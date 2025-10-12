@@ -1,0 +1,14 @@
+{
+    "name": "create_and_store_athelete_summary",
+    "description": "Creates a stored summary of a client based upon thier training history.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "athelete_summary_to_store": {
+                "type": "string",  
+                "description": "Athelete summary 200 words or less"
+            }
+        },
+        "required": ["athelete_summary_to_store"]
+    }   
+}

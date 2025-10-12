@@ -1,0 +1,22 @@
+{
+    "name": "create_one_off_workout",
+    "description": "Creates a one-off workout for a client.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "client_ftp": {
+                "type": "integer",
+                "description": "Client FTP"
+            },
+            "workout_duration": { 
+                "type": "integer",
+                "description": "Workout duration in seconds"
+            },
+            "workout_type": {
+                "type": "string",
+                "description": "Workout type"
+            }
+        },
+        "required": ["client_ftp", "workout_duration", "workout_type"]
+    }
+}
