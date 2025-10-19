@@ -3,9 +3,11 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 from google import genai
+from google.api_core import exceptions as google_exceptions
+import requests
 
 # Import our custom modules
-from train_r.core.config import get_model_name, get_model_config
+from train_r.core.config import AppConfig, get_model_name, get_model_config
 from train_r.tools.loader import load_tools, get_tool_names
 from train_r.tools.handler import handle_tool_call
 from train_r.core.conversation import ConversationManager
@@ -115,6 +117,12 @@ def main():
         print("Error: INTERVALS_API_KEY not found in .env file")
         return
 
+    # Create application config
+    config = AppConfig(
+        gemini_api_key=gemini_api_key,
+        intervals_api_key=intervals_api_key
+    )
+
     # Load system prompt
     system_prompt = load_prompt("prompts/system_prompt.txt")
 
@@ -129,7 +137,7 @@ def main():
     print("Type 'quit' to exit\n")
 
     # Initialize Gemini client
-    client = genai.Client(api_key=gemini_api_key)
+    client = genai.Client(api_key=config.gemini_api_key)
 
     # Initialize conversation manager
     conversation = ConversationManager()
@@ -154,48 +162,64 @@ def main():
         conversation.add_user_message(user_input)
         logger.info(f"USER: {user_input}")
 
-        # Generate response with tools
-        response = client.models.generate_content(
-            model=model_name,
-            contents=conversation.get_history(),
-            config=config
-        )
-
-        # Check for tool calls
-        while has_tool_calls(response):
-            # Add model response with tool calls to history
-            conversation.add_model_response(response)
-
-            # Get tool calls
-            tool_calls = get_tool_calls(response)
-
-            # Execute each tool call
-            for tool_call in tool_calls:
-                # Handle tool call with both API keys
-                result = handle_tool_call(tool_call, gemini_api_key, intervals_api_key)
-
-                # Add tool response to conversation
-                conversation.add_tool_response(tool_call, result)
-
-            # Call model again with tool results
+        try:
+            # Generate response with tools
             response = client.models.generate_content(
                 model=model_name,
                 contents=conversation.get_history(),
                 config=config
             )
 
-        # Add final model response to history
-        conversation.add_model_response(response)
+            # Check for tool calls
+            while has_tool_calls(response):
+                # Add model response with tool calls to history
+                conversation.add_model_response(response)
 
-        # Extract and display text response
-        text_response = get_text_response(response)
+                # Get tool calls
+                tool_calls = get_tool_calls(response)
 
-        if text_response:
-            logger.info(f"ASSISTANT: {text_response}")
-            print(f"\nTrain-R: {text_response}")
-        else:
-            logger.warning("ASSISTANT: No response generated")
-            print("\nTrain-R: (No response)")
+                # Execute each tool call
+                for tool_call in tool_calls:
+                    # Handle tool call with config
+                    result = handle_tool_call(tool_call, config)
+
+                    # Add tool response to conversation
+                    conversation.add_tool_response(tool_call, result)
+
+                try:
+                    # Call model again with tool results
+                    response = client.models.generate_content(
+                        model=model_name,
+                        contents=conversation.get_history(),
+                        config=config
+                    )
+                except (google_exceptions.GoogleAPIError, requests.RequestException) as e:
+                    logger.error(f"Error during tool response processing: {str(e)}", exc_info=True)
+                    print("\nTrain-R: Sorry, there was an error processing the tool results. Please try again.")
+                    break
+
+            # Add final model response to history
+            conversation.add_model_response(response)
+
+            # Extract and display text response
+            text_response = get_text_response(response)
+
+            if text_response:
+                logger.info(f"ASSISTANT: {text_response}")
+                print(f"\nTrain-R: {text_response}")
+            else:
+                logger.warning("ASSISTANT: No response generated")
+                print("\nTrain-R: (No response)")
+
+        except google_exceptions.GoogleAPIError as e:
+            logger.error(f"Google API error: {str(e)}", exc_info=True)
+            print("\nTrain-R: Sorry, there was an error communicating with the AI. Please try again.")
+        except requests.RequestException as e:
+            logger.error(f"Network error: {str(e)}", exc_info=True)
+            print("\nTrain-R: Sorry, there was a network error. Please check your connection and try again.")
+        except Exception as e:
+            logger.error(f"Unexpected error: {str(e)}", exc_info=True)
+            print("\nTrain-R: Sorry, an unexpected error occurred. Please try again.")
 
 
 if __name__ == "__main__":
