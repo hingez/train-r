@@ -1,61 +1,17 @@
-2025-10-12 16:28:33 - INFO - ============================================================
-2025-10-12 16:28:33 - INFO - Train-R Application Started
-2025-10-12 16:28:33 - INFO - ============================================================
-2025-10-12 16:28:33 - INFO - Loaded 3 tools: analyse_recent_history, create_and_store_athelete_summary, create_one_off_workout
-2025-10-12 16:28:34 - INFO - USER: Hello
-2025-10-12 16:28:37 - INFO - ASSISTANT: Hello there! Welcome to Train-R, your personal cycling coach. I'm excited to help you achieve your cycling goals.
-
-As a new client, I can assist you with a few things:
-
-1.  **Reviewing your training history:** If you've been training already, I can analyze your past performance to understand your strengths and areas for improvement.
-2.  **Creating one-off training sessions:** Need a specific workout for an indoor trainer or an outdoor ride? I can design a session tailored to your needs.
-3.  **Developing longer-term training plans:** If you have a specific event or goal in mind, I can create a comprehensive plan to get you there.
-
-What would you like to start with today?
-2025-10-12 16:28:40 - INFO - USER: workout
-2025-10-12 16:28:42 - INFO - ASSISTANT: Great! I can definitely create a workout for you. To make sure it's the most effective for your current fitness, could you please tell me:
-
-1.  **Your current FTP (Functional Threshold Power):** This is a key metric for tailoring power-based workouts.
-2.  **How long you'd like the workout to be:** Please provide the duration in minutes.
-3.  **What type of workout are you looking for?** For example, are you interested in endurance, tempo, interval training (like VO2 max or threshold), or something else?
-2025-10-12 16:29:01 - INFO - USER: 350, 1.5 hours, endurance
-2025-10-12 16:29:03 - INFO - TOOL_CALL: create_one_off_workout
-2025-10-12 16:29:03 - INFO - TOOL_ARGS: {
-  "workout_duration": 5400,
-  "client_ftp": 350,
-  "workout_type": "endurance"
-}
-2025-10-12 16:29:03 - INFO - Generating workout: FTP=350W, Duration=5400s, Type=endurance
-2025-10-12 16:29:13 - INFO - Workout generated successfully
-2025-10-12 16:29:13 - INFO - Workout saved to: data/created_workouts/endurance_20251012_162913.zwo
-2025-10-12 16:29:13 - INFO - Scheduling workout for: 2025-10-12T17:29:13
-2025-10-12 16:29:13 - INFO - Upload successful - Event ID: 76045270
-2025-10-12 16:29:13 - INFO - TOOL_RESULT: {
-  "success": true,
-  "workout_file": "data/created_workouts/endurance_20251012_162913.zwo",
-  "event_id": 76045270,
-  "event_name": "Endurance 90min (68% FTP)",
-  "scheduled_time": "2025-10-12T17:29:13",
-  "message": "Workout created and scheduled for 2025-10-12T17:29:13"
-}
-2025-10-12 16:29:13 - INFO - ------------------------------------------------------------
-2025-10-12 16:29:15 - INFO - ASSISTANT: Excellent! I've created a 1.5-hour endurance workout for you, tailored to your FTP of 350.
-
-Here are the details:
-*   **Workout Name:** Endurance 90min (68% FTP)
-*   **Scheduled Time:** October 12, 2025, at 5:29 PM (your local time)
-*   **Workout File:** `data/created_workouts/endurance_20251012_162913.zwo` (This file can be loaded into most cycling computers or indoor training apps.)
-
-This workout will focus on building your aerobic base at a steady, comfortable pace. Let me know if you'd like any adjustments or have other training needs!
-2025-10-12 16:31:19 - INFO - USER: I was thinking about doing 3 months of base training to prepare me for teh season next year. can you help to strucutre a paln for me, with workouts, duerations and ttypes
-2025-10-12 16:31:22 - INFO - ASSISTANT: That's an excellent goal! A 3-month base training block is a fantastic way to build a strong foundation for next season.
-
-Before I dive into structuring a detailed plan with specific workouts, durations, and types, it would be incredibly helpful to **analyze your recent training history**. This allows me to understand your current fitness, workload, and any areas we might need to focus on or be mindful of.
-
-Would you like me to analyze your recent history first?
-
-Regardless, I can certainly start outlining a general structure for a 3-month base training plan. To make sure the plan is as effective as possible, could you confirm your current **FTP** again? This will be crucial for setting appropriate training zones.
-2025-10-12 16:31:54 - INFO - USER: 1
-2025-10-12 16:31:56 - INFO - ASSISTANT: It looks like you might have entered "1" for your FTP. Could you please provide your actual **Functional Threshold Power (FTP)** in watts? This is a crucial number for me to design effective and personalized workouts for your base training plan.
-
-Once I have that, I can start outlining your 3-month base training plan, including workout types, durations, and how they'll progress over time.
+2025-10-23 20:37:25 - INFO - ============================================================
+2025-10-23 20:37:25 - INFO - Train-R Application Started
+2025-10-23 20:37:25 - INFO - ============================================================
+2025-10-23 20:37:25 - INFO - FastAPI application created and configured
+2025-10-23 20:37:25 - INFO - ============================================================
+2025-10-23 20:37:25 - INFO - Starting Train-R API Server (Refactored Architecture)
+2025-10-23 20:37:25 - INFO - ============================================================
+2025-10-23 20:37:25 - INFO - Configuration loaded successfully
+2025-10-23 20:37:25 - INFO - Configuration validated
+2025-10-23 20:37:25 - INFO - GeminiClient initialized
+2025-10-23 20:37:25 - INFO - LLM client initialized: gemini-2.5-flash
+2025-10-23 20:37:25 - INFO - CoachService initialized with 3 tools: analyse_recent_history, create_and_store_athlete_summary, create_one_off_workout
+2025-10-23 20:37:25 - INFO - Coach service initialized with tool support
+2025-10-23 20:37:25 - INFO - Workout service initialized
+2025-10-23 20:37:25 - INFO - ============================================================
+2025-10-23 20:37:25 - INFO - Train-R API Server ready
+2025-10-23 20:37:25 - INFO - ============================================================

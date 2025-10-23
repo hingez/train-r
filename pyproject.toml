@@ -1,19 +1,29 @@
 [project]
 name = "train-r"
-version = "0.1.0"
-description = "LLM-powered cycling coach with Gemini and intervals.icu integration"
-readme = "README.md"
+version = "0.2.0"
+description = "LLM-powered cycling coach with Gemini and intervals.icu integration (Refactored Architecture)"
+# readme = "README.md"  # Temporarily disabled due to encoding issues
 requires-python = ">=3.12"
 dependencies = [
+    "fastapi>=0.119.0",
     "google-genai>=1.43.0",
     "google-generativeai>=0.8.0",
     "python-dotenv>=1.0.0",
     "requests>=2.32.0",
+    "uvicorn>=0.38.0",
+    "websockets>=15.0.1",
 ]
 
 [project.scripts]
-train-r = "scripts.coach:main"
-train-r-upload = "scripts.upload_workout:main"
+# Main commands
+train-r = "src.scripts.dev:main"
+train-r-cli = "src.scripts.coach:main"
+
+# Utility commands
+train-r-upload = "src.scripts.upload_workout:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
 
 [build-system]
 requires = ["hatchling"]
