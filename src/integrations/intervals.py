@@ -177,6 +177,57 @@ class IntervalsUploader:
         # Use shared upload logic
         return self._build_and_upload_event(file_contents_base64, filename, start_date, external_id)
 
+    def get_workout_history(
+        self,
+        oldest_date: Optional[str] = None,
+        newest_date: Optional[str] = None
+    ) -> list[dict]:
+        """Retrieve workout history from intervals.icu.
+
+        Args:
+            oldest_date: Start date in YYYY-MM-DD format (optional)
+            newest_date: End date in YYYY-MM-DD format (optional)
+
+        Returns:
+            List of activity/event dicts from intervals.icu API
+
+        Raises:
+            requests.HTTPError: If API request fails
+        """
+        logger = logging.getLogger('train-r')
+
+        # Build URL with query parameters
+        url = f"{self.BASE_URL}/athlete/{self.athlete_id}/events"
+        params = {}
+
+        if oldest_date:
+            params['oldest'] = oldest_date
+        if newest_date:
+            params['newest'] = newest_date
+
+        # Define the fetch function for retry wrapper
+        def make_fetch_request() -> list[dict]:
+            response = requests.get(
+                url,
+                params=params,
+                auth=self.auth,
+                timeout=30
+            )
+            response.raise_for_status()
+            return response.json()
+
+        # Execute with retry logic
+        logger.info(f"Fetching workout history from intervals.icu (oldest={oldest_date}, newest={newest_date})")
+
+        result = retry_with_backoff(
+            func=make_fetch_request,
+            exception_types=(requests.RequestException, requests.HTTPError),
+            operation_name="intervals.icu fetch history"
+        )
+
+        logger.info(f"Successfully fetched {len(result)} workouts from intervals.icu")
+        return result
+
     def test_connection(self) -> bool:
         """Test API connection and authentication.
 

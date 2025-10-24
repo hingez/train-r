@@ -51,6 +51,8 @@ def handle_tool_call(
     # Route to appropriate handler
     if tool_name == "create_one_off_workout":
         result = _handle_create_workout(tool_args, config, workout_service)
+    elif tool_name == "get_history":
+        result = _handle_get_history(tool_args, config)
     else:
         # Other tools return dummy response for now
         result = {"result": "tool run successfully"}
@@ -195,4 +197,68 @@ def _handle_create_workout(
             "success": False,
             "error": str(e),
             "message": f"Failed to create workout: {str(e)}"
+        }
+
+
+def _handle_get_history(
+    args: dict,
+    config: AppConfig
+) -> dict:
+    """Handle get_history tool call.
+
+    Args:
+        args: Tool arguments (oldest_date, newest_date - both optional)
+        config: Application configuration with API keys and paths
+
+    Returns:
+        Result dict with confirmation message
+    """
+    logger = logging.getLogger('train-r')
+
+    try:
+        # Extract optional parameters
+        oldest_date = args.get("oldest_date")
+        newest_date = args.get("newest_date")
+
+        logger.info(f"Fetching workout history (oldest={oldest_date}, newest={newest_date})")
+
+        # Initialize uploader (it handles both uploads and fetches)
+        uploader = IntervalsUploader(api_key=config.intervals_api_key)
+
+        # Fetch workout history
+        history = uploader.get_workout_history(
+            oldest_date=oldest_date,
+            newest_date=newest_date
+        )
+
+        logger.info(f"Retrieved {len(history)} workouts from intervals.icu")
+
+        # Ensure history directory exists
+        history_dir = config.data_dir / "workout_history"
+        history_dir.mkdir(parents=True, exist_ok=True)
+
+        # Save history to JSON file with timestamp
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"history_{timestamp}.json"
+        filepath = history_dir / filename
+
+        with open(filepath, 'w', encoding='utf-8') as f:
+            json.dump(history, f, indent=2, ensure_ascii=False)
+
+        logger.info(f"Workout history saved to: {filepath}")
+
+        # Return simple confirmation (data manipulation comes later)
+        return {
+            "success": True,
+            "message": "history fetched",
+            "workout_count": len(history),
+            "saved_to": str(filepath)
+        }
+
+    except Exception as e:
+        logger.error(f"Error fetching history: {str(e)}", exc_info=True)
+        return {
+            "success": False,
+            "error": str(e),
+            "message": f"Failed to fetch history: {str(e)}"
         }

@@ -59,6 +59,7 @@ class AppConfig:
     logs_dir: Path
     tools_dir: Path
     workouts_dir: Path
+    history_dir: Path
 
     # LLM Settings
     model_name: str = GEMINI_MODEL_NAME
@@ -103,6 +104,7 @@ class AppConfig:
         logs_dir = PROJECT_ROOT / "logs"
         tools_dir = PROJECT_ROOT / "src" / "tools" / "definitions"
         workouts_dir = data_dir / "created_workouts"
+        history_dir = data_dir / "workout_history"
 
         # Get CORS origins (default to localhost:5173 for frontend)
         cors_origins_str = os.getenv("CORS_ORIGINS", "http://localhost:5173")
@@ -117,6 +119,7 @@ class AppConfig:
             logs_dir=logs_dir,
             tools_dir=tools_dir,
             workouts_dir=workouts_dir,
+            history_dir=history_dir,
             cors_origins=cors_origins,
         )
 
@@ -128,6 +131,7 @@ class AppConfig:
         """
         self.logs_dir.mkdir(exist_ok=True)
         self.workouts_dir.mkdir(parents=True, exist_ok=True)
+        self.history_dir.mkdir(parents=True, exist_ok=True)
 
     def validate(self) -> bool:
         """Validate that all required paths and settings exist.
