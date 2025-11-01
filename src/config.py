@@ -98,6 +98,9 @@ class AppConfig:
                 "Please set it in .env file or environment variables."
             )
 
+        # Get athlete ID (try both old typo and corrected spelling for backward compatibility)
+        athlete_id = os.getenv("INTERVALS_ATHLETE_ID") or os.getenv("INTERVALS_ATHELETE_ID") or DEFAULT_ATHLETE_ID
+
         # Build paths
         prompts_dir = PROJECT_ROOT / "prompts"
         data_dir = PROJECT_ROOT / "data"
@@ -121,6 +124,7 @@ class AppConfig:
             workouts_dir=workouts_dir,
             history_dir=history_dir,
             cors_origins=cors_origins,
+            default_athlete_id=athlete_id,
         )
 
     def create_directories(self):

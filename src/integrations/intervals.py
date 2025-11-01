@@ -5,7 +5,7 @@ import logging
 from pathlib import Path
 from typing import Optional
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from src.config import DEFAULT_ATHLETE_ID
 from src.utils.retry import retry_with_backoff
@@ -182,28 +182,39 @@ class IntervalsUploader:
         oldest_date: Optional[str] = None,
         newest_date: Optional[str] = None
     ) -> list[dict]:
-        """Retrieve workout history from intervals.icu.
+        """Retrieve completed activity history from intervals.icu.
+
+        Uses the /activities endpoint which returns only completed activities
+        with actual performance data (power, heart rate, etc.), not planned workouts.
+        Automatically defaults to last 12 months if oldest_date not specified.
+        Transforms field names to be universally understandable for LLM processing.
 
         Args:
-            oldest_date: Start date in YYYY-MM-DD format (optional)
-            newest_date: End date in YYYY-MM-DD format (optional)
+            oldest_date: Start date in YYYY-MM-DD format (optional, defaults to 12 months ago)
+            newest_date: End date in YYYY-MM-DD format (optional, defaults to today)
 
         Returns:
-            List of activity/event dicts from intervals.icu API
+            List of transformed activity dicts with standardized field names
 
         Raises:
             requests.HTTPError: If API request fails
         """
         logger = logging.getLogger('train-r')
 
-        # Build URL with query parameters
-        url = f"{self.BASE_URL}/athlete/{self.athlete_id}/events"
-        params = {}
+        # Default to last 12 months if not specified
+        if not oldest_date:
+            twelve_months_ago = datetime.now() - timedelta(days=365)
+            oldest_date = twelve_months_ago.strftime("%Y-%m-%d")
 
-        if oldest_date:
-            params['oldest'] = oldest_date
-        if newest_date:
-            params['newest'] = newest_date
+        if not newest_date:
+            newest_date = datetime.now().strftime("%Y-%m-%d")
+
+        # Use activities endpoint for completed rides only
+        url = f"{self.BASE_URL}/athlete/{self.athlete_id}/activities"
+        params = {
+            'oldest': oldest_date,
+            'newest': newest_date
+        }
 
         # Define the fetch function for retry wrapper
         def make_fetch_request() -> list[dict]:
@@ -217,16 +228,157 @@ class IntervalsUploader:
             return response.json()
 
         # Execute with retry logic
-        logger.info(f"Fetching workout history from intervals.icu (oldest={oldest_date}, newest={newest_date})")
+        logger.info(f"Fetching activity history from intervals.icu (oldest={oldest_date}, newest={newest_date})")
 
         result = retry_with_backoff(
             func=make_fetch_request,
             exception_types=(requests.RequestException, requests.HTTPError),
-            operation_name="intervals.icu fetch history"
+            operation_name="intervals.icu fetch activities"
         )
 
-        logger.info(f"Successfully fetched {len(result)} workouts from intervals.icu")
-        return result
+        logger.info(f"Successfully fetched {len(result)} completed activities from intervals.icu")
+
+        # Transform activities to use standardized field names
+        transformed_activities = []
+        for activity in result:
+            transformed = {
+                "date": activity.get("start_date_local"),
+                "type": activity.get("type"),
+                "duration_seconds": activity.get("moving_time"),
+                "distance_meters": activity.get("distance"),
+                "avg_power_watts": activity.get("icu_average_watts"),
+                "normalized_power_watts": activity.get("icu_weighted_avg_watts"),
+                "intensity_factor": activity.get("icu_intensity"),
+                "training_stress_score": activity.get("icu_training_load"),
+                "power_zone_times": activity.get("icu_zone_times"),
+                "acute_training_load": activity.get("icu_atl"),
+                "chronic_training_load": activity.get("icu_ctl")
+            }
+            transformed_activities.append(transformed)
+
+        logger.info(f"Transformed {len(transformed_activities)} activities with standardized field names")
+        return transformed_activities
+
+    def get_power_curves(
+        self,
+        time_periods_months: Optional[list[int]] = None,
+        durations_seconds: Optional[list[int]] = None,
+        sport_type: str = "Ride"
+    ) -> dict:
+        """Retrieve aggregate power curves from intervals.icu.
+
+        Gets best power outputs across all activities for specified time periods
+        and durations. Useful for tracking fitness improvements over time.
+
+        Args:
+            time_periods_months: List of time periods in months (default: [1, 2, 3, 6, 12])
+            durations_seconds: List of durations in seconds to retrieve power for
+                             (default: [15, 30, 60, 120, 180, 300, 600, 900, 1200, 1800, 2700, 3600])
+            sport_type: Sport type to filter activities (default: "Ride")
+
+        Returns:
+            Dict mapping time periods to power curves, e.g.:
+            {
+                "1_month": {"15_seconds": 450, "30_seconds": 420, ...},
+                "2_months": {"15_seconds": 455, "30_seconds": 425, ...},
+                ...
+            }
+
+        Raises:
+            requests.HTTPError: If API request fails
+        """
+        logger = logging.getLogger('train-r')
+
+        # Default time periods: 1, 2, 3, 6, 12 months
+        if time_periods_months is None:
+            time_periods_months = [1, 2, 3, 6, 12]
+
+        # Default durations: 15s, 30s, 1m, 2m, 3m, 5m, 10m, 15m, 20m, 30m, 45m, 60m
+        if durations_seconds is None:
+            durations_seconds = [15, 30, 60, 120, 180, 300, 600, 900, 1200, 1800, 2700, 3600]
+
+        power_curves = {}
+
+        for months in time_periods_months:
+            # Calculate the date range for this time period
+            end_date = datetime.now()
+            start_date = end_date - timedelta(days=months * 30)  # Approximate month as 30 days
+
+            # Use the activity-power-curves endpoint with empty ext parameter
+            # API spec: /api/v1/athlete/{id}/activity-power-curves{ext}
+            url = f"{self.BASE_URL}/athlete/{self.athlete_id}/activity-power-curves"
+            params = {
+                'oldest': start_date.strftime("%Y-%m-%d"),
+                'newest': end_date.strftime("%Y-%m-%d"),
+                'type': sport_type,
+                'secs': ','.join(str(s) for s in durations_seconds)
+            }
+
+            # Define the fetch function for retry wrapper
+            def make_fetch_request() -> dict:
+                response = requests.get(
+                    url,
+                    params=params,
+                    auth=self.auth,
+                    timeout=30
+                )
+                response.raise_for_status()
+                return response.json()
+
+            # Execute with retry logic
+            logger.info(f"Fetching {months}-month power curve from intervals.icu")
+
+            try:
+                result = retry_with_backoff(
+                    func=make_fetch_request,
+                    exception_types=(requests.RequestException, requests.HTTPError),
+                    operation_name=f"intervals.icu fetch {months}-month power curve"
+                )
+
+                # Transform the result to extract best power values for requested durations
+                # The API returns: {secs: [15, 30, ...], curves: [{watts: [...]}, ...]}
+                period_key = f"{months}_month" if months == 1 else f"{months}_months"
+                power_curves[period_key] = {}
+
+                # Extract best power for each duration across all activities
+                if isinstance(result, dict) and 'secs' in result and 'curves' in result:
+                    secs_array = result['secs']
+                    curves = result['curves']
+
+                    # For each duration, find the max watts across all activities
+                    for idx, duration_secs in enumerate(secs_array):
+                        # Format duration as human-readable key
+                        if duration_secs < 60:
+                            duration_key = f"{duration_secs}_seconds"
+                        elif duration_secs < 3600:
+                            duration_key = f"{duration_secs // 60}_minutes"
+                        else:
+                            duration_key = f"{duration_secs // 3600}_hours"
+
+                        # Find max watts for this duration across all activities
+                        max_watts = None
+                        for curve in curves:
+                            if 'watts' in curve and idx < len(curve['watts']):
+                                watts = curve['watts'][idx]
+                                if watts and (max_watts is None or watts > max_watts):
+                                    max_watts = watts
+
+                        power_curves[period_key][duration_key] = max_watts
+
+                    logger.info(f"Successfully fetched {months}-month power curve with {len(power_curves[period_key])} data points")
+                else:
+                    # If response structure is different, log the structure for debugging
+                    logger.warning(f"Unexpected response structure for {months}-month curve: {result.keys() if isinstance(result, dict) else type(result)}")
+                    power_curves[period_key] = result
+
+            except requests.HTTPError as e:
+                logger.error(f"Failed to fetch {months}-month power curve: {str(e)}")
+                # Continue with other time periods even if one fails
+                period_key = f"{months}_month" if months == 1 else f"{months}_months"
+                power_curves[period_key] = {"error": str(e)}
+
+        logger.info(f"Retrieved power curves for {len(power_curves)} time periods")
+        return power_curves
 
     def test_connection(self) -> bool:
         """Test API connection and authentication.

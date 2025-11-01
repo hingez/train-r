@@ -1,5 +1,5 @@
 ## Project Summary
-Train-R is an LLM-powered cycling coach that helps users with training plans, providing individual workouts and overall plans to reach specific goals. The system uses Gemini for conversational AI with tool-calling capabilities and integrates with intervals.icu for workout scheduling.
+Train-R is an LLM-powered cycling coach that helps users with training plans, providing individual workouts and overall plans to reach specific goals. The system uses Gemini for conversational AI with tool-calling capabilities and integrates with intervals.icu for workout scheduling. You can view the API spec for intervals in the intervals_icu_api_spec.json file
 
 ## Git Practices
 - Write clear, descriptive commit messages. Start with a short summary (50 characters or less), then add details if needed.
