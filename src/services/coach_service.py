@@ -6,8 +6,9 @@ providing the core functionality for the Train-R cycling coach.
 import logging
 from pathlib import Path
 from typing import Optional, Callable, Any, TYPE_CHECKING
+import json
 
-from src.models.gemini_client import GeminiClient, LLMConfig, ToolCall
+from src.models.llm_client import LLMClient
 from src.config import AppConfig
 from src.utils.conversation import ConversationManager
 from src.tools.loader import load_tools, get_tool_names
@@ -22,11 +23,11 @@ logger = logging.getLogger('train-r')
 class CoachService:
     """Service for managing cycling coach conversations with tool support.
 
-    This service manages multi-turn conversations with the Gemini API,
+    This service manages multi-turn conversations with the LLM API,
     handling tool calling and response parsing.
 
     Attributes:
-        llm_client: Gemini client for generating responses
+        llm_client: LLM client for generating responses
         config: Application configuration
         workout_service: Workout generation service
         conversation: Conversation history manager
@@ -37,24 +38,26 @@ class CoachService:
 
     def __init__(
         self,
-        llm_client: GeminiClient,
+        llm_client: LLMClient,
         config: AppConfig,
         workout_service: "WorkoutService"
     ):
         """Initialize coach service.
 
         Args:
-            llm_client: Initialized Gemini client
+            llm_client: Initialized LLM client
             config: Application configuration
             workout_service: Workout generation service
         """
         self.llm_client = llm_client
         self.config = config
         self.workout_service = workout_service
-        self.conversation = ConversationManager()
 
         # Load system prompt
         self.system_prompt = self._load_prompt("prompts/system_prompt.txt")
+
+        # Initialize conversation with system prompt
+        self.conversation = ConversationManager(system_instruction=self.system_prompt)
 
         # Load tools
         self.tools = load_tools(str(config.tools_dir))
@@ -101,74 +104,93 @@ class CoachService:
         logger.info(f"USER: {user_message}")
 
         try:
-            # Configure LLM with tools
-            llm_config = LLMConfig(
-                model=self.config.model_name,
-                temperature=self.config.temperature,
-                system_instruction=self.system_prompt,
-                tools=self.tools
-            )
-
             # Generate response
             response = self.llm_client.generate(
-                self.conversation.get_history(),
-                llm_config
+                messages=self.conversation.get_history(),
+                model=self.config.model_name,
+                temperature=self.config.temperature,
+                tools=self.tools,
+                tool_choice="auto",
+                reasoning_effort=self.config.reasoning_effort
             )
 
             # Handle tool calls in a loop
             iteration = 0
             max_iterations = 10
 
-            while response.has_tool_calls and iteration < max_iterations:
+            while response.choices[0].message.tool_calls and iteration < max_iterations:
                 iteration += 1
 
                 # Add model response with tool calls to history
-                # Note: Using raw_response to maintain compatibility with ConversationManager
-                self.conversation.add_model_response(response.raw_response)
+                self.conversation.add_model_response(response)
 
                 # Execute each tool call
-                for tool_call in response.tool_calls:
-                    logger.info(f"TOOL_CALL: {tool_call.name}")
+                for tool_call in response.choices[0].message.tool_calls:
+                    # Parse arguments from JSON string
+                    args = json.loads(tool_call.function.arguments)
+                    logger.info(f"TOOL_CALL: {tool_call.function.name}")
 
                     # Notify via callback if provided
                     if on_tool_call:
-                        await on_tool_call(tool_call.name, tool_call.args)
+                        await on_tool_call(tool_call.function.name, args)
 
                     # Execute tool
                     try:
-                        result = handle_tool_call(tool_call, self.config, self.workout_service)
+                        # Create a simple object to pass to handle_tool_call
+                        class ToolCallObj:
+                            def __init__(self, name, args):
+                                self.name = name
+                                self.args = args
+
+                        result = handle_tool_call(
+                            ToolCallObj(tool_call.function.name, args),
+                            self.config,
+                            self.workout_service
+                        )
                         success = result.get("success", True)
 
                         # Add tool response to conversation
-                        self.conversation.add_tool_response(tool_call, result)
+                        self.conversation.add_tool_response(
+                            tool_call.id,
+                            tool_call.function.name,
+                            result
+                        )
 
                         # Notify via callback if provided
                         if on_tool_result:
-                            await on_tool_result(tool_call.name, result, success)
+                            await on_tool_result(tool_call.function.name, result, success)
 
                     except Exception as e:
                         logger.error(f"Tool execution error: {e}", exc_info=True)
                         error_result = {"success": False, "error": str(e)}
 
-                        self.conversation.add_tool_response(tool_call, error_result)
+                        self.conversation.add_tool_response(
+                            tool_call.id,
+                            tool_call.function.name,
+                            error_result
+                        )
 
                         if on_tool_result:
-                            await on_tool_result(tool_call.name, error_result, False)
+                            await on_tool_result(tool_call.function.name, error_result, False)
 
                 # Generate again with tool results
                 response = self.llm_client.generate(
-                    self.conversation.get_history(),
-                    llm_config
+                    messages=self.conversation.get_history(),
+                    model=self.config.model_name,
+                    temperature=self.config.temperature,
+                    tools=self.tools,
+                    tool_choice="auto",
+                    reasoning_effort=self.config.reasoning_effort
                 )
 
             if iteration >= max_iterations:
                 logger.warning(f"Tool calling exceeded max iterations ({max_iterations})")
 
             # Add final model response to history
-            self.conversation.add_model_response(response.raw_response)
+            self.conversation.add_model_response(response)
 
             # Extract and return text response
-            text_response = response.text
+            text_response = response.choices[0].message.content or ""
             logger.info(f"ASSISTANT: {text_response}")
 
             return text_response if text_response else "(No response)"

@@ -11,7 +11,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-from src.models.gemini_client import GeminiClient, LLMConfig
+from src.models.llm_client import LLMClient
 from src.config import AppConfig
 
 logger = logging.getLogger('train-r')
@@ -20,19 +20,19 @@ logger = logging.getLogger('train-r')
 class WorkoutService:
     """Service for generating and managing workouts.
 
-    Uses Gemini to generate structured ZWO workout files.
+    Uses LLM to generate structured ZWO workout files.
 
     Attributes:
-        llm_client: Gemini client for generating workouts
+        llm_client: LLM client for generating workouts
         config: Application configuration
         prompt_template: System prompt for workout generation
     """
 
-    def __init__(self, llm_client: GeminiClient, config: AppConfig):
+    def __init__(self, llm_client: LLMClient, config: AppConfig):
         """Initialize workout service.
 
         Args:
-            llm_client: Initialized Gemini client
+            llm_client: Initialized LLM client
             config: Application configuration
         """
         self.llm_client = llm_client
@@ -55,7 +55,7 @@ class WorkoutService:
         workout_duration: int,
         workout_type: str
     ) -> str:
-        """Generate a ZWO workout file using Gemini.
+        """Generate a ZWO workout file using LLM.
 
         Args:
             client_ftp: Client's FTP in watts
@@ -80,18 +80,22 @@ Return ONLY the ZWO XML file content, nothing else."""
 
         logger.info(f"Generating {workout_type} workout (FTP: {client_ftp}W, Duration: {workout_duration}s)")
 
-        # Configure LLM for workout generation
-        llm_config = LLMConfig(
-            model=self.config.model_name,
-            temperature=self.config.temperature,
-            system_instruction=self.prompt_template
-        )
+        # Build messages with system instruction and user prompt
+        messages = [
+            {"role": "system", "content": self.prompt_template},
+            {"role": "user", "content": user_prompt}
+        ]
 
         # Generate using LLM client
-        response = self.llm_client.generate(user_prompt, llm_config)
+        response = self.llm_client.generate(
+            messages=messages,
+            model=self.config.model_name,
+            temperature=self.config.temperature,
+            reasoning_effort=self.config.reasoning_effort
+        )
 
         # Extract and validate ZWO content
-        zwo_content = response.text.strip()
+        zwo_content = response.choices[0].message.content.strip()
 
         if not self._validate_zwo(zwo_content):
             raise ValueError("Generated workout is missing required XML structure")

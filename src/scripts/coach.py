@@ -7,7 +7,7 @@ import asyncio
 
 from src.config import AppConfig
 from src.utils.logger import setup_logger
-from src.models.gemini_client import GeminiClient
+from src.models.llm_client import LLMClient
 from src.services.coach_service import CoachService
 from src.services.workout_service import WorkoutService
 
@@ -30,7 +30,7 @@ async def main():
         config.create_directories()
 
         # Initialize LLM client
-        llm_client = GeminiClient(api_key=config.gemini_api_key)
+        llm_client = LLMClient(api_key=config.gemini_api_key)
         logger.info(f"LLM client initialized: {config.model_name}")
 
         # Initialize workout service first (needed by coach service)

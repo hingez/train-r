@@ -1,17 +1,17 @@
-"""Load tool definitions from JSON files and convert to Gemini Tool format."""
+"""Load tool definitions from JSON files and convert to OpenAI function format."""
 import json
 from pathlib import Path
-from google.genai.types import Tool, FunctionDeclaration
+from typing import Any
 
 
-def load_tools(tools_dir: str = "tools") -> list[Tool]:
+def load_tools(tools_dir: str = "tools") -> list[dict[str, Any]]:
     """Load all tool definitions from JSON files in the tools directory.
 
     Args:
         tools_dir: Directory containing tool JSON definition files
 
     Returns:
-        List of Gemini Tool objects
+        List of OpenAI-compatible tool definitions
     """
     tools_path = Path(tools_dir)
 
@@ -24,37 +24,35 @@ def load_tools(tools_dir: str = "tools") -> list[Tool]:
     if not tool_files:
         return []
 
-    # Convert each JSON file to FunctionDeclaration
-    function_declarations = []
+    # Convert each JSON file to OpenAI tool format
+    tools = []
 
     for tool_file in tool_files:
         with open(tool_file, 'r') as f:
             tool_def = json.load(f)
 
-        # Create FunctionDeclaration
-        func_declaration = FunctionDeclaration(
-            name=tool_def["name"],
-            description=tool_def.get("description", ""),
-            parameters=tool_def.get("parameters", {})
-        )
+        # Create OpenAI-compatible tool definition
+        openai_tool = {
+            "type": "function",
+            "function": {
+                "name": tool_def["name"],
+                "description": tool_def.get("description", ""),
+                "parameters": tool_def.get("parameters", {})
+            }
+        }
 
-        function_declarations.append(func_declaration)
+        tools.append(openai_tool)
 
-    # Return single Tool with all function declarations
-    return [Tool(function_declarations=function_declarations)]
+    return tools
 
 
-def get_tool_names(tools: list[Tool]) -> list[str]:
-    """Extract tool names from Tool objects for reference.
+def get_tool_names(tools: list[dict[str, Any]]) -> list[str]:
+    """Extract tool names from tool definitions for reference.
 
     Args:
-        tools: List of Tool objects
+        tools: List of OpenAI-compatible tool definitions
 
     Returns:
         List of tool names
     """
-    names = []
-    for tool in tools:
-        for func in tool.function_declarations:
-            names.append(func.name)
-    return names
+    return [tool["function"]["name"] for tool in tools]

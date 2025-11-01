@@ -7,7 +7,6 @@ from typing import Any, Dict, Optional, Tuple, TYPE_CHECKING
 from pathlib import Path
 
 from src.config import AppConfig
-from src.models.gemini_client import ToolCall
 
 # Updated imports to use new src/ structure
 from src.integrations.intervals import IntervalsUploader
@@ -24,14 +23,14 @@ MAX_DURATION = 14400  # Maximum duration: 4 hours
 
 
 def handle_tool_call(
-    tool_call: ToolCall,
+    tool_call: Any,
     config: AppConfig,
     workout_service: "WorkoutService"
 ) -> dict:
     """Handle a tool call from the model.
 
     Args:
-        tool_call: ToolCall object with name and args
+        tool_call: Tool call object with name and args attributes
         config: Application configuration with API keys
         workout_service: WorkoutService instance for workout generation
 

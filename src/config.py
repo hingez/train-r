@@ -64,6 +64,7 @@ class AppConfig:
     # LLM Settings
     model_name: str = GEMINI_MODEL_NAME
     temperature: float = GEMINI_TEMPERATURE
+    reasoning_effort: Optional[str] = None  # "low", "medium", "high", "none", or None to use default
 
     # Application Settings
     workout_schedule_hours: int = DEFAULT_WORKOUT_SCHEDULE_HOURS
@@ -113,6 +114,9 @@ class AppConfig:
         cors_origins_str = os.getenv("CORS_ORIGINS", "http://localhost:5173")
         cors_origins = [origin.strip() for origin in cors_origins_str.split(",")]
 
+        # Get reasoning effort if specified
+        reasoning_effort = os.getenv("REASONING_EFFORT")  # Can be "low", "medium", "high", "none", or None
+
         return cls(
             gemini_api_key=gemini_api_key,
             intervals_api_key=intervals_api_key,
@@ -125,6 +129,7 @@ class AppConfig:
             history_dir=history_dir,
             cors_origins=cors_origins,
             default_athlete_id=athlete_id,
+            reasoning_effort=reasoning_effort,
         )
 
     def create_directories(self):
