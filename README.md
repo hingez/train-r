@@ -4,66 +4,53 @@ An AI cycling coach that creates personalized workouts and uploads them to inter
 
 ## How it Works
 
-Train-R uses Google Gemini 2.5 Flash with function calling to provide conversational coaching. When you request a workout, the LLM:
+Train-R uses an LLM (Gemini 2.5 Flash) with function calling to provide conversational coaching. When you request a workout:
 
-1. Understands your request (workout type, duration, intensity)
+1. The LLM understands your request (workout type, duration, intensity)
 2. Calls the `create_one_off_workout` tool with your FTP and parameters
 3. Generates a structured ZWO workout file (Zwift format)
-4. Uploads it to your intervals.icu calendar via API (scheduled 1 hour ahead)
+4. Uploads it to your intervals.icu calendar (scheduled 1 hour ahead)
 5. Responds with confirmation and workout details
 
-The conversation maintains context, so you can refine workouts, ask follow-up questions, or request modifications. The backend is a FastAPI server with WebSocket support for real-time communication with the React frontend.
+The conversation maintains context, so you can refine workouts or ask follow-up questions. Built with FastAPI backend and React frontend.
 
 ## Setup
 
-1. **Clone and navigate to the project**
+1. **Install dependencies**
    ```bash
    git clone https://github.com/hingez/train-r.git
    cd train-r
+   uv sync
    ```
 
-2. **Create your `.env` file**
+2. **Create `.env` file**
    ```bash
    cp .env.example .env
    ```
 
 3. **Add your API keys to `.env`**
    ```env
-   GEMINI_API_KEY=your_key_here      # Get at: https://aistudio.google.com/apikey
-   INTERVALS_API_KEY=your_key_here   # Get at: https://intervals.icu → Settings → Developer Settings
-   ```
-
-4. **Install dependencies**
-   ```bash
-   uv sync
+   LLM_API_KEY=your_key_here           # Get at: https://aistudio.google.com/apikey
+   INTERVALS_API_KEY=your_key_here     # Get at: https://intervals.icu/settings#developer
    ```
 
 ## Usage
 
-**Web Interface** (recommended)
 ```bash
 uv run train-r
 ```
+
 Opens at http://localhost:5173 (backend at http://localhost:8000)
 
-**Terminal Interface**
-```bash
-uv run train-r-cli
-```
-
-## Example
+### Example
 
 ```
 You: I need a 90 minute sweet spot workout, my FTP is 340 watts
-Train-R: [Creates workout and uploads to intervals.icu, scheduled 1 hour ahead]
+Train-R: [Creates and uploads workout to intervals.icu]
 ```
 
 ## Requirements
 
 - Python 3.12+
 - [uv](https://docs.astral.sh/uv/) package manager
-- Node.js 18+ (for web interface)
-
----
-
-For more details, explore the code or ask questions using Claude Code.
+- Node.js 18+ (for frontend)
