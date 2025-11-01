@@ -1,17 +1,4 @@
-2025-10-23 20:37:25 - INFO - ============================================================
-2025-10-23 20:37:25 - INFO - Train-R Application Started
-2025-10-23 20:37:25 - INFO - ============================================================
-2025-10-23 20:37:25 - INFO - FastAPI application created and configured
-2025-10-23 20:37:25 - INFO - ============================================================
-2025-10-23 20:37:25 - INFO - Starting Train-R API Server (Refactored Architecture)
-2025-10-23 20:37:25 - INFO - ============================================================
-2025-10-23 20:37:25 - INFO - Configuration loaded successfully
-2025-10-23 20:37:25 - INFO - Configuration validated
-2025-10-23 20:37:25 - INFO - GeminiClient initialized
-2025-10-23 20:37:25 - INFO - LLM client initialized: gemini-2.5-flash
-2025-10-23 20:37:25 - INFO - CoachService initialized with 3 tools: analyse_recent_history, create_and_store_athlete_summary, create_one_off_workout
-2025-10-23 20:37:25 - INFO - Coach service initialized with tool support
-2025-10-23 20:37:25 - INFO - Workout service initialized
-2025-10-23 20:37:25 - INFO - ============================================================
-2025-10-23 20:37:25 - INFO - Train-R API Server ready
-2025-10-23 20:37:25 - INFO - ============================================================
+2025-11-01 15:15:55 - INFO - ============================================================
+2025-11-01 15:15:55 - INFO - Train-R Application Started
+2025-11-01 15:15:55 - INFO - ============================================================
+2025-11-01 15:15:55 - INFO - FastAPI application created and configured
