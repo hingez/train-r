@@ -13,15 +13,13 @@ from src.config import AppConfig
 from src.utils.logger import setup_logger
 from src.models.llm_client import LLMClient
 from src.services.coach_service import CoachService
-from src.services.workout_service import WorkoutService
 from src.api.routes import router
 
 # Initialize logging
 logger = setup_logger()
 
-# Global service instances
+# Global service instance
 _coach_service: Optional[CoachService] = None
-_workout_service: Optional[WorkoutService] = None
 
 
 def get_coach_service() -> CoachService:
@@ -38,20 +36,6 @@ def get_coach_service() -> CoachService:
     return _coach_service
 
 
-def get_workout_service() -> WorkoutService:
-    """Get the global workout service instance.
-
-    Returns:
-        WorkoutService instance
-
-    Raises:
-        RuntimeError: If service not initialized (app not started)
-    """
-    if _workout_service is None:
-        raise RuntimeError("Workout service not initialized. App may not have started.")
-    return _workout_service
-
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan manager.
@@ -61,7 +45,7 @@ async def lifespan(app: FastAPI):
     Args:
         app: FastAPI application instance
     """
-    global _coach_service, _workout_service
+    global _coach_service
 
     # Startup
     logger.info("=" * 60)
@@ -84,15 +68,11 @@ async def lifespan(app: FastAPI):
         logger.info("Configuration validated")
 
         # Initialize single shared LLM client
-        llm_client = LLMClient(api_key=config.gemini_api_key)
+        llm_client = LLMClient(api_key=config.llm_api_key)
         logger.info(f"LLM client initialized: {config.model_name}")
 
-        # Initialize workout service first (needed by coach service)
-        _workout_service = WorkoutService(llm_client, config)
-        logger.info("Workout service initialized")
-
-        # Initialize coach service with workout service
-        _coach_service = CoachService(llm_client, config, _workout_service)
+        # Initialize coach service (includes workout generation)
+        _coach_service = CoachService(llm_client, config)
         logger.info("Coach service initialized with tool support")
 
         logger.info("=" * 60)

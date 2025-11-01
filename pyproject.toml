@@ -14,9 +14,8 @@ dependencies = [
 ]
 
 [project.scripts]
-# Main commands
+# Main command
 train-r = "src.scripts.dev:main"
-train-r-cli = "src.scripts.coach:main"
 
 # Utility commands
 train-r-upload = "src.scripts.upload_workout:main"

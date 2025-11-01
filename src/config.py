@@ -19,8 +19,8 @@ load_dotenv()
 PROJECT_ROOT = Path(__file__).parent.parent
 
 # Model configuration constants
-GEMINI_MODEL_NAME = "gemini-2.5-flash"
-GEMINI_TEMPERATURE = 0
+LLM_MODEL_NAME = "gemini-2.5-flash"
+LLM_TEMPERATURE = 0
 DEFAULT_WORKOUT_SCHEDULE_HOURS = 1
 DEFAULT_ATHLETE_ID = "0"
 
@@ -34,7 +34,7 @@ class AppConfig:
     Principle - one source of truth for all config.
 
     Attributes:
-        gemini_api_key: API key for Google Gemini (from environment)
+        llm_api_key: API key for LLM provider (from environment)
         intervals_api_key: API key for intervals.icu (from environment)
         project_root: Root directory of the project
         prompts_dir: Directory containing prompt templates
@@ -49,7 +49,7 @@ class AppConfig:
         cors_origins: List of allowed CORS origins for API (default: ["http://localhost:5173"])
     """
     # API Keys
-    gemini_api_key: str
+    llm_api_key: str
     intervals_api_key: str
 
     # Paths
@@ -62,8 +62,8 @@ class AppConfig:
     history_dir: Path
 
     # LLM Settings
-    model_name: str = GEMINI_MODEL_NAME
-    temperature: float = GEMINI_TEMPERATURE
+    model_name: str = LLM_MODEL_NAME
+    temperature: float = LLM_TEMPERATURE
     reasoning_effort: Optional[str] = None  # "low", "medium", "high", "none", or None to use default
 
     # Application Settings
@@ -83,14 +83,15 @@ class AppConfig:
         Raises:
             ValueError: If required environment variables are missing
         """
-        # Get required API keys
-        gemini_api_key = os.getenv("GEMINI_API_KEY")
+        # Get required API keys (support both new and legacy env var names)
+        llm_api_key = os.getenv("LLM_API_KEY") or os.getenv("GEMINI_API_KEY")
         intervals_api_key = os.getenv("INTERVALS_API_KEY")
 
-        if not gemini_api_key:
+        if not llm_api_key:
             raise ValueError(
-                "GEMINI_API_KEY not found in environment. "
-                "Please set it in .env file or environment variables."
+                "LLM_API_KEY not found in environment. "
+                "Please set it in .env file or environment variables. "
+                "(Legacy GEMINI_API_KEY is also supported)"
             )
 
         if not intervals_api_key:
@@ -118,7 +119,7 @@ class AppConfig:
         reasoning_effort = os.getenv("REASONING_EFFORT")  # Can be "low", "medium", "high", "none", or None
 
         return cls(
-            gemini_api_key=gemini_api_key,
+            llm_api_key=llm_api_key,
             intervals_api_key=intervals_api_key,
             project_root=PROJECT_ROOT,
             prompts_dir=prompts_dir,

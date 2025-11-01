@@ -13,7 +13,7 @@ from src.integrations.intervals import IntervalsUploader
 
 # Import for type hints only to avoid circular dependency
 if TYPE_CHECKING:
-    from src.services.workout_service import WorkoutService
+    from src.services.coach_service import CoachService
 
 # Validation constants
 MIN_FTP = 50  # Minimum reasonable FTP in watts
@@ -25,14 +25,14 @@ MAX_DURATION = 14400  # Maximum duration: 4 hours
 def handle_tool_call(
     tool_call: Any,
     config: AppConfig,
-    workout_service: "WorkoutService"
+    coach_service: "CoachService"
 ) -> dict:
     """Handle a tool call from the model.
 
     Args:
         tool_call: Tool call object with name and args attributes
         config: Application configuration with API keys
-        workout_service: WorkoutService instance for workout generation
+        coach_service: CoachService instance for workout generation
 
     Returns:
         Result dict from tool execution
@@ -47,19 +47,36 @@ def handle_tool_call(
     logger.info(f"TOOL_CALL: {tool_name}")
     logger.info(f"TOOL_ARGS: {json.dumps(tool_args, indent=2)}")
 
-    # Route to appropriate handler
-    if tool_name == "create_one_off_workout":
-        result = _handle_create_workout(tool_args, config, workout_service)
-    elif tool_name == "get_history":
-        result = _handle_get_history(tool_args, config)
+    # Route to appropriate handler using dictionary dispatch
+    handler = _get_tool_handler(tool_name)
+    if handler:
+        result = handler(tool_args, config, coach_service)
     else:
-        # Other tools return dummy response for now
+        # Unknown tools return dummy response
+        logger.warning(f"No handler found for tool: {tool_name}")
         result = {"result": "tool run successfully"}
 
     logger.info(f"TOOL_RESULT: {json.dumps(result, indent=2)}")
     logger.info("-" * 60)
 
     return result
+
+
+def _get_tool_handler(tool_name: str):
+    """Get the handler function for a tool.
+
+    Args:
+        tool_name: Name of the tool
+
+    Returns:
+        Handler function or None if not found
+    """
+    # Tool handler registry - maps tool names to handler functions
+    handlers = {
+        "create_one_off_workout": _handle_create_workout,
+        "get_history": _handle_get_history,
+    }
+    return handlers.get(tool_name)
 
 
 def _validate_workout_params(
@@ -113,14 +130,14 @@ def _validate_workout_params(
 def _handle_create_workout(
     args: dict,
     config: AppConfig,
-    workout_service: "WorkoutService"
+    coach_service: "CoachService"
 ) -> dict:
     """Handle create_one_off_workout tool call.
 
     Args:
         args: Tool arguments (client_ftp, workout_duration, workout_type)
         config: Application configuration with API keys
-        workout_service: WorkoutService instance for workout generation
+        coach_service: CoachService instance for workout generation
 
     Returns:
         Result dict with workout details
@@ -145,8 +162,8 @@ def _handle_create_workout(
 
         logger.info(f"Generating workout: FTP={client_ftp}W, Duration={workout_duration}s, Type={workout_type}")
 
-        # Generate workout using shared service
-        zwo_content = workout_service.generate_workout(
+        # Generate workout using coach service
+        zwo_content = coach_service.generate_workout(
             client_ftp=client_ftp,
             workout_duration=workout_duration,
             workout_type=workout_type
@@ -155,7 +172,7 @@ def _handle_create_workout(
         logger.info("Workout generated successfully")
 
         # Save workout to file
-        filepath = workout_service.save_workout(zwo_content, workout_type)
+        filepath = coach_service.save_workout(zwo_content, workout_type)
         logger.info(f"Workout saved to: {filepath}")
 
         # Calculate schedule time using configured hours

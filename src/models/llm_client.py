@@ -1,7 +1,7 @@
-"""OpenAI-compatible LLM client for Train-R using Gemini.
+"""OpenAI-compatible LLM client for Train-R.
 
-This module provides an OpenAI library-based client that connects to Gemini's
-OpenAI-compatible endpoint, following the KISS principle.
+This module provides an OpenAI library-based client that can connect to
+OpenAI-compatible endpoints (currently configured for Gemini), following the KISS principle.
 """
 import logging
 from typing import Optional, Any
@@ -14,22 +14,22 @@ logger = logging.getLogger('train-r')
 
 
 class LLMClient:
-    """OpenAI-compatible LLM client using Gemini endpoint.
+    """OpenAI-compatible LLM client.
 
-    Simple, focused client for interacting with Gemini via OpenAI library.
+    Simple, focused client for interacting with LLM providers via OpenAI library.
     Handles retries and provides a consistent interface.
 
     Attributes:
-        client: Initialized OpenAI client pointed at Gemini endpoint
+        client: Initialized OpenAI client
         api_key: API key for authentication
-        base_url: Gemini OpenAI-compatible endpoint
+        base_url: LLM provider's OpenAI-compatible endpoint
     """
 
     def __init__(self, api_key: str):
         """Initialize LLM client.
 
         Args:
-            api_key: Gemini API key
+            api_key: LLM provider API key
         """
         self.api_key = api_key
         self.base_url = "https://generativelanguage.googleapis.com/v1beta/openai/"
@@ -37,7 +37,7 @@ class LLMClient:
             api_key=api_key,
             base_url=self.base_url
         )
-        logger.info("LLMClient initialized with Gemini endpoint")
+        logger.info(f"LLMClient initialized with endpoint: {self.base_url}")
 
     def generate(
         self,
@@ -51,11 +51,11 @@ class LLMClient:
         reasoning_effort: Optional[str] = None,
         **kwargs
     ) -> ChatCompletion:
-        """Generate completion using OpenAI library with Gemini.
+        """Generate completion using OpenAI library.
 
         Args:
             messages: List of message dictionaries with role and content
-            model: Model identifier (e.g., "gemini-2.5-flash")
+            model: Model identifier
             temperature: Sampling temperature (0.0 = deterministic, 1.0 = creative)
             tools: List of available tools/functions for function calling
             tool_choice: How to use tools ("auto", "required", "none")
