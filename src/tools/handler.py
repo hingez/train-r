@@ -9,7 +9,7 @@ from pathlib import Path
 from src.config import AppConfig
 
 # Updated imports to use new src/ structure
-from src.integrations.intervals import IntervalsUploader
+from src.integrations.intervals import IntervalsClient
 
 # Import for type hints only to avoid circular dependency
 if TYPE_CHECKING:
@@ -181,15 +181,15 @@ def _handle_create_workout(
 
         logger.info(f"Scheduling workout for: {schedule_time_str}")
 
-        # Initialize uploader
-        uploader = IntervalsUploader(api_key=config.intervals_api_key)
+        # Initialize intervals.icu client
+        intervals_client = IntervalsClient(api_key=config.intervals_api_key)
 
         # Generate external ID
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         external_id = f"train-r-{timestamp}"
 
         # Upload workout
-        response = uploader.upload_workout(
+        response = intervals_client.upload_workout(
             file_path=filepath,
             start_date=schedule_time_str,
             external_id=external_id
@@ -238,11 +238,11 @@ def _handle_get_history(
 
         logger.info(f"Fetching workout history (oldest={oldest_date}, newest={newest_date})")
 
-        # Initialize uploader (it handles both uploads and fetches)
-        uploader = IntervalsUploader(api_key=config.intervals_api_key)
+        # Initialize intervals.icu client
+        intervals_client = IntervalsClient(api_key=config.intervals_api_key)
 
         # Fetch workout history
-        history = uploader.get_workout_history(
+        history = intervals_client.get_workout_history(
             oldest_date=oldest_date,
             newest_date=newest_date
         )

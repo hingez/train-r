@@ -2,7 +2,7 @@
 import os
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
-from train_r.integrations.intervals import IntervalsUploader
+from src.integrations.intervals import IntervalsClient
 
 load_dotenv()
 
@@ -10,11 +10,11 @@ load_dotenv()
 api_key = os.getenv("INTERVALS_API_KEY")
 
 # Initialize uploader - use athlete_id 0 (means "use athlete associated with API key")
-uploader = IntervalsUploader(api_key, athlete_id=None)
+intervals_client = IntervalsClient(api_key, athlete_id=None)
 
 # Test connection first
 print("Testing connection...")
-if not uploader.test_connection():
+if not intervals_client.test_connection():
     print("❌ Connection failed")
     exit(1)
 print("✓ Connection successful")
@@ -28,7 +28,7 @@ print(f"\nUploading {workout_file}...")
 print(f"Target date: {target_date_str}")
 
 try:
-    response = uploader.upload_workout(
+    response = intervals_client.upload_workout(
         file_path=workout_file,
         start_date=target_date_str,
         external_id="test-upload-001"

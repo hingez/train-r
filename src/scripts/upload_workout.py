@@ -5,7 +5,7 @@ from pathlib import Path
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
 
-from src.integrations.intervals import IntervalsUploader
+from src.integrations.intervals import IntervalsClient
 
 # Get project root (parent of src directory)
 PROJECT_ROOT = Path(__file__).parent.parent.parent
@@ -137,14 +137,14 @@ def main():
 
     # Initialize uploader
     try:
-        uploader = IntervalsUploader(api_key, athlete_id)
+        intervals_client = IntervalsClient(api_key, athlete_id)
     except ValueError as e:
         print(f"Error: {e}")
         sys.exit(1)
 
     # Test connection
     print("Testing connection to intervals.icu...")
-    if not uploader.test_connection():
+    if not intervals_client.test_connection():
         print("Error: Could not connect to intervals.icu")
         print("Please check your API key and internet connection")
         sys.exit(1)
@@ -180,7 +180,7 @@ def main():
     # Upload workout
     print("\nUploading workout...")
     try:
-        response = uploader.upload_workout(
+        response = intervals_client.upload_workout(
             file_path=str(selected_workout),
             start_date=target_date,
             external_id=f"train-r-{selected_workout.stem}"

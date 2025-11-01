@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 from src.config import AppConfig
-from src.integrations.intervals import IntervalsUploader
+from src.integrations.intervals import IntervalsClient
 
 # Configure logging
 logging.basicConfig(
@@ -21,16 +21,16 @@ def test_get_history():
     config = AppConfig.from_env()
     logger.info("Configuration loaded")
 
-    # Initialize uploader
-    uploader = IntervalsUploader(
+    # Initialize client
+    intervals_client = IntervalsClient(
         api_key=config.intervals_api_key,
         athlete_id=config.default_athlete_id
     )
-    logger.info(f"IntervalsUploader initialized for athlete: {uploader.athlete_id}")
+    logger.info(f"IntervalsClient initialized for athlete: {intervals_client.athlete_id}")
 
     # Test 1: Connection test
     logger.info("\n=== Test 1: Connection Test ===")
-    if uploader.test_connection():
+    if intervals_client.test_connection():
         logger.info("✓ Connection successful")
     else:
         logger.error("✗ Connection failed")
@@ -42,7 +42,7 @@ def test_get_history():
     newest_date = datetime.now().strftime("%Y-%m-%d")
 
     try:
-        history = uploader.get_workout_history(
+        history = intervals_client.get_workout_history(
             oldest_date=oldest_date,
             newest_date=newest_date
         )
@@ -78,7 +78,7 @@ def test_get_history():
     # Test 3: Fetch last 12 months automatically (default behavior)
     logger.info("\n=== Test 3: Fetch Last 12 Months (Automatic) ===")
     try:
-        history_12m = uploader.get_workout_history()
+        history_12m = intervals_client.get_workout_history()
         logger.info(f"✓ Fetched {len(history_12m)} workouts from last 12 months automatically")
 
     except Exception as e:
@@ -88,7 +88,7 @@ def test_get_history():
     # Test 4: Fetch power curves
     logger.info("\n=== Test 4: Fetch Power Curves ===")
     try:
-        power_curves = uploader.get_power_curves()
+        power_curves = intervals_client.get_power_curves()
         logger.info(f"✓ Fetched power curves for {len(power_curves)} time periods")
 
         # Display power curves for each time period

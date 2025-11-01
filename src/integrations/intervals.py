@@ -1,4 +1,4 @@
-"""Module for uploading workouts to intervals.icu."""
+"""Module for interacting with intervals.icu API."""
 import base64
 import os
 import logging
@@ -11,8 +11,8 @@ from src.config import DEFAULT_ATHLETE_ID
 from src.utils.retry import retry_with_backoff
 
 
-class IntervalsUploader:
-    """Handle workout uploads to intervals.icu via API."""
+class IntervalsClient:
+    """Client for intervals.icu API - handles uploads and data retrieval."""
 
     BASE_URL = "https://intervals.icu/api/v1"
 
@@ -374,7 +374,7 @@ class IntervalsUploader:
             except requests.HTTPError as e:
                 logger.error(f"Failed to fetch {months}-month power curve: {str(e)}")
                 # Continue with other time periods even if one fails
-                period_key = f"{months}_month" if months == 1 else f"{months}_months"
+                period_key = f"{months}_month_max_power" if months == 1 else f"{months}_months_max_power"
                 power_curves[period_key] = {"error": str(e)}
 
         logger.info(f"Retrieved power curves for {len(power_curves)} time periods")
