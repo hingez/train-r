@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from dotenv import load_dotenv
 
 from src.integrations.intervals import IntervalsClient
+from src.config import AppConfig, UPLOAD_DEFAULT_HOUR, UPLOAD_DEFAULT_MINUTE
 
 # Get project root (parent of src directory)
 PROJECT_ROOT = Path(__file__).parent.parent.parent
@@ -103,9 +104,9 @@ def get_target_date() -> str:
             print("Please enter 1, 2, or 3")
 
     # Get time
-    time_str = input("Enter time (HH:MM, default 09:00): ").strip()
+    time_str = input(f"Enter time (HH:MM, default {UPLOAD_DEFAULT_HOUR:02d}:{UPLOAD_DEFAULT_MINUTE:02d}): ").strip()
     if not time_str:
-        time_str = "09:00"
+        time_str = f"{UPLOAD_DEFAULT_HOUR:02d}:{UPLOAD_DEFAULT_MINUTE:02d}"
 
     try:
         time_parts = time_str.split(":")
@@ -114,8 +115,8 @@ def get_target_date() -> str:
 
         date = date.replace(hour=hour, minute=minute, second=0)
     except (ValueError, IndexError):
-        print("Invalid time format, using 09:00")
-        date = date.replace(hour=9, minute=0, second=0)
+        print(f"Invalid time format, using {UPLOAD_DEFAULT_HOUR:02d}:{UPLOAD_DEFAULT_MINUTE:02d}")
+        date = date.replace(hour=UPLOAD_DEFAULT_HOUR, minute=UPLOAD_DEFAULT_MINUTE, second=0)
 
     return date.strftime("%Y-%m-%dT%H:%M:%S")
 
@@ -126,18 +127,16 @@ def main():
 
     print("=== intervals.icu Workout Uploader ===\n")
 
-    # Check API key and athlete ID
-    api_key = os.getenv("INTERVALS_API_KEY")
-    athlete_id = os.getenv("INTERVALS_ATHELETE_ID")
-
-    if not api_key:
-        print("Error: INTERVALS_API_KEY not found in .env file")
-        print("Please add your intervals.icu API key to .env")
+    # Load config
+    try:
+        config = AppConfig.from_env()
+    except ValueError as e:
+        print(f"Configuration error: {e}")
         sys.exit(1)
 
     # Initialize uploader
     try:
-        intervals_client = IntervalsClient(api_key, athlete_id)
+        intervals_client = IntervalsClient(api_key=config.intervals_api_key, config=config)
     except ValueError as e:
         print(f"Error: {e}")
         sys.exit(1)

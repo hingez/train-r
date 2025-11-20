@@ -10,6 +10,8 @@ import time
 import os
 from pathlib import Path
 
+from src.config import BACKEND_HOST, BACKEND_PORT, FRONTEND_PORT
+
 # Store processes so we can clean them up
 processes = []
 
@@ -69,11 +71,11 @@ def main():
     print("🚀 Starting Train-R Development Environment")
     print("=" * 60)
     print()
-    print("Backend API:  http://localhost:8000")
-    print("API Docs:     http://localhost:8000/docs")
-    print("WebSocket:    ws://localhost:8000/ws")
+    print(f"Backend API:  http://localhost:{BACKEND_PORT}")
+    print(f"API Docs:     http://localhost:{BACKEND_PORT}/docs")
+    print(f"WebSocket:    ws://localhost:{BACKEND_PORT}/ws")
     print()
-    print("Frontend:     http://localhost:5173")
+    print(f"Frontend:     http://localhost:{FRONTEND_PORT}")
     print()
     print("Press CTRL+C to stop all servers")
     print("=" * 60)
@@ -82,7 +84,7 @@ def main():
     # Start backend server
     print("Starting backend server...")
     backend_proc = subprocess.Popen(
-        [sys.executable, "-m", "uvicorn", "src.main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"],
+        [sys.executable, "-m", "uvicorn", "src.main:app", "--reload", "--host", BACKEND_HOST, "--port", str(BACKEND_PORT)],
         cwd=str(project_root),
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,

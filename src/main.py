@@ -11,12 +11,15 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from src.config import AppConfig
 from src.utils.logger import setup_logger
-from src.models.llm_client import LLMClient
+from src.integrations.llm_client import LLMClient
 from src.services.coach_service import CoachService
 from src.api.routes import router
 
 # Initialize logging
 logger = setup_logger()
+
+# Load configuration early for CORS setup
+_config = AppConfig.from_env()
 
 # Global service instance
 _coach_service: Optional[CoachService] = None
@@ -53,26 +56,19 @@ async def lifespan(app: FastAPI):
     logger.info("=" * 60)
 
     try:
-        # Load configuration from environment
-        config = AppConfig.from_env()
-        logger.info("Configuration loaded successfully")
-
-        # Configure CORS with settings from config
-        configure_cors(config)
-
         # Create required directories
-        config.create_directories()
+        _config.create_directories()
 
         # Validate configuration
-        config.validate()
+        _config.validate()
         logger.info("Configuration validated")
 
         # Initialize single shared LLM client
-        llm_client = LLMClient(api_key=config.llm_api_key)
-        logger.info(f"LLM client initialized: {config.model_name}")
+        llm_client = LLMClient(api_key=_config.llm_api_key, base_url=_config.llm_base_url)
+        logger.info(f"LLM client initialized: {_config.model_name}")
 
         # Initialize coach service (includes workout generation)
-        _coach_service = CoachService(llm_client, config)
+        _coach_service = CoachService(llm_client, _config)
         logger.info("Coach service initialized with tool support")
 
         logger.info("=" * 60)
@@ -96,9 +92,19 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Train-R API",
     description="LLM-powered cycling coach API with WebSocket support (Refactored)",
-    version="0.2.0",
+    version=_config.app_version,
     lifespan=lifespan
 )
+
+# Configure CORS middleware (must be done before app starts)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=_config.cors_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+logger.info(f"CORS configured for origins: {', '.join(_config.cors_origins)}")
 
 # Include API routes
 app.include_router(router)
@@ -106,22 +112,6 @@ app.include_router(router)
 logger.info("FastAPI application created and configured")
 
 
-def configure_cors(config: AppConfig):
-    """Configure CORS middleware using app configuration.
-
-    Args:
-        config: Application configuration with CORS settings
-    """
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=config.cors_origins,
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-    logger.info(f"CORS configured for origins: {', '.join(config.cors_origins)}")
-
-
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host=_config.backend_host, port=_config.backend_port)

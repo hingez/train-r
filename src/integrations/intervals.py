@@ -7,26 +7,26 @@ from typing import Optional
 import requests
 from datetime import datetime, timedelta
 
-from src.config import DEFAULT_ATHLETE_ID
+from src.config import AppConfig
 from src.utils.retry import retry_with_backoff
 
 
 class IntervalsClient:
     """Client for intervals.icu API - handles uploads and data retrieval."""
 
-    BASE_URL = "https://intervals.icu/api/v1"
-
-    def __init__(self, api_key: str, athlete_id: Optional[str] = None):
+    def __init__(self, api_key: str, config: AppConfig, athlete_id: Optional[str] = None):
         """Initialize uploader with API key.
 
         Args:
             api_key: intervals.icu API key
-            athlete_id: intervals.icu athlete ID (optional, will use default if not provided)
+            config: Application configuration
+            athlete_id: intervals.icu athlete ID (optional, will use default from config if not provided)
         """
         if not api_key:
             raise ValueError("API key is required")
         self.api_key = api_key
-        self.athlete_id = athlete_id if athlete_id else DEFAULT_ATHLETE_ID
+        self.config = config
+        self.athlete_id = athlete_id if athlete_id else config.default_athlete_id
         self.auth = ("API_KEY", api_key)
 
     def read_workout_file(self, file_path: str) -> str:
@@ -87,7 +87,7 @@ class IntervalsClient:
             event["external_id"] = external_id
 
         payload = [event]
-        url = f"{self.BASE_URL}/athlete/{self.athlete_id}/events/bulk"
+        url = f"{self.config.intervals_base_url}/athlete/{self.athlete_id}/events/bulk"
 
         # Define custom retry logic for HTTP errors
         def should_retry(exception: Exception) -> bool:
@@ -110,7 +110,7 @@ class IntervalsClient:
                 params={"upsert": True},
                 json=payload,
                 auth=self.auth,
-                timeout=30
+                timeout=self.config.intervals_api_timeout
             )
             response.raise_for_status()
             result = response.json()
@@ -201,16 +201,16 @@ class IntervalsClient:
         """
         logger = logging.getLogger('train-r')
 
-        # Default to last 12 months if not specified
+        # Default to configured lookback period if not specified
         if not oldest_date:
-            twelve_months_ago = datetime.now() - timedelta(days=365)
-            oldest_date = twelve_months_ago.strftime("%Y-%m-%d")
+            lookback_ago = datetime.now() - timedelta(days=self.config.history_default_lookback_days)
+            oldest_date = lookback_ago.strftime("%Y-%m-%d")
 
         if not newest_date:
             newest_date = datetime.now().strftime("%Y-%m-%d")
 
         # Use activities endpoint for completed rides only
-        url = f"{self.BASE_URL}/athlete/{self.athlete_id}/activities"
+        url = f"{self.config.intervals_base_url}/athlete/{self.athlete_id}/activities"
         params = {
             'oldest': oldest_date,
             'newest': newest_date
@@ -222,7 +222,7 @@ class IntervalsClient:
                 url,
                 params=params,
                 auth=self.auth,
-                timeout=30
+                timeout=self.config.intervals_api_timeout
             )
             response.raise_for_status()
             return response.json()
@@ -289,13 +289,12 @@ class IntervalsClient:
         """
         logger = logging.getLogger('train-r')
 
-        # Default time periods: 1, 2, 3, 6, 12 months
+        # Use configured defaults if not provided
         if time_periods_months is None:
-            time_periods_months = [1, 2, 3, 6, 12]
+            time_periods_months = self.config.power_curve_time_periods_months
 
-        # Default durations: 15s, 30s, 1m, 2m, 3m, 5m, 10m, 15m, 20m, 30m, 45m, 60m
         if durations_seconds is None:
-            durations_seconds = [15, 30, 60, 120, 180, 300, 600, 900, 1200, 1800, 2700, 3600]
+            durations_seconds = self.config.power_curve_durations_seconds
 
         power_curves = {}
 
@@ -306,7 +305,7 @@ class IntervalsClient:
 
             # Use the activity-power-curves endpoint with empty ext parameter
             # API spec: /api/v1/athlete/{id}/activity-power-curves{ext}
-            url = f"{self.BASE_URL}/athlete/{self.athlete_id}/activity-power-curves"
+            url = f"{self.config.intervals_base_url}/athlete/{self.athlete_id}/activity-power-curves"
             params = {
                 'oldest': start_date.strftime("%Y-%m-%d"),
                 'newest': end_date.strftime("%Y-%m-%d"),
@@ -320,7 +319,7 @@ class IntervalsClient:
                     url,
                     params=params,
                     auth=self.auth,
-                    timeout=30
+                    timeout=self.config.intervals_api_timeout
                 )
                 response.raise_for_status()
                 return response.json()

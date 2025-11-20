@@ -3,12 +3,14 @@ import time
 import logging
 from typing import TypeVar, Callable, Type, Optional, Tuple
 
+from src.config import API_MAX_RETRIES, API_INITIAL_RETRY_DELAY, API_RETRY_BACKOFF_MULTIPLIER
+
 logger = logging.getLogger('train-r')
 
-# Retry configuration constants
-MAX_RETRIES = 3
-INITIAL_RETRY_DELAY = 1  # seconds
-RETRY_BACKOFF_MULTIPLIER = 2
+# Re-export constants for backwards compatibility
+MAX_RETRIES = API_MAX_RETRIES
+INITIAL_RETRY_DELAY = API_INITIAL_RETRY_DELAY
+RETRY_BACKOFF_MULTIPLIER = API_RETRY_BACKOFF_MULTIPLIER
 
 T = TypeVar('T')
 

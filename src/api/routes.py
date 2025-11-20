@@ -22,10 +22,11 @@ async def health_check():
     Returns:
         Health status dictionary
     """
+    from src.config import APP_VERSION
     return {
         "status": "healthy",
         "service": "train-r-api",
-        "version": "0.2.0"  # Updated version for refactored structure
+        "version": APP_VERSION
     }
 
 

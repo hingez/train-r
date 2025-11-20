@@ -2,9 +2,7 @@
 import logging
 from pathlib import Path
 
-
-LOG_DIR = "logs"
-LOG_FILE = "train-r.log"
+from src.config import LOG_FILENAME, LOG_LEVEL, PROJECT_ROOT
 
 
 def setup_logger():
@@ -14,9 +12,10 @@ def setup_logger():
         Logger instance that can be used throughout the application
     """
     # Create logs directory if it doesn't exist
-    Path(LOG_DIR).mkdir(exist_ok=True)
+    log_dir = PROJECT_ROOT / "logs"
+    log_dir.mkdir(exist_ok=True)
 
-    log_path = Path(LOG_DIR) / LOG_FILE
+    log_path = log_dir / LOG_FILENAME
 
     # Clear the log file
     with open(log_path, 'w') as f:
@@ -24,14 +23,17 @@ def setup_logger():
 
     # Get or create logger
     logger = logging.getLogger('train-r')
-    logger.setLevel(logging.INFO)
+
+    # Convert string log level to logging constant
+    numeric_level = getattr(logging, LOG_LEVEL.upper(), logging.INFO)
+    logger.setLevel(numeric_level)
 
     # Remove existing handlers to avoid duplicates
     logger.handlers.clear()
 
     # File handler
     file_handler = logging.FileHandler(log_path)
-    file_handler.setLevel(logging.INFO)
+    file_handler.setLevel(numeric_level)
 
     # Formatter with timestamp
     formatter = logging.Formatter(
