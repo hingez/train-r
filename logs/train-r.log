@@ -1,4 +1,47 @@
-2025-11-01 15:15:55 - INFO - ============================================================
-2025-11-01 15:15:55 - INFO - Train-R Application Started
-2025-11-01 15:15:55 - INFO - ============================================================
-2025-11-01 15:15:55 - INFO - FastAPI application created and configured
+2025-11-20 18:58:08 - INFO - ============================================================
+2025-11-20 18:58:08 - INFO - Train-R Application Started
+2025-11-20 18:58:08 - INFO - ============================================================
+2025-11-20 18:58:08 - INFO - CORS configured for origins: http://localhost:5173
+2025-11-20 18:58:08 - INFO - FastAPI application created and configured
+2025-11-20 18:58:08 - INFO - ============================================================
+2025-11-20 18:58:08 - INFO - Starting Train-R API Server (Refactored Architecture)
+2025-11-20 18:58:08 - INFO - ============================================================
+2025-11-20 18:58:08 - INFO - Configuration validated
+2025-11-20 18:58:08 - INFO - LLMClient initialized with endpoint: https://generativelanguage.googleapis.com/v1beta/openai/
+2025-11-20 18:58:08 - INFO - LLM client initialized: gemini-2.5-flash
+2025-11-20 18:58:08 - INFO - CoachService initialized with 2 tools: create_one_off_workout, get_user_workout_history
+2025-11-20 18:58:08 - INFO - Coach service initialized with tool support
+2025-11-20 18:58:08 - INFO - ============================================================
+2025-11-20 18:58:08 - INFO - Train-R API Server ready
+2025-11-20 18:58:08 - INFO - ============================================================
+2025-11-20 18:58:08 - INFO - Client e73ad092-a636-4d79-bb03-c3fb27859c81 connected. Total connections: 1
+2025-11-20 18:58:08 - INFO - Client 570f0654-932f-4a99-9e85-8aa46795199f connected. Total connections: 2
+2025-11-20 18:58:11 - INFO - Client e73ad092-a636-4d79-bb03-c3fb27859c81 disconnected. Total connections: 1
+2025-11-20 18:58:11 - INFO - Client e73ad092-a636-4d79-bb03-c3fb27859c81 disconnected
+2025-11-20 18:58:11 - INFO - Client 570f0654-932f-4a99-9e85-8aa46795199f disconnected. Total connections: 0
+2025-11-20 18:58:11 - INFO - Client 570f0654-932f-4a99-9e85-8aa46795199f disconnected
+2025-11-20 18:58:11 - INFO - Client bf040187-3910-4a7c-944a-8379d9ea4380 connected. Total connections: 1
+2025-11-20 18:58:11 - ERROR - Error sending message to client bf040187-3910-4a7c-944a-8379d9ea4380: 
+2025-11-20 18:58:11 - INFO - Client bf040187-3910-4a7c-944a-8379d9ea4380 disconnected. Total connections: 0
+2025-11-20 18:58:11 - ERROR - WebSocket error: WebSocket is not connected. Need to call "accept" first.
+Traceback (most recent call last):
+  File "/Users/zeph/Projects/train-r/src/api/routes.py", line 65, in websocket_endpoint
+    data = await websocket.receive_json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zeph/Projects/train-r/.venv/lib/python3.12/site-packages/starlette/websockets.py", line 134, in receive_json
+    raise RuntimeError('WebSocket is not connected. Need to call "accept" first.')
+RuntimeError: WebSocket is not connected. Need to call "accept" first.
+2025-11-20 18:58:11 - INFO - Client 07791cbe-ce57-4936-a6fd-d80fadba0eba connected. Total connections: 1
+2025-11-20 18:58:14 - INFO - Client 4c2bdb2c-13cf-48e6-bef4-7ba1d088b528 connected. Total connections: 2
+2025-11-20 18:58:17 - INFO - Received from 4c2bdb2c-13cf-48e6-bef4-7ba1d088b528: Hello
+2025-11-20 18:58:17 - INFO - USER: Hello
+2025-11-20 18:58:19 - INFO - ASSISTANT: Hello! I'm Train-R, your professional cycling coach. I can help you with reviewing your training history, creating one-off training sessions, or developing longer-term training plans to achieve your goals.
+
+How can I help you today?
+2025-11-20 18:58:28 - INFO - Client 07791cbe-ce57-4936-a6fd-d80fadba0eba disconnected. Total connections: 1
+2025-11-20 18:58:28 - INFO - Client 07791cbe-ce57-4936-a6fd-d80fadba0eba disconnected
+2025-11-20 18:58:28 - INFO - Client 4c2bdb2c-13cf-48e6-bef4-7ba1d088b528 disconnected. Total connections: 0
+2025-11-20 18:58:28 - INFO - Client 4c2bdb2c-13cf-48e6-bef4-7ba1d088b528 disconnected
+2025-11-20 18:58:28 - INFO - ============================================================
+2025-11-20 18:58:28 - INFO - Shutting down Train-R API Server
+2025-11-20 18:58:28 - INFO - ============================================================

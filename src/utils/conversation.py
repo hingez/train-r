@@ -1,35 +1,36 @@
-"""Conversation history management for multi-turn interactions."""
-from typing import Any
-from openai.types.chat import ChatCompletion
+"""Conversation history management for LLM interactions."""
 import json
+from typing import Optional
+from openai.types.chat import ChatCompletion
 
 
 class ConversationManager:
-    """Manage conversation history for OpenAI-compatible API calls."""
+    """Manages conversation history for LLM interactions.
 
-    def __init__(self, system_instruction: str = None):
-        """Initialize conversation history.
+    Maintains conversation history in OpenAI chat format with support for
+    system messages, user messages, assistant messages, and tool calls.
+
+    Attributes:
+        history: List of conversation messages
+    """
+
+    def __init__(self, system_instruction: Optional[str] = None):
+        """Initialize conversation manager.
 
         Args:
-            system_instruction: Optional system instruction to prepend
+            system_instruction: Optional system prompt to start conversation
         """
         self.history = []
         if system_instruction:
-            self.history.append({
-                "role": "system",
-                "content": system_instruction
-            })
+            self.history.append({"role": "system", "content": system_instruction})
 
-    def add_user_message(self, text: str):
-        """Add a user message to the conversation history.
+    def add_user_message(self, content: str):
+        """Add a user message to history.
 
         Args:
-            text: User's message text
+            content: User message content
         """
-        self.history.append({
-            "role": "user",
-            "content": text
-        })
+        self.history.append({"role": "user", "content": content})
 
     def add_model_response(self, response: ChatCompletion):
         """Add a model response to the conversation history.
@@ -43,9 +44,7 @@ class ConversationManager:
         message = response.choices[0].message
 
         # Build the message to add to history
-        history_message = {
-            "role": "assistant"
-        }
+        history_message = {"role": "assistant"}
 
         # Add content if present
         if message.content:
@@ -82,15 +81,15 @@ class ConversationManager:
             "content": json.dumps(result)
         })
 
-    def get_history(self) -> list:
-        """Get the conversation history.
+    def get_user_workout_history(self) -> list[dict]:
+        """Get conversation history.
 
         Returns:
-            List of conversation turns formatted for OpenAI API
+            List of conversation messages
         """
         return self.history
 
     def clear(self):
-        """Clear the conversation history (keeping system message if present)."""
+        """Clear conversation history (keeping system messages)."""
         system_messages = [msg for msg in self.history if msg.get("role") == "system"]
         self.history = system_messages

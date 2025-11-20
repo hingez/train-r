@@ -1,5 +1,5 @@
 {
-    "name": "get_history",
+    "name": "get_user_workout_history",
     "description": "Retrieves all historic workouts from intervals.icu for the athlete. This includes completed activities with performance data such as power, heart rate, duration, and training stress. Use this to review past training before creating new workouts or plans.",
     "parameters": {
         "type": "object",

@@ -1,0 +1,60 @@
+============================================================
+🚀 Starting Train-R Development Environment
+============================================================
+
+Backend API:  http://localhost:8000
+API Docs:     http://localhost:8000/docs
+WebSocket:    ws://localhost:8000/ws
+
+Frontend:     http://localhost:5173
+
+Press CTRL+C to stop all servers
+============================================================
+
+Starting backend server...
+Starting frontend server...
+
+============================================================
+✅ Both servers are starting up...
+============================================================
+
+INFO:     Will watch for changes in these directories: ['/Users/zeph/Projects/train-r']
+
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+> frontend@0.0.0 dev
+INFO:     Started reloader process [20453] using StatReload
+> vite
+INFO:     Started server process [20469]
+
+INFO:     Waiting for application startup.
+Port 5173 is in use, trying another one...
+ERROR:    Traceback (most recent call last):
+
+File "/Users/zeph/Projects/train-r/.venv/lib/python3.12/site-packages/starlette/routing.py", line 694, in lifespan
+VITE v7.1.10  ready in 76 ms
+async with self.lifespan_context(app) as maybe_state:
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+➜  Local:   http://localhost:5174/
+File "/Users/zeph/.local/share/uv/python/cpython-3.12.11-macos-aarch64-none/lib/python3.12/contextlib.py", line 210, in __aenter__
+➜  Network: use --host to expose
+return await anext(self.gen)
+
+
+============================================================
+Shutting down Train-R development environment...
+============================================================
+
+
+==========================INFO:     Stopping reloader process [20907]
+down Train-R development environment...
+============================================================
+All processes terminated. Goodbye!
+
+⚠️  A process has stopped unexpectedly (exit code: -15)
+
+
+============================================================
+Shutting down Train-R development environment...
+============================================================
+All processes terminated. Goodbye!

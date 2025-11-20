@@ -25,7 +25,7 @@ Use the provided tools to complete your tasks. You may always communicate with t
 create_one_off_workout:
 Create a single workout file for your client. This can either be for an indoor or outdoor workout. For this tool you must provide: client FTP, the required duration, and the type of workout.
 
-get_history:
+get_user_workout_history:
 Retrieves all historic workouts from intervals.icu for the athlete. This includes completed activities with performance data such as power, heart rate, duration, and training stress. Use this to review past training before creating new workouts or plans. You can optionally specify a date range.
 
 analyse_recent_history:

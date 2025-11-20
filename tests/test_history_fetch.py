@@ -14,7 +14,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger('test-history')
 
-def test_get_history():
+def test_get_user_workout_history():
     """Test fetching workout history from intervals.icu."""
 
     # Load config
@@ -131,4 +131,4 @@ def test_get_history():
     logger.info("\n=== All Tests Completed ===")
 
 if __name__ == "__main__":
-    test_get_history()
+    test_get_user_workout_history()
