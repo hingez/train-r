@@ -118,6 +118,38 @@ class ConnectionManager:
         message = ConfirmationRequest(confirmation_id=confirmation_id, question=question, context=context)
         await self.send_message(message, client_id)
 
+    async def close_all(self):
+        """Close all active WebSocket connections gracefully.
+
+        Called during application shutdown to ensure clean disconnect.
+        """
+        import asyncio
+
+        logger.info(f"Closing {len(self.active_connections)} active WebSocket connections...")
+
+        # Create list of close tasks
+        close_tasks = []
+        for client_id, websocket in list(self.active_connections.items()):
+            try:
+                # Send closing message
+                close_tasks.append(websocket.close(code=1001, reason="Server shutting down"))
+            except Exception as e:
+                logger.error(f"Error closing connection {client_id}: {e}")
+
+        # Wait for all closes with timeout
+        if close_tasks:
+            try:
+                await asyncio.wait_for(
+                    asyncio.gather(*close_tasks, return_exceptions=True),
+                    timeout=3.0
+                )
+            except asyncio.TimeoutError:
+                logger.warning("Some WebSocket connections did not close within timeout")
+
+        # Clear the dictionary
+        self.active_connections.clear()
+        logger.info("All WebSocket connections closed")
+
 
 # Global connection manager instance
 manager = ConnectionManager()

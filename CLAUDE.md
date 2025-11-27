@@ -16,7 +16,7 @@ Commit often—it's better to have many small commits than one giant one. Don't 
 - Use the config file to hold necessary constants and variables.
 - Only write additional .md files when you are asked to.
 - Use a single LLM client (client address) when calling Gemini. If you need to add functionality, do it there so it can be shared across the project.
-- No feature creep—just execute what is planned.
+- NO FEATURE CREEP JUST ADD THE FEATURES YOU ARE ASKED TO ADD, ALWAYS ASK IF YOU ARE UNSURE
 - Ensure to leave succinct, clear comments where required to understand the function of code.
 - Write straightforward, readable code. Avoid unnecessary complexity, clever tricks, or overengineering. Choose the simplest solution that solves the problem.
 - Only implement features and functions that are currently required. Don't add code for hypothetical use cases or future needs or "just in case" scenarios.

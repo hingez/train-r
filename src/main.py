@@ -87,6 +87,12 @@ async def lifespan(app: FastAPI):
         logger.info("Shutting down Train-R API Server")
         logger.info("=" * 60)
 
+        # Close all WebSocket connections gracefully
+        from src.api.websocket import manager
+        await manager.close_all()
+
+        logger.info("Shutdown complete")
+
 
 # Create FastAPI app
 app = FastAPI(

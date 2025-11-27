@@ -50,8 +50,8 @@ LLM_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"  # Gem
 INTERVALS_BASE_URL = "https://intervals.icu/api/v1"  # intervals.icu API endpoint
 INTERVALS_API_TIMEOUT = 30  # Maximum seconds to wait for intervals.icu responses
 BACKEND_HOST = "0.0.0.0"  # Server host (0.0.0.0 = all interfaces)
-BACKEND_PORT = 8000  # Port for backend API server
-FRONTEND_PORT = 5173  # Port for frontend dev server (Vite default)
+BACKEND_PORT = 3000  # Port for backend API server
+FRONTEND_PORT = 3001  # Port for frontend dev server
 
 # ─────────────────────────────────────────────────────────────
 # Retry Configuration
@@ -245,8 +245,8 @@ class AppConfig:
         workouts_dir = data_dir / "created_workouts"
         history_dir = data_dir / "workout_history"
 
-        # Get CORS origins (default to localhost:5173 for frontend)
-        cors_origins_str = os.getenv("CORS_ORIGINS", "http://localhost:5173")
+        # Get CORS origins (default to localhost:3001 for frontend)
+        cors_origins_str = os.getenv("CORS_ORIGINS", "http://localhost:3001")
         cors_origins = [origin.strip() for origin in cors_origins_str.split(",")]
 
         # Get reasoning effort if specified

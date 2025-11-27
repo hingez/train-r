@@ -5,7 +5,7 @@ import { useWebSocket } from "./hooks/useWebSocket";
 import type { DisplayType, Message, ConfirmationResponse } from "./types/messages";
 
 // WebSocket URL - change this to match your backend
-const WS_URL = "ws://localhost:8000/ws";
+const WS_URL = "ws://localhost:3000/ws";
 
 function App() {
   const { messages, sendMessage, sendConfirmation, connectionStatus, error } = useWebSocket(WS_URL);
