@@ -66,13 +66,19 @@ def load_tool_executors(tools_dir: str = "tools") -> Dict[str, Callable]:
     .py file and extracts its execute() function.
 
     Args:
-        tools_dir: Directory containing tool definition files
+        tools_dir: Directory containing tool definition files (can be the definitions dir itself or parent)
 
     Returns:
         Dict mapping tool names to their execute functions
     """
     tools_path = Path(tools_dir)
-    definitions_path = tools_path / "definitions"
+
+    # If the path already ends with 'definitions', use it directly
+    # Otherwise, append 'definitions' to the path
+    if tools_path.name == "definitions":
+        definitions_path = tools_path
+    else:
+        definitions_path = tools_path / "definitions"
 
     if not definitions_path.exists():
         return {}
