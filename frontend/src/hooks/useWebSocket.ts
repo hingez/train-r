@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import type { Message, UserMessage } from '@/types/messages';
+import type { Message, UserMessage, ConfirmationResponse } from '@/types/messages';
 
 interface UseWebSocketReturn {
   messages: Message[];
   sendMessage: (content: string) => void;
+  sendConfirmation: (response: ConfirmationResponse) => void;
   connectionStatus: 'connecting' | 'connected' | 'disconnected' | 'error';
   error: string | null;
 }
@@ -89,9 +90,24 @@ export function useWebSocket(url: string): UseWebSocketReturn {
     }
   }, []);
 
+  const sendConfirmation = useCallback((response: ConfirmationResponse) => {
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify(response));
+      // Remove the confirmation request from messages after response
+      setMessages((prev) => prev.filter(m =>
+        m.type !== 'confirmation_request' ||
+        (m as any).confirmation_id !== response.confirmation_id
+      ));
+    } else {
+      console.error('WebSocket is not connected');
+      setError('Cannot send confirmation: not connected');
+    }
+  }, []);
+
   return {
     messages,
     sendMessage,
+    sendConfirmation,
     connectionStatus,
     error,
   };

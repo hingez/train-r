@@ -2,16 +2,18 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ChatMessage } from "./ChatMessage";
-import type { Message } from "@/types/messages";
+import { ConfirmationDialog } from "./ConfirmationDialog";
+import type { Message, ConfirmationResponse } from "@/types/messages";
 import { Send } from "lucide-react";
 
 interface ChatPanelProps {
   messages: Message[];
   onSendMessage: (content: string) => void;
+  onSendConfirmation: (response: ConfirmationResponse) => void;
   connectionStatus: string;
 }
 
-export function ChatPanel({ messages, onSendMessage, connectionStatus }: ChatPanelProps) {
+export function ChatPanel({ messages, onSendMessage, onSendConfirmation, connectionStatus }: ChatPanelProps) {
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -31,8 +33,19 @@ export function ChatPanel({ messages, onSendMessage, connectionStatus }: ChatPan
     }
   };
 
-  // Filter out display_update messages from chat view
+  const handleConfirmation = (confirmationId: string, confirmed: boolean) => {
+    onSendConfirmation({
+      type: "confirmation_response",
+      confirmation_id: confirmationId,
+      confirmed,
+    });
+  };
+
+  // Filter out display_update messages from chat view and find pending confirmations
   const chatMessages = messages.filter(m => m.type !== "display_update");
+  const pendingConfirmation = messages.find(
+    m => m.type === "confirmation_request"
+  ) as Message & { type: "confirmation_request" } | undefined;
 
   return (
     <div className="flex flex-col h-screen bg-background border-l">
@@ -57,6 +70,19 @@ export function ChatPanel({ messages, onSendMessage, connectionStatus }: ChatPan
         {chatMessages.map((message, index) => (
           <ChatMessage key={index} message={message} />
         ))}
+
+        {/* Show confirmation dialog if there's a pending confirmation */}
+        {pendingConfirmation && (
+          <div className="mt-4">
+            <ConfirmationDialog
+              question={pendingConfirmation.question}
+              context={pendingConfirmation.context}
+              onConfirm={() => handleConfirmation(pendingConfirmation.confirmation_id, true)}
+              onReject={() => handleConfirmation(pendingConfirmation.confirmation_id, false)}
+            />
+          </div>
+        )}
+
         <div ref={messagesEndRef} />
       </div>
 

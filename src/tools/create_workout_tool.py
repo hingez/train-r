@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, Optional, Tuple, TYPE_CHECKING
 
 from src.config import AppConfig
-from src.integrations.intervals import IntervalsClient
 
 # Import for type hints only to avoid circular dependency
 if TYPE_CHECKING:
@@ -96,7 +95,7 @@ def execute(
 
         logger.info(f"Generating workout: FTP={client_ftp}W, Duration={workout_duration}s, Type={workout_type}")
 
-        # Generate workout using workout generator
+        # Generate workout using workout generator (but don't save yet)
         zwo_content = coach_service.workout_generator.generate_workout(
             client_ftp=client_ftp,
             workout_duration=workout_duration,
@@ -105,40 +104,26 @@ def execute(
 
         logger.info("Workout generated successfully")
 
-        # Save workout to file
-        filepath = coach_service.workout_generator.save_workout(zwo_content, workout_type)
-        logger.info(f"Workout saved to: {filepath}")
-
         # Calculate schedule time using configured hours
         schedule_time = datetime.now() + timedelta(hours=config.workout_schedule_hours)
         schedule_time_str = schedule_time.strftime("%Y-%m-%dT%H:%M:%S")
 
-        logger.info(f"Scheduling workout for: {schedule_time_str}")
+        logger.info(f"Workout created for scheduling at: {schedule_time_str}")
 
-        # Initialize intervals.icu client
-        intervals_client = IntervalsClient(api_key=config.intervals_api_key, config=config)
-
-        # Generate external ID
+        # Generate external ID and filename for later use
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         external_id = f"train-r-{timestamp}"
+        filename = f"{workout_type.replace(' ', '_')}_{timestamp}.zwo"
 
-        # Upload workout
-        response = intervals_client.upload_workout(
-            file_path=filepath,
-            start_date=schedule_time_str,
-            external_id=external_id
-        )
-
-        logger.info(f"Upload successful - Event ID: {response.get('id')}")
-
-        # Return success result
+        # Return success result with workout content (will be saved/uploaded after user confirmation)
         return {
             "success": True,
-            "workout_file": filepath,
-            "event_id": response.get("id"),
-            "event_name": response.get("name"),
+            "zwo_content": zwo_content,
+            "filename": filename,
+            "workout_type": workout_type,
             "scheduled_time": schedule_time_str,
-            "message": f"Workout created and scheduled for {schedule_time_str}"
+            "external_id": external_id,
+            "message": f"Workout created and ready to schedule for {schedule_time_str}"
         }
 
     except Exception as e:

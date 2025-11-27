@@ -4,6 +4,8 @@ export type MessageType =
   | "tool_call"
   | "tool_result"
   | "display_update"
+  | "confirmation_request"
+  | "confirmation_response"
   | "error";
 
 export type DisplayType = "welcome" | "workout" | "charts" | "tool_execution";
@@ -47,10 +49,25 @@ export interface ErrorMessage extends BaseMessage {
   message: string;
 }
 
+export interface ConfirmationRequest extends BaseMessage {
+  type: "confirmation_request";
+  confirmation_id: string;
+  question: string;
+  context?: Record<string, any>;
+}
+
+export interface ConfirmationResponse extends BaseMessage {
+  type: "confirmation_response";
+  confirmation_id: string;
+  confirmed: boolean;
+}
+
 export type Message =
   | UserMessage
   | AssistantMessage
   | ToolCall
   | ToolResult
   | DisplayUpdate
+  | ConfirmationRequest
+  | ConfirmationResponse
   | ErrorMessage;

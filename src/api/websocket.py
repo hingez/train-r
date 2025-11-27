@@ -4,7 +4,7 @@ import logging
 from typing import Dict
 from fastapi import WebSocket, WebSocketDisconnect
 
-from src.api.schemas import AssistantMessage, ToolCall, ToolResult, DisplayUpdate, ErrorMessage
+from src.api.schemas import AssistantMessage, ToolCall, ToolResult, DisplayUpdate, ErrorMessage, ConfirmationRequest
 
 logger = logging.getLogger('train-r')
 
@@ -37,7 +37,7 @@ class ConnectionManager:
             del self.active_connections[client_id]
             logger.info(f"Client {client_id} disconnected. Total connections: {len(self.active_connections)}")
 
-    async def send_message(self, message: AssistantMessage | ToolCall | ToolResult | DisplayUpdate | ErrorMessage, client_id: str):
+    async def send_message(self, message: AssistantMessage | ToolCall | ToolResult | DisplayUpdate | ErrorMessage | ConfirmationRequest, client_id: str):
         """Send message to specific client.
 
         Args:
@@ -104,6 +104,18 @@ class ConnectionManager:
             client_id: Target client identifier
         """
         message = ErrorMessage(message=error_message)
+        await self.send_message(message, client_id)
+
+    async def send_confirmation_request(self, confirmation_id: str, question: str, context: dict, client_id: str):
+        """Send confirmation request to client.
+
+        Args:
+            confirmation_id: Unique ID for this confirmation
+            question: Question to ask the user
+            context: Additional context for the confirmation
+            client_id: Target client identifier
+        """
+        message = ConfirmationRequest(confirmation_id=confirmation_id, question=question, context=context)
         await self.send_message(message, client_id)
 
 

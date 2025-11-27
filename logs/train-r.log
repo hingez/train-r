@@ -1,29 +1,23 @@
-2025-11-20 18:58:08 - INFO - ============================================================
-2025-11-20 18:58:08 - INFO - Train-R Application Started
-2025-11-20 18:58:08 - INFO - ============================================================
-2025-11-20 18:58:08 - INFO - CORS configured for origins: http://localhost:5173
-2025-11-20 18:58:08 - INFO - FastAPI application created and configured
-2025-11-20 18:58:08 - INFO - ============================================================
-2025-11-20 18:58:08 - INFO - Starting Train-R API Server (Refactored Architecture)
-2025-11-20 18:58:08 - INFO - ============================================================
-2025-11-20 18:58:08 - INFO - Configuration validated
-2025-11-20 18:58:08 - INFO - LLMClient initialized with endpoint: https://generativelanguage.googleapis.com/v1beta/openai/
-2025-11-20 18:58:08 - INFO - LLM client initialized: gemini-2.5-flash
-2025-11-20 18:58:08 - INFO - CoachService initialized with 2 tools: create_one_off_workout, get_user_workout_history
-2025-11-20 18:58:08 - INFO - Coach service initialized with tool support
-2025-11-20 18:58:08 - INFO - ============================================================
-2025-11-20 18:58:08 - INFO - Train-R API Server ready
-2025-11-20 18:58:08 - INFO - ============================================================
-2025-11-20 18:58:08 - INFO - Client e73ad092-a636-4d79-bb03-c3fb27859c81 connected. Total connections: 1
-2025-11-20 18:58:08 - INFO - Client 570f0654-932f-4a99-9e85-8aa46795199f connected. Total connections: 2
-2025-11-20 18:58:11 - INFO - Client e73ad092-a636-4d79-bb03-c3fb27859c81 disconnected. Total connections: 1
-2025-11-20 18:58:11 - INFO - Client e73ad092-a636-4d79-bb03-c3fb27859c81 disconnected
-2025-11-20 18:58:11 - INFO - Client 570f0654-932f-4a99-9e85-8aa46795199f disconnected. Total connections: 0
-2025-11-20 18:58:11 - INFO - Client 570f0654-932f-4a99-9e85-8aa46795199f disconnected
-2025-11-20 18:58:11 - INFO - Client bf040187-3910-4a7c-944a-8379d9ea4380 connected. Total connections: 1
-2025-11-20 18:58:11 - ERROR - Error sending message to client bf040187-3910-4a7c-944a-8379d9ea4380: 
-2025-11-20 18:58:11 - INFO - Client bf040187-3910-4a7c-944a-8379d9ea4380 disconnected. Total connections: 0
-2025-11-20 18:58:11 - ERROR - WebSocket error: WebSocket is not connected. Need to call "accept" first.
+2025-11-27 17:21:05 - INFO - ============================================================
+2025-11-27 17:21:05 - INFO - Train-R Application Started
+2025-11-27 17:21:05 - INFO - ============================================================
+2025-11-27 17:21:05 - INFO - CORS configured for origins: http://localhost:5173
+2025-11-27 17:21:05 - INFO - FastAPI application created and configured
+2025-11-27 17:21:05 - INFO - ============================================================
+2025-11-27 17:21:05 - INFO - Starting Train-R API Server (Refactored Architecture)
+2025-11-27 17:21:05 - INFO - ============================================================
+2025-11-27 17:21:05 - INFO - Configuration validated
+2025-11-27 17:21:05 - INFO - LLMClient initialized with endpoint: https://generativelanguage.googleapis.com/v1beta/openai/
+2025-11-27 17:21:05 - INFO - LLM client initialized: gemini-2.5-flash
+2025-11-27 17:21:05 - INFO - CoachService initialized with 2 tools: create_one_off_workout, get_user_workout_history
+2025-11-27 17:21:05 - INFO - Coach service initialized with tool support
+2025-11-27 17:21:05 - INFO - ============================================================
+2025-11-27 17:21:05 - INFO - Train-R API Server ready
+2025-11-27 17:21:05 - INFO - ============================================================
+2025-11-27 17:21:10 - INFO - Client 1a4cc663-6578-4482-8b9a-54f3159ce710 connected. Total connections: 1
+2025-11-27 17:21:10 - ERROR - Error sending message to client 1a4cc663-6578-4482-8b9a-54f3159ce710: 
+2025-11-27 17:21:10 - INFO - Client 1a4cc663-6578-4482-8b9a-54f3159ce710 disconnected. Total connections: 0
+2025-11-27 17:21:10 - ERROR - WebSocket error: WebSocket is not connected. Need to call "accept" first.
 Traceback (most recent call last):
   File "/Users/zeph/Projects/train-r/src/api/routes.py", line 65, in websocket_endpoint
     data = await websocket.receive_json()
@@ -31,17 +25,88 @@ Traceback (most recent call last):
   File "/Users/zeph/Projects/train-r/.venv/lib/python3.12/site-packages/starlette/websockets.py", line 134, in receive_json
     raise RuntimeError('WebSocket is not connected. Need to call "accept" first.')
 RuntimeError: WebSocket is not connected. Need to call "accept" first.
-2025-11-20 18:58:11 - INFO - Client 07791cbe-ce57-4936-a6fd-d80fadba0eba connected. Total connections: 1
-2025-11-20 18:58:14 - INFO - Client 4c2bdb2c-13cf-48e6-bef4-7ba1d088b528 connected. Total connections: 2
-2025-11-20 18:58:17 - INFO - Received from 4c2bdb2c-13cf-48e6-bef4-7ba1d088b528: Hello
-2025-11-20 18:58:17 - INFO - USER: Hello
-2025-11-20 18:58:19 - INFO - ASSISTANT: Hello! I'm Train-R, your professional cycling coach. I can help you with reviewing your training history, creating one-off training sessions, or developing longer-term training plans to achieve your goals.
+2025-11-27 17:21:10 - INFO - Client 0b225d6b-ebb5-4d1a-8f8f-9066fda4576b connected. Total connections: 1
+2025-11-27 17:21:10 - INFO - Client 0b225d6b-ebb5-4d1a-8f8f-9066fda4576b disconnected. Total connections: 0
+2025-11-27 17:21:10 - INFO - Client 0b225d6b-ebb5-4d1a-8f8f-9066fda4576b disconnected
+2025-11-27 17:21:10 - INFO - Client 4232488f-6e62-48bc-8469-f0dfdc60754e connected. Total connections: 1
+2025-11-27 17:21:11 - INFO - Client 4232488f-6e62-48bc-8469-f0dfdc60754e disconnected. Total connections: 0
+2025-11-27 17:21:11 - INFO - Client 4232488f-6e62-48bc-8469-f0dfdc60754e disconnected
+2025-11-27 17:21:11 - INFO - Client bfc64f0a-c685-4596-9f19-773978b140a4 connected. Total connections: 1
+2025-11-27 17:21:14 - INFO - Client b4aeb8e8-d18d-4ddc-b08c-db86f9142596 connected. Total connections: 2
+2025-11-27 17:21:54 - INFO - Received from b4aeb8e8-d18d-4ddc-b08c-db86f9142596: Can you create a workout; 20min warm-up Main Set: 2 x 20min @ 95-98% FTP, 8min recovery 15min cool-down FTP is 345, stick to low treshold % please
+2025-11-27 17:21:54 - INFO - USER: Can you create a workout; 20min warm-up Main Set: 2 x 20min @ 95-98% FTP, 8min recovery 15min cool-down FTP is 345, stick to low treshold % please
+2025-11-27 17:21:57 - INFO - TOOL_CALL: create_one_off_workout
+2025-11-27 17:21:57 - INFO - Generating workout: FTP=345W, Duration=4980s, Type=20min warm-up. Main Set: 2 x 20min @ 95% FTP, 8min recovery. 15min cool-down.
+2025-11-27 17:21:57 - INFO - Generating 20min warm-up. Main Set: 2 x 20min @ 95% FTP, 8min recovery. 15min cool-down. workout (FTP: 345W, Duration: 4980s)
+2025-11-27 17:22:04 - INFO - Workout generated successfully
+2025-11-27 17:22:04 - INFO - Workout generated successfully
+2025-11-27 17:22:04 - INFO - Workout saved to: /Users/zeph/Projects/train-r/data/created_workouts/20min_warm_up_main_set_2_x_20min_95_ftp_8min_recovery_15min_cool_down_20251127_172204.zwo
+2025-11-27 17:22:04 - INFO - Workout saved to: /Users/zeph/Projects/train-r/data/created_workouts/20min_warm_up_main_set_2_x_20min_95_ftp_8min_recovery_15min_cool_down_20251127_172204.zwo
+2025-11-27 17:22:04 - INFO - Scheduling workout for: 2025-11-27T18:22:04
+2025-11-27 17:22:04 - INFO - Upload successful - Event ID: 81711291
+2025-11-27 17:22:04 - INFO - TOOL_RESULT: {
+  "success": true,
+  "workout_file": "/Users/zeph/Projects/train-r/data/created_workouts/20min_warm_up_main_set_2_x_20min_95_ftp_8min_recovery_15min_cool_down_20251127_172204.zwo",
+  "event_id": 81711291,
+  "event_name": "Threshold - 2x20min @ 95% FTP",
+  "scheduled_time": "2025-11-27T18:22:04",
+  "message": "Workout created and scheduled for 2025-11-27T18:22:04"
+}
+2025-11-27 17:22:06 - INFO - ASSISTANT: Great! I've created and scheduled your workout: "Threshold - 2x20min @ 95% FTP" for you. It includes a 20-minute warm-up, two 20-minute intervals at 95% of your FTP (345W) with 8 minutes of recovery in between, and a 15-minute cool-down.
 
-How can I help you today?
-2025-11-20 18:58:28 - INFO - Client 07791cbe-ce57-4936-a6fd-d80fadba0eba disconnected. Total connections: 1
-2025-11-20 18:58:28 - INFO - Client 07791cbe-ce57-4936-a6fd-d80fadba0eba disconnected
-2025-11-20 18:58:28 - INFO - Client 4c2bdb2c-13cf-48e6-bef4-7ba1d088b528 disconnected. Total connections: 0
-2025-11-20 18:58:28 - INFO - Client 4c2bdb2c-13cf-48e6-bef4-7ba1d088b528 disconnected
-2025-11-20 18:58:28 - INFO - ============================================================
-2025-11-20 18:58:28 - INFO - Shutting down Train-R API Server
-2025-11-20 18:58:28 - INFO - ============================================================
+The workout file has been generated and is available at `/Users/zeph/Projects/train-r/data/created_workouts/20min_warm_up_main_set_2_x_20min_95_ftp_8min_recovery_15min_cool_down_20251127_172204.zwo`. It's also been scheduled for you.
+
+Let me know if you need any other workouts or have any questions!
+2025-11-27 17:22:51 - INFO - Received from b4aeb8e8-d18d-4ddc-b08c-db86f9142596: can re do it and make it for 1 hour 15 and only 2X 20 mins
+2025-11-27 17:22:51 - INFO - USER: can re do it and make it for 1 hour 15 and only 2X 20 mins
+2025-11-27 17:22:54 - INFO - TOOL_CALL: create_one_off_workout
+2025-11-27 17:22:54 - INFO - Generating workout: FTP=345W, Duration=4500s, Type=15min warm-up. Main Set: 2 x 20min @ 95% FTP, 8min recovery. 12min cool-down.
+2025-11-27 17:22:54 - INFO - Generating 15min warm-up. Main Set: 2 x 20min @ 95% FTP, 8min recovery. 12min cool-down. workout (FTP: 345W, Duration: 4500s)
+2025-11-27 17:23:03 - INFO - Workout generated successfully
+2025-11-27 17:23:03 - INFO - Workout generated successfully
+2025-11-27 17:23:03 - INFO - Workout saved to: /Users/zeph/Projects/train-r/data/created_workouts/15min_warm_up_main_set_2_x_20min_95_ftp_8min_recovery_12min_cool_down_20251127_172303.zwo
+2025-11-27 17:23:03 - INFO - Workout saved to: /Users/zeph/Projects/train-r/data/created_workouts/15min_warm_up_main_set_2_x_20min_95_ftp_8min_recovery_12min_cool_down_20251127_172303.zwo
+2025-11-27 17:23:03 - INFO - Scheduling workout for: 2025-11-27T18:23:03
+2025-11-27 17:23:03 - INFO - Upload successful - Event ID: 81711456
+2025-11-27 17:23:03 - INFO - TOOL_RESULT: {
+  "success": true,
+  "workout_file": "/Users/zeph/Projects/train-r/data/created_workouts/15min_warm_up_main_set_2_x_20min_95_ftp_8min_recovery_12min_cool_down_20251127_172303.zwo",
+  "event_id": 81711456,
+  "event_name": "Threshold - 2x20min @ 95% FTP",
+  "scheduled_time": "2025-11-27T18:23:03",
+  "message": "Workout created and scheduled for 2025-11-27T18:23:03"
+}
+2025-11-27 17:23:06 - INFO - ASSISTANT: No problem! I've adjusted the workout for you to be 1 hour and 15 minutes (75 minutes) in total, still with two 20-minute intervals at 95% FTP.
+
+Here's the breakdown:
+*   **15-minute warm-up**
+*   **Main Set:** 2 x 20min @ 95% FTP (345W), with 8 minutes of recovery in between
+*   **12-minute cool-down**
+
+The workout file has been generated and is available at `/Users/zeph/Projects/train-r/data/created_workouts/15min_warm_up_main_set_2_x_20min_95_ftp_8min_recovery_12min_cool_down_20251127_172303.zwo`. It's also been scheduled for you.
+
+Let me know if this works better for you!
+2025-11-27 19:08:43 - INFO - Client b4aeb8e8-d18d-4ddc-b08c-db86f9142596 disconnected. Total connections: 1
+2025-11-27 19:08:43 - INFO - Client b4aeb8e8-d18d-4ddc-b08c-db86f9142596 disconnected
+2025-11-27 19:08:43 - INFO - Client bfc64f0a-c685-4596-9f19-773978b140a4 disconnected. Total connections: 0
+2025-11-27 19:08:43 - INFO - Client bfc64f0a-c685-4596-9f19-773978b140a4 disconnected
+2025-11-27 19:08:43 - INFO - Client 6ed7c1b8-34d1-4c53-b9d8-ac7c6dac524e connected. Total connections: 1
+2025-11-27 19:08:43 - ERROR - Error sending message to client 6ed7c1b8-34d1-4c53-b9d8-ac7c6dac524e: 
+2025-11-27 19:08:43 - INFO - Client 6ed7c1b8-34d1-4c53-b9d8-ac7c6dac524e disconnected. Total connections: 0
+2025-11-27 19:08:43 - ERROR - WebSocket error: WebSocket is not connected. Need to call "accept" first.
+Traceback (most recent call last):
+  File "/Users/zeph/Projects/train-r/src/api/routes.py", line 65, in websocket_endpoint
+    data = await websocket.receive_json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zeph/Projects/train-r/.venv/lib/python3.12/site-packages/starlette/websockets.py", line 134, in receive_json
+    raise RuntimeError('WebSocket is not connected. Need to call "accept" first.')
+RuntimeError: WebSocket is not connected. Need to call "accept" first.
+2025-11-27 19:08:43 - INFO - Client dcf9e6ec-97e4-430d-b3aa-0fe6664e7919 connected. Total connections: 1
+2025-11-27 19:08:47 - INFO - Client 7efe4e70-44b2-4db1-958f-e48165ce59ae connected. Total connections: 2
+2025-11-27 19:28:01 - INFO - Client dcf9e6ec-97e4-430d-b3aa-0fe6664e7919 disconnected. Total connections: 1
+2025-11-27 19:28:01 - INFO - Client dcf9e6ec-97e4-430d-b3aa-0fe6664e7919 disconnected
+2025-11-27 19:28:01 - INFO - Client 7efe4e70-44b2-4db1-958f-e48165ce59ae disconnected. Total connections: 0
+2025-11-27 19:28:01 - INFO - Client 7efe4e70-44b2-4db1-958f-e48165ce59ae disconnected
+2025-11-27 19:28:22 - INFO - ============================================================
+2025-11-27 19:28:22 - INFO - Shutting down Train-R API Server
+2025-11-27 19:28:22 - INFO - ============================================================

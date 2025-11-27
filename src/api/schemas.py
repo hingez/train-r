@@ -56,6 +56,22 @@ class ErrorMessage(BaseModel):
     timestamp: datetime = Field(default_factory=datetime.now)
 
 
+class ConfirmationRequest(BaseModel):
+    """Request user confirmation for an action."""
+    type: Literal["confirmation_request"] = "confirmation_request"
+    confirmation_id: str
+    question: str
+    context: Optional[dict[str, Any]] = None
+    timestamp: datetime = Field(default_factory=datetime.now)
+
+
+class ConfirmationResponse(BaseModel):
+    """User's response to a confirmation request."""
+    type: Literal["confirmation_response"] = "confirmation_response"
+    confirmation_id: str
+    confirmed: bool
+
+
 class ConnectionStatus(BaseModel):
     """WebSocket connection status."""
     connected: bool

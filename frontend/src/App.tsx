@@ -2,13 +2,13 @@ import { useState, useEffect } from "react";
 import { ChatPanel } from "./components/chat/ChatPanel";
 import { DisplayPanel } from "./components/display/DisplayPanel";
 import { useWebSocket } from "./hooks/useWebSocket";
-import type { DisplayType, Message } from "./types/messages";
+import type { DisplayType, Message, ConfirmationResponse } from "./types/messages";
 
 // WebSocket URL - change this to match your backend
 const WS_URL = "ws://localhost:8000/ws";
 
 function App() {
-  const { messages, sendMessage, connectionStatus, error } = useWebSocket(WS_URL);
+  const { messages, sendMessage, sendConfirmation, connectionStatus, error } = useWebSocket(WS_URL);
   const [displayType, setDisplayType] = useState<DisplayType>("welcome");
   const [displayData, setDisplayData] = useState<Record<string, any> | undefined>();
 
@@ -37,6 +37,7 @@ function App() {
         <ChatPanel
           messages={messages}
           onSendMessage={sendMessage}
+          onSendConfirmation={sendConfirmation}
           connectionStatus={connectionStatus}
         />
       </div>
