@@ -110,11 +110,16 @@ def extract_interval_power(intervals: list[dict]) -> dict:
 
         result[interval_name] = {
             "avg_power_watts": interval.get("average_watts"),
+            "normalized_power_watts": interval.get("weighted_average_watts"),
             "max_power_watts": interval.get("max_watts"),
+            "min_power_watts": interval.get("min_watts"),
             "duration_seconds": interval.get("moving_time"),
+            "distance": interval.get("distance"),
             "training_stress_score": interval.get("training_load"),
             "intensity_factor": interval.get("intensity"),
-            "zone": interval.get("zone")
+            "zone": interval.get("zone"),
+            "joules": interval.get("joules"),
+            "joules_above_ftp": interval.get("joules_above_ftp")
         }
 
     return result
@@ -171,8 +176,13 @@ def enrich_workout_data(
         # Fetch activity details for name and interval check
         activity_details = intervals_client.get_activity_details(str(activity_id))
 
-        # Fetch power curves for this workout
-        power_curves = intervals_client.get_activity_power_curves(str(activity_id))
+        # Fetch comprehensive power curves for this workout
+        # Standard durations: 15s, 30s, 1m, 2m, 3m, 5m, 10m, 15m, 20m, 30m, 45m, 60m
+        comprehensive_durations = [15, 30, 60, 120, 180, 300, 600, 900, 1200, 1800, 2700, 3600]
+        power_curves = intervals_client.get_activity_power_curves(
+            str(activity_id),
+            durations=comprehensive_durations
+        )
 
         # Fetch intervals only if workout has structured intervals
         interval_data = {}
