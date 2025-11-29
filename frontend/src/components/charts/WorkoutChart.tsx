@@ -55,9 +55,20 @@ export function WorkoutChart({ workoutData, showFTPLine = true, showZoneOverlays
   // Format Y-axis labels (power)
   const formatPower = (value: number) => `${value}W`;
 
-  // Sample every Nth segment for X-axis labels to avoid crowding
+  // Dynamic label interval based on workout duration and segment count
   const totalSegments = segments.length;
-  const labelInterval = Math.ceil(totalSegments / 12);
+  const { totalDuration } = workoutData;
+
+  // Calculate optimal label interval to show roughly 10-15 labels
+  let targetLabels = 12;
+  if (totalDuration < 1800) {
+    // Short workouts (<30min): show more labels
+    targetLabels = 15;
+  } else if (totalDuration > 5400) {
+    // Long workouts (>90min): show fewer labels
+    targetLabels = 10;
+  }
+  const labelInterval = Math.ceil(totalSegments / targetLabels);
 
   // Calculate max power for chart domain
   const maxPower = Math.max(...segments.map(s => s.power));

@@ -188,7 +188,9 @@ async def websocket_endpoint(websocket: WebSocket):
                             display_type="workout",
                             data={
                                 "workout_type": result.get("workout_type"),
-                                "scheduled_time": result.get("scheduled_time")
+                                "scheduled_time": result.get("scheduled_time"),
+                                "workout_data": result.get("workout_data"),
+                                "workout_file": result.get("filename")
                             },
                             client_id=client_id
                         )

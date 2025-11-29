@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from typing import Any, Dict, Optional, Tuple, TYPE_CHECKING
 
 from src.config import AppConfig
+from src.utils.zwo_parser import parse_zwo_content
 
 # Import for type hints only to avoid circular dependency
 if TYPE_CHECKING:
@@ -104,6 +105,15 @@ def execute(
 
         logger.info("Workout generated successfully")
 
+        # Parse ZWO content for visualization
+        try:
+            workout_data = parse_zwo_content(zwo_content, client_ftp)
+            logger.info(f"Parsed workout into {len(workout_data['segments'])} segments")
+        except Exception as e:
+            logger.error(f"Failed to parse ZWO content: {e}", exc_info=True)
+            # Continue without workout data - visualization will use mock data
+            workout_data = None
+
         # Calculate schedule time using configured hours
         schedule_time = datetime.now() + timedelta(hours=config.workout_schedule_hours)
         schedule_time_str = schedule_time.strftime("%Y-%m-%dT%H:%M:%S")
@@ -116,7 +126,7 @@ def execute(
         filename = f"{workout_type.replace(' ', '_')}_{timestamp}.zwo"
 
         # Return success result with workout content (will be saved/uploaded after user confirmation)
-        return {
+        result = {
             "success": True,
             "zwo_content": zwo_content,
             "filename": filename,
@@ -125,6 +135,12 @@ def execute(
             "external_id": external_id,
             "message": f"Workout created and ready to schedule for {schedule_time_str}"
         }
+
+        # Add parsed workout data if available
+        if workout_data:
+            result["workout_data"] = workout_data
+
+        return result
 
     except Exception as e:
         logger.error(f"Error creating workout: {str(e)}", exc_info=True)

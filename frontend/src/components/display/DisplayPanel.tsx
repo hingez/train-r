@@ -85,8 +85,10 @@ export function DisplayPanel({ displayType, displayData }: DisplayPanelProps) {
   }
 
   if (displayType === "workout") {
-    // Generate mock workout data (FTP 300W sweet spot workout)
-    const mockWorkout = generateMockWorkout(300);
+    // Use real workout data if available, otherwise fall back to mock data
+    const workoutData = displayData?.workout_data
+      ? displayData.workout_data
+      : generateMockWorkout(300);
 
     return (
       <div className="p-8 space-y-6 overflow-y-auto h-full">
@@ -96,7 +98,7 @@ export function DisplayPanel({ displayType, displayData }: DisplayPanelProps) {
             <CardTitle>Workout Profile</CardTitle>
           </CardHeader>
           <CardContent>
-            <WorkoutChart workoutData={mockWorkout} showFTPLine={true} />
+            <WorkoutChart workoutData={workoutData} showFTPLine={true} />
           </CardContent>
         </Card>
 
@@ -109,21 +111,21 @@ export function DisplayPanel({ displayType, displayData }: DisplayPanelProps) {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-sm font-medium">Workout Name:</p>
-                <p className="text-sm text-muted-foreground">{mockWorkout.workoutName}</p>
+                <p className="text-sm text-muted-foreground">{workoutData.workoutName}</p>
               </div>
               <div>
                 <p className="text-sm font-medium">Duration:</p>
                 <p className="text-sm text-muted-foreground">
-                  {Math.round(mockWorkout.totalDuration / 60)} minutes
+                  {Math.round(workoutData.totalDuration / 60)} minutes
                 </p>
               </div>
               <div>
                 <p className="text-sm font-medium">FTP:</p>
-                <p className="text-sm text-muted-foreground">{mockWorkout.ftp}W</p>
+                <p className="text-sm text-muted-foreground">{workoutData.ftp}W</p>
               </div>
               <div>
                 <p className="text-sm font-medium">Description:</p>
-                <p className="text-sm text-muted-foreground">{mockWorkout.description}</p>
+                <p className="text-sm text-muted-foreground">{workoutData.description}</p>
               </div>
             </div>
 

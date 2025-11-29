@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { ChatPanel } from "./components/chat/ChatPanel";
 import { DisplayPanel } from "./components/display/DisplayPanel";
 import { useWebSocket } from "./hooks/useWebSocket";
-import type { DisplayType, Message, ConfirmationResponse } from "./types/messages";
+import type { DisplayType } from "./types/messages";
 
 // WebSocket URL - change this to match your backend
 const WS_URL = "ws://localhost:3000/ws";

@@ -30,7 +30,6 @@ export function generateSweetSpotWorkout(ftp: number = 300): WorkoutData {
 
   // Interval 1: 12 minutes at 91% FTP (sweet spot)
   const intervalPower = Math.round(ftp * 0.91);
-  const intervalDuration = 12 * 60; // 12 minutes in seconds
 
   // Break interval into 1-minute segments for better visualization
   for (let i = 0; i < 12; i++) {
