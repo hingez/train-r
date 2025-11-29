@@ -91,73 +91,15 @@ def map_power_curve_periods(power_curves: dict) -> dict:
     return result
 
 
-def extract_interval_power(intervals: list[dict]) -> dict:
-    """Extract interval power data into structured format.
-
-    Args:
-        intervals: List of interval objects from intervals.icu
-
-    Returns:
-        Dict mapping interval names to power data, or empty dict if no intervals
-    """
-    if not intervals:
-        return {}
-
-    result = {}
-    for i, interval in enumerate(intervals, 1):
-        # Use interval label if available, otherwise use generic name
-        interval_name = interval.get("label", f"interval_{i}")
-
-        result[interval_name] = {
-            "avg_power_watts": interval.get("average_watts"),
-            "normalized_power_watts": interval.get("weighted_average_watts"),
-            "max_power_watts": interval.get("max_watts"),
-            "min_power_watts": interval.get("min_watts"),
-            "duration_seconds": interval.get("moving_time"),
-            "distance": interval.get("distance"),
-            "training_stress_score": interval.get("training_load"),
-            "intensity_factor": interval.get("intensity"),
-            "zone": interval.get("zone"),
-            "joules": interval.get("joules"),
-            "joules_above_ftp": interval.get("joules_above_ftp")
-        }
-
-    return result
-
-
-def has_structured_intervals(activity_details: dict) -> bool:
-    """Determine if an activity has structured intervals.
-
-    Args:
-        activity_details: Full activity object from intervals.icu
-
-    Returns:
-        True if activity has structured intervals, False otherwise
-    """
-    # Check if icu_intervals exists and has content
-    intervals = activity_details.get("icu_intervals")
-    if intervals and len(intervals) > 0:
-        return True
-
-    # Also check interval summary
-    interval_summary = activity_details.get("interval_summary")
-    if interval_summary and len(interval_summary) > 0:
-        return True
-
-    return False
-
-
 def enrich_workout_data(
     workout: dict,
-    intervals_client: IntervalsClient,
-    fetch_intervals: bool = True
+    intervals_client: IntervalsClient
 ) -> dict:
     """Enrich workout with additional data from intervals.icu.
 
     Args:
         workout: Base workout dict from get_workout_history
         intervals_client: IntervalsClient instance
-        fetch_intervals: Whether to fetch interval data for structured workouts
 
     Returns:
         Enriched workout dict matching template format
@@ -167,56 +109,32 @@ def enrich_workout_data(
 
     if not activity_id:
         logger.warning("Workout missing activity ID, skipping enrichment")
-        return transform_to_template_format(workout, None, {}, {})
+        return transform_to_template_format(workout, None)
 
     try:
         # Small delay to avoid rate limiting
         time.sleep(0.1)
 
-        # Fetch activity details for name and interval check
+        # Fetch activity details for name and elevation
         activity_details = intervals_client.get_activity_details(str(activity_id))
 
-        # Fetch comprehensive power curves for this workout
-        # Standard durations: 15s, 30s, 1m, 2m, 3m, 5m, 10m, 15m, 20m, 30m, 45m, 60m
-        comprehensive_durations = [15, 30, 60, 120, 180, 300, 600, 900, 1200, 1800, 2700, 3600]
-        power_curves = intervals_client.get_activity_power_curves(
-            str(activity_id),
-            durations=comprehensive_durations
-        )
-
-        # Fetch intervals only if workout has structured intervals
-        interval_data = {}
-        if fetch_intervals and has_structured_intervals(activity_details):
-            logger.info(f"Activity {activity_id} has structured intervals, fetching...")
-            raw_intervals = intervals_client.get_activity_intervals(str(activity_id))
-            interval_data = extract_interval_power(raw_intervals)
-
-        return transform_to_template_format(
-            workout,
-            activity_details,
-            power_curves,
-            interval_data
-        )
+        return transform_to_template_format(workout, activity_details)
 
     except Exception as e:
         logger.error(f"Error enriching workout {activity_id}: {str(e)}")
         # Return basic transformed data on error
-        return transform_to_template_format(workout, None, {}, {})
+        return transform_to_template_format(workout, None)
 
 
 def transform_to_template_format(
     workout: dict,
-    activity_details: Optional[dict],
-    power_curves: dict,
-    interval_data: dict
+    activity_details: Optional[dict]
 ) -> dict:
     """Transform workout data to match template format.
 
     Args:
         workout: Base workout data
         activity_details: Full activity details (may be None)
-        power_curves: Power curve data for workout
-        interval_data: Extracted interval power data
 
     Returns:
         Workout dict matching template format
@@ -229,11 +147,9 @@ def transform_to_template_format(
         "np": workout.get("normalized_power_watts"),
         "avg_power": workout.get("avg_power_watts"),
         "if": workout.get("intensity_factor"),
-        "distance": workout.get("distance_meters"),
-        "elevation_gain": activity_details.get("total_elevation_gain") if activity_details else None,
-        "time_in_zones": transform_zone_times(workout.get("power_zone_times")),
-        "interval_power": interval_data,
-        "power_curve_max": power_curves
+        "distance_km": workout.get("distance_meters") / 1000,
+        "elevation_gain_m": activity_details.get("total_elevation_gain") if activity_details else None,
+        "time_in_zones": transform_zone_times(workout.get("power_zone_times"))
     }
 
 
@@ -283,7 +199,7 @@ def generate_test_data(
 
     for idx, workout in enumerate(history, 1):
         logger.info(f"Processing workout {idx}/{total}...")
-        enriched = enrich_workout_data(workout, intervals_client, fetch_intervals=True)
+        enriched = enrich_workout_data(workout, intervals_client)
         enriched_workouts.append(enriched)
 
     # Fetch aggregate power curves
