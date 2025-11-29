@@ -17,7 +17,8 @@ import argparse
 import json
 import logging
 import time
-from datetime import datetime
+from collections import defaultdict
+from datetime import datetime, timedelta
 from typing import Optional
 
 from src.config import AppConfig
@@ -153,6 +154,80 @@ def transform_to_template_format(
     }
 
 
+def aggregate_weekly_stats(workouts: list[dict]) -> dict:
+    """Aggregate workout data into weekly summaries.
+
+    Args:
+        workouts: List of workout dicts with date, duration, tss, etc.
+
+    Returns:
+        Dict mapping week start dates (ISO format) to aggregated stats
+    """
+    weekly_data = defaultdict(lambda: {
+        "total_time_seconds": 0,
+        "total_distance_km": 0.0,
+        "total_elevation_gain_m": 0.0,
+        "total_tss": 0.0,
+        "total_time_in_zones": {
+            "zone_1": 0,
+            "zone_2": 0,
+            "zone_3": 0,
+            "zone_4": 0,
+            "zone_5": 0
+        },
+        "workout_count": 0
+    })
+
+    for workout in workouts:
+        # Parse workout date
+        date_str = workout.get("date")
+        if not date_str:
+            continue
+
+        try:
+            workout_date = datetime.fromisoformat(date_str.replace('Z', '+00:00'))
+        except (ValueError, AttributeError):
+            logger.warning(f"Could not parse date: {date_str}")
+            continue
+
+        # Calculate week start (Monday)
+        week_start = workout_date - timedelta(days=workout_date.weekday())
+        week_key = week_start.strftime("%Y-%m-%d")
+
+        # Aggregate metrics
+        weekly_data[week_key]["total_time_seconds"] += workout.get("duration") or 0
+        weekly_data[week_key]["total_distance_km"] += workout.get("distance_km") or 0.0
+        weekly_data[week_key]["total_elevation_gain_m"] += workout.get("elevation_gain_m") or 0.0
+        weekly_data[week_key]["total_tss"] += workout.get("tss") or 0.0
+        weekly_data[week_key]["workout_count"] += 1
+
+        # Aggregate time in zones
+        time_in_zones = workout.get("time_in_zones", {})
+        for zone in ["zone_1", "zone_2", "zone_3", "zone_4", "zone_5"]:
+            zone_time = time_in_zones.get(zone)
+            if zone_time:
+                weekly_data[week_key]["total_time_in_zones"][zone] += zone_time
+
+    # Convert defaultdict to regular dict and sort by week
+    result = {}
+    for week_key in sorted(weekly_data.keys(), reverse=True):
+        stats = weekly_data[week_key]
+
+        # Round numeric values for cleaner output
+        result[week_key] = {
+            "week_start": week_key,
+            "total_time_seconds": stats["total_time_seconds"],
+            "total_time_hours": round(stats["total_time_seconds"] / 3600, 2),
+            "total_distance_km": round(stats["total_distance_km"], 2),
+            "total_elevation_gain_m": round(stats["total_elevation_gain_m"], 1),
+            "total_tss": round(stats["total_tss"], 1),
+            "total_time_in_zones": stats["total_time_in_zones"],
+            "workout_count": stats["workout_count"]
+        }
+
+    return result
+
+
 def generate_test_data(
     oldest_date: Optional[str] = None,
     newest_date: Optional[str] = None,
@@ -209,6 +284,12 @@ def generate_test_data(
     # Transform power curve periods to match template
     transformed_power_curves = map_power_curve_periods(power_curves)
 
+    # Generate weekly aggregated statistics
+    logger.info("Aggregating weekly statistics...")
+    weekly_stats = aggregate_weekly_stats(enriched_workouts)
+    weeks_count = len(weekly_stats)
+    logger.info(f"Generated statistics for {weeks_count} weeks")
+
     # Prepare final data structures
     workout_history_data = {
         "workout_history": enriched_workouts
@@ -218,9 +299,14 @@ def generate_test_data(
         "max_power": transformed_power_curves
     }
 
+    weekly_summary_data = {
+        "weekly_summary": weekly_stats
+    }
+
     # Save to template file locations
     workout_history_path = config.athlete_data_dir / "athelete_workout_history.json"
     power_history_path = config.athlete_data_dir / "athelete_power_history.json"
+    weekly_summary_path = config.athlete_data_dir / "athelete_weekly_summary.json"
 
     logger.info(f"Saving workout history to {workout_history_path}")
     with open(workout_history_path, 'w', encoding='utf-8') as f:
@@ -230,11 +316,17 @@ def generate_test_data(
     with open(power_history_path, 'w', encoding='utf-8') as f:
         json.dump(power_history_data, f, indent=2, ensure_ascii=False)
 
+    logger.info(f"Saving weekly summary to {weekly_summary_path}")
+    with open(weekly_summary_path, 'w', encoding='utf-8') as f:
+        json.dump(weekly_summary_data, f, indent=2, ensure_ascii=False)
+
     logger.info("=" * 60)
     logger.info("Test data generation complete!")
     logger.info(f"Workouts processed: {len(enriched_workouts)}")
+    logger.info(f"Weeks summarized: {weeks_count}")
     logger.info(f"Workout history: {workout_history_path}")
     logger.info(f"Power history: {power_history_path}")
+    logger.info(f"Weekly summary: {weekly_summary_path}")
     logger.info("=" * 60)
 
 
