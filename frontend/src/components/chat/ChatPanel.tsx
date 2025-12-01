@@ -129,7 +129,7 @@ export function ChatPanel({ messages, onSendMessage, onSendConfirmation, connect
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask about workouts, training plans... (Enter to send, Shift+Enter for new line)"
+            placeholder="Let's get started!"
             disabled={connectionStatus !== "connected"}
             className="flex-1 min-h-12 max-h-32 resize-none"
           />

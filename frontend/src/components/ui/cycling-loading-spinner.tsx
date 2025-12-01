@@ -66,7 +66,7 @@ export function CyclingLoadingSpinner() {
       setCurrentPhrase(
         CYCLING_PHRASES[Math.floor(Math.random() * CYCLING_PHRASES.length)]
       );
-    }, 5000);
+    }, 2500);
 
     return () => clearInterval(interval);
   }, []);

@@ -1,31 +1,560 @@
-2025-12-01 16:10:29 - INFO - ============================================================
-2025-12-01 16:10:29 - INFO - Train-R Application Started
-2025-12-01 16:10:29 - INFO - ============================================================
-2025-12-01 16:10:29 - INFO - CORS configured for origins: http://localhost:3001
-2025-12-01 16:10:29 - INFO - FastAPI application created and configured
-2025-12-01 16:10:29 - INFO - ============================================================
-2025-12-01 16:10:29 - INFO - Starting Train-R API Server (Refactored Architecture)
-2025-12-01 16:10:29 - INFO - ============================================================
-2025-12-01 16:10:29 - INFO - Configuration validated
-2025-12-01 16:10:29 - INFO - LLMClient initialized with endpoint: https://generativelanguage.googleapis.com/v1beta/openai/
-2025-12-01 16:10:29 - INFO - LLM client initialized: gemini-2.5-flash
-2025-12-01 16:10:29 - INFO - CoachService initialized with 2 tools: create_one_off_workout, get_user_workout_history
-2025-12-01 16:10:29 - INFO - Coach service initialized with tool support
-2025-12-01 16:10:29 - INFO - ============================================================
-2025-12-01 16:10:29 - INFO - Train-R API Server ready
-2025-12-01 16:10:29 - INFO - ============================================================
-2025-12-01 16:10:33 - INFO - Client b1bb7afd-fb6c-48de-b4ee-592e28bf7116 connected. Total connections: 1
-2025-12-01 16:10:33 - INFO - Client 5e82007b-a13e-45d5-9b36-476a078edd1f connected. Total connections: 2
-2025-12-01 16:10:36 - INFO - Client 44c56968-1f0c-4240-a376-c434cf7c48fc connected. Total connections: 3
-2025-12-01 16:10:44 - INFO - Client b1bb7afd-fb6c-48de-b4ee-592e28bf7116 disconnected. Total connections: 2
-2025-12-01 16:10:44 - INFO - Client b1bb7afd-fb6c-48de-b4ee-592e28bf7116 disconnected
-2025-12-01 16:10:44 - INFO - Client 5e82007b-a13e-45d5-9b36-476a078edd1f disconnected. Total connections: 1
-2025-12-01 16:10:44 - INFO - Client 5e82007b-a13e-45d5-9b36-476a078edd1f disconnected
-2025-12-01 16:10:44 - INFO - Client 44c56968-1f0c-4240-a376-c434cf7c48fc disconnected. Total connections: 0
-2025-12-01 16:10:44 - INFO - Client 44c56968-1f0c-4240-a376-c434cf7c48fc disconnected
-2025-12-01 16:10:44 - INFO - ============================================================
-2025-12-01 16:10:44 - INFO - Shutting down Train-R API Server
-2025-12-01 16:10:44 - INFO - ============================================================
-2025-12-01 16:10:44 - INFO - Closing 0 active WebSocket connections...
-2025-12-01 16:10:44 - INFO - All WebSocket connections closed
-2025-12-01 16:10:44 - INFO - Shutdown complete
+2025-12-01 16:19:53 - INFO - ============================================================
+2025-12-01 16:19:53 - INFO - Train-R Application Started
+2025-12-01 16:19:53 - INFO - ============================================================
+2025-12-01 16:19:53 - INFO - CORS configured for origins: http://localhost:3001
+2025-12-01 16:19:53 - INFO - FastAPI application created and configured
+2025-12-01 16:19:53 - INFO - ============================================================
+2025-12-01 16:19:53 - INFO - Starting Train-R API Server (Refactored Architecture)
+2025-12-01 16:19:53 - INFO - ============================================================
+2025-12-01 16:19:53 - INFO - Configuration validated
+2025-12-01 16:19:53 - INFO - LLMClient initialized with endpoint: https://generativelanguage.googleapis.com/v1beta/openai/
+2025-12-01 16:19:53 - INFO - LLM client initialized: gemini-2.5-flash
+2025-12-01 16:19:53 - INFO - CoachService initialized with 2 tools: create_one_off_workout, get_user_workout_history
+2025-12-01 16:19:53 - INFO - Coach service initialized with tool support
+2025-12-01 16:19:53 - INFO - ============================================================
+2025-12-01 16:19:53 - INFO - Train-R API Server ready
+2025-12-01 16:19:53 - INFO - ============================================================
+2025-12-01 16:20:04 - INFO - Client 282858fa-cacc-4134-9d0a-b3d53f911811 connected. Total connections: 1
+2025-12-01 16:20:04 - INFO - Client 282858fa-cacc-4134-9d0a-b3d53f911811 disconnected. Total connections: 0
+2025-12-01 16:20:04 - INFO - Client 282858fa-cacc-4134-9d0a-b3d53f911811 disconnected
+2025-12-01 16:20:05 - INFO - Client 3d4e85dd-fde4-40b7-ba4c-58a7d54bdfb1 connected. Total connections: 1
+2025-12-01 16:20:05 - INFO - Client 3d4e85dd-fde4-40b7-ba4c-58a7d54bdfb1 disconnected. Total connections: 0
+2025-12-01 16:20:05 - INFO - Client 3d4e85dd-fde4-40b7-ba4c-58a7d54bdfb1 disconnected
+2025-12-01 16:20:05 - INFO - Client ebc5330d-af90-41eb-90ab-04c863a166f7 connected. Total connections: 1
+2025-12-01 16:20:12 - INFO - Received from ebc5330d-af90-41eb-90ab-04c863a166f7: Hello, how are you today?
+2025-12-01 16:20:12 - INFO - USER: Hello, how are you today?
+2025-12-01 16:20:14 - INFO - ASSISTANT: Hello! I'm doing great, thank you.
+
+It's a pleasure to meet you! As a professional cycling coach, I can help you with a few things:
+
+1.  **Reviewing your training history:** We can analyze your past performance in structured workouts and unstructured rides.
+2.  **Creating one-off training sessions:** I can design a single workout for you to use immediately.
+3.  **Developing longer-term training plans:** I can create a multi-workout plan to help you achieve a specific long-term goal.
+
+What would you like to start with today?
+2025-12-01 16:21:38 - INFO - Received from ebc5330d-af90-41eb-90ab-04c863a166f7: CAn you generate me a Threshold workout? FTP 350, Time 60 mins
+2025-12-01 16:21:38 - INFO - USER: CAn you generate me a Threshold workout? FTP 350, Time 60 mins
+2025-12-01 16:21:39 - INFO - TOOL_CALL: create_one_off_workout
+2025-12-01 16:21:39 - INFO - Generating workout: FTP=350W, Duration=3600s, Type=Threshold
+2025-12-01 16:21:39 - INFO - Generating Threshold workout (FTP: 350W, Duration: 3600s)
+2025-12-01 16:21:49 - INFO - Workout generated successfully
+2025-12-01 16:21:49 - INFO - Workout generated successfully
+2025-12-01 16:21:49 - INFO - Parsing workout: Threshold 3x10min @ 99% FTP, Duration: 3600s, Granularity: 60s
+2025-12-01 16:21:49 - INFO - Parsed workout into 60 segments
+2025-12-01 16:21:49 - INFO - Workout created for scheduling at: 2025-12-01T17:21:49
+2025-12-01 16:21:49 - INFO - TOOL_RESULT: {
+  "success": true,
+  "zwo_content": "<workout_file>\n<name>Threshold 3x10min @ 99% FTP</name>\n<author>train-r-generator</author>\n<description>A 60-minute Threshold workout featuring 3x10 minute efforts at 99% FTP, designed to improve sustained power.</description>\n<sportType>bike</sportType>\n<workout>\n    <!-- WARMUP (10 minutes) -->\n    <Warmup Duration=\"300\" PowerLow=\"0.5\" PowerHigh=\"0.7\"/>\n    <SteadyState Duration=\"180\" Power=\"0.8\"/>\n    <SteadyState Duration=\"120\" Power=\"0.5\"/>\n    \n    <!-- MAIN INTERVALS (45 minutes) -->\n    <IntervalsT Repeat=\"3\" OnDuration=\"600\" OffDuration=\"300\" OnPower=\"0.99\" OffPower=\"0.5\"/>\n\n    <!-- COOLDOWN (5 minutes) -->\n    <Cooldown Duration=\"300\" PowerLow=\"0.7\" PowerHigh=\"0.4\"/>\n    \n</workout>\n</workout_file>",
+  "filename": "Threshold_20251201_162149.zwo",
+  "workout_type": "Threshold",
+  "scheduled_time": "2025-12-01T17:21:49",
+  "external_id": "train-r-20251201_162149",
+  "message": "Workout created and ready to schedule for 2025-12-01T17:21:49",
+  "workout_data": {
+    "segments": [
+      {
+        "time": "0:00",
+        "duration": 60,
+        "power": 175,
+        "zone": "warmup",
+        "trainingZone": "Z1",
+        "label": "Warmup"
+      },
+      {
+        "time": "1:00",
+        "duration": 60,
+        "power": 192,
+        "zone": "warmup",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "2:00",
+        "duration": 60,
+        "power": 210,
+        "zone": "warmup",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "3:00",
+        "duration": 60,
+        "power": 227,
+        "zone": "warmup",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "4:00",
+        "duration": 60,
+        "power": 244,
+        "zone": "warmup",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "5:00",
+        "duration": 60,
+        "power": 280,
+        "zone": "tempo",
+        "trainingZone": "Z3",
+        "label": "Interval 1"
+      },
+      {
+        "time": "6:00",
+        "duration": 60,
+        "power": 280,
+        "zone": "tempo",
+        "trainingZone": "Z3",
+        "label": null
+      },
+      {
+        "time": "7:00",
+        "duration": 60,
+        "power": 280,
+        "zone": "tempo",
+        "trainingZone": "Z3",
+        "label": null
+      },
+      {
+        "time": "8:00",
+        "duration": 60,
+        "power": 175,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": "Recovery"
+      },
+      {
+        "time": "9:00",
+        "duration": 60,
+        "power": 175,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "10:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": "Interval 1"
+      },
+      {
+        "time": "11:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "12:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "13:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "14:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "15:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "16:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "17:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "18:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "19:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "20:00",
+        "duration": 60,
+        "power": 175,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": "Recovery"
+      },
+      {
+        "time": "21:00",
+        "duration": 60,
+        "power": 175,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "22:00",
+        "duration": 60,
+        "power": 175,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "23:00",
+        "duration": 60,
+        "power": 175,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "24:00",
+        "duration": 60,
+        "power": 175,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "25:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": "Interval 2"
+      },
+      {
+        "time": "26:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "27:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "28:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "29:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "30:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "31:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "32:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "33:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "34:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "35:00",
+        "duration": 60,
+        "power": 175,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": "Recovery"
+      },
+      {
+        "time": "36:00",
+        "duration": 60,
+        "power": 175,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "37:00",
+        "duration": 60,
+        "power": 175,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "38:00",
+        "duration": 60,
+        "power": 175,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "39:00",
+        "duration": 60,
+        "power": 175,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "40:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": "Interval 3"
+      },
+      {
+        "time": "41:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "42:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "43:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "44:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "45:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "46:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "47:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "48:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "49:00",
+        "duration": 60,
+        "power": 346,
+        "zone": "threshold",
+        "trainingZone": "Z5",
+        "label": null
+      },
+      {
+        "time": "50:00",
+        "duration": 60,
+        "power": 175,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": "Recovery"
+      },
+      {
+        "time": "51:00",
+        "duration": 60,
+        "power": 175,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "52:00",
+        "duration": 60,
+        "power": 175,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "53:00",
+        "duration": 60,
+        "power": 175,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "54:00",
+        "duration": 60,
+        "power": 175,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "55:00",
+        "duration": 60,
+        "power": 244,
+        "zone": "cooldown",
+        "trainingZone": "Z2",
+        "label": "Cooldown"
+      },
+      {
+        "time": "56:00",
+        "duration": 60,
+        "power": 218,
+        "zone": "cooldown",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "57:00",
+        "duration": 60,
+        "power": 192,
+        "zone": "cooldown",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "58:00",
+        "duration": 60,
+        "power": 166,
+        "zone": "cooldown",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "59:00",
+        "duration": 60,
+        "power": 140,
+        "zone": "cooldown",
+        "trainingZone": "Z1",
+        "label": null
+      }
+    ],
+    "ftp": 350,
+    "totalDuration": 3600,
+    "workoutName": "Threshold 3x10min @ 99% FTP",
+    "description": "A 60-minute Threshold workout featuring 3x10 minute efforts at 99% FTP, designed to improve sustained power."
+  }
+}
+2025-12-01 16:21:51 - INFO - ASSISTANT: Great! I've generated a 60-minute Threshold workout for you with an FTP of 350.
+
+Here's the workout breakdown:
+
+**Workout Name:** Threshold 3x10min @ 99% FTP
+**Description:** A 60-minute Threshold workout featuring 3x10 minute efforts at 99% FTP, designed to improve sustained power.
+
+**Workout Structure:**
+
+*   **Warmup:** 10 minutes, gradually increasing from 50% to 80% FTP, with a short recovery at 50% FTP.
+*   **Main Intervals:** 3 repetitions of:
+    *   10 minutes at 99% FTP (346.5 watts)
+    *   5 minutes recovery at 50% FTP (175 watts)
+*   **Cooldown:** 5 minutes, gradually decreasing from 70% to 40% FTP.
+
+This workout is designed to challenge your ability to sustain power at your threshold. Let me know if you'd like any adjustments or another type of workout!
+2025-12-01 16:21:53 - INFO - Received confirmation from ebc5330d-af90-41eb-90ab-04c863a166f7: False
+2025-12-01 16:22:02 - INFO - Client ebc5330d-af90-41eb-90ab-04c863a166f7 disconnected. Total connections: 0
+2025-12-01 16:22:02 - INFO - Client ebc5330d-af90-41eb-90ab-04c863a166f7 disconnected
