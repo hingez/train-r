@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { ChatMessage } from "./ChatMessage";
 import { ConfirmationDialog } from "./ConfirmationDialog";
 import type { Message, ConfirmationResponse } from "@/types/messages";
@@ -30,6 +30,17 @@ export function ChatPanel({ messages, onSendMessage, onSendConfirmation, connect
     if (input.trim() && connectionStatus === "connected") {
       onSendMessage(input.trim());
       setInput("");
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    // Submit on Enter, new line on Shift+Enter
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      if (input.trim() && connectionStatus === "connected") {
+        onSendMessage(input.trim());
+        setInput("");
+      }
     }
   };
 
@@ -88,13 +99,14 @@ export function ChatPanel({ messages, onSendMessage, onSendConfirmation, connect
 
       {/* Input */}
       <div className="border-t px-4 py-4">
-        <form onSubmit={handleSubmit} className="flex gap-2">
-          <Input
+        <form onSubmit={handleSubmit} className="flex gap-2 items-end">
+          <Textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask about workouts, training plans..."
+            onKeyDown={handleKeyDown}
+            placeholder="Ask about workouts, training plans... (Enter to send, Shift+Enter for new line)"
             disabled={connectionStatus !== "connected"}
-            className="flex-1"
+            className="flex-1 min-h-12 max-h-32 resize-none"
           />
           <Button
             type="submit"
