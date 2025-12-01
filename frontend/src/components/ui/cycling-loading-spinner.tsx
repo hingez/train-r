@@ -72,9 +72,9 @@ export function CyclingLoadingSpinner() {
   }, []);
 
   return (
-    <div className="flex items-center gap-3 text-muted-foreground">
+    <div className="flex items-center gap-3 text-purple-600 dark:text-purple-400">
       <Spinner variant="circle" size={16} />
-      <span className="text-sm">{currentPhrase}</span>
+      <span className="text-sm font-medium">{currentPhrase}</span>
     </div>
   );
 }

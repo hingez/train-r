@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { getToolAlias } from "@/lib/toolAliases";
 import type { Message } from "@/types/messages";
 
 interface ChatMessageProps {
@@ -29,8 +30,8 @@ export function ChatMessage({ message }: ChatMessageProps) {
   if (message.type === "tool_call") {
     return (
       <div className="flex justify-center mb-4">
-        <div className="bg-accent text-accent-foreground rounded-lg px-3 py-1 text-xs">
-          Executing: {message.tool_name}
+        <div className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded-lg px-3 py-1 text-xs font-medium">
+          {getToolAlias(message.tool_name)}...
         </div>
       </div>
     );
@@ -41,11 +42,13 @@ export function ChatMessage({ message }: ChatMessageProps) {
       <div className="flex justify-center mb-4">
         <div
           className={cn(
-            "rounded-lg px-3 py-1 text-xs",
-            message.success ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+            "rounded-lg px-3 py-1 text-xs font-medium",
+            message.success
+              ? "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300"
+              : "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300"
           )}
         >
-          {message.success ? "✓" : "✗"} {message.tool_name} completed
+          {message.success ? "✓" : "✗"} {getToolAlias(message.tool_name)} completed
         </div>
       </div>
     );
