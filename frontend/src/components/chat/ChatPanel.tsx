@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ChatMessage } from "./ChatMessage";
 import { ConfirmationDialog } from "./ConfirmationDialog";
+import { CyclingLoadingSpinner } from "@/components/ui/cycling-loading-spinner";
 import type { Message, ConfirmationResponse } from "@/types/messages";
 import { Send } from "lucide-react";
 
@@ -58,6 +59,21 @@ export function ChatPanel({ messages, onSendMessage, onSendConfirmation, connect
     m => m.type === "confirmation_request"
   ) as Message & { type: "confirmation_request" } | undefined;
 
+  // Determine if we're waiting for a response from the model
+  const isWaitingForResponse = () => {
+    if (chatMessages.length === 0) return false;
+
+    const lastMessage = chatMessages[chatMessages.length - 1];
+
+    // If last message is from user, we're waiting for assistant response
+    if (lastMessage.type === "user_message") return true;
+
+    // If last message is a tool_call, we're still processing
+    if (lastMessage.type === "tool_call") return true;
+
+    return false;
+  };
+
   return (
     <div className="flex flex-col h-screen bg-background border-l">
       {/* Header */}
@@ -91,6 +107,15 @@ export function ChatPanel({ messages, onSendMessage, onSendConfirmation, connect
               onConfirm={() => handleConfirmation(pendingConfirmation.confirmation_id, true)}
               onReject={() => handleConfirmation(pendingConfirmation.confirmation_id, false)}
             />
+          </div>
+        )}
+
+        {/* Show loading spinner when waiting for model response */}
+        {isWaitingForResponse() && (
+          <div className="flex justify-start mb-4">
+            <div className="bg-muted rounded-lg px-4 py-3">
+              <CyclingLoadingSpinner />
+            </div>
           </div>
         )}
 
