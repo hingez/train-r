@@ -40,7 +40,7 @@ The conversation maintains context, so you can refine workouts or ask follow-up 
 uv run train-r
 ```
 
-Opens at http://localhost:5173 (backend at http://localhost:8000)
+Opens at http://localhost:3001 (backend at http://localhost:3000)
 
 ### Example
 

@@ -1,30 +1,27 @@
-# Train-R Frontend POC
+# Train-R Frontend
 
-A lightweight proof-of-concept frontend for the Train-R cycling coach application.
+A modern, responsive frontend for the Train-R cycling coach application, built with Next.js and shadcn/ui.
 
 ## Architecture
 
 ### Stack
-- **Frontend**: React + TypeScript + Vite
+- **Framework**: Next.js 15+ (App Router)
+- **Language**: TypeScript
 - **Styling**: Tailwind CSS + shadcn/ui components
 - **State Management**: React hooks
 - **Communication**: WebSocket for real-time chat
 - **Backend**: FastAPI + WebSocket
 
 ### Layout
-- **75% Display Panel** (left): Dynamic content area that shows different views based on conversation
-- **25% Chat Panel** (right): Real-time chat interface with the AI coach
+- **75% Display Panel** (left): Dynamic content area that shows different views based on conversation (Workouts, Charts, Welcome screen).
+- **25% Chat Panel** (right): Real-time chat interface with the AI coach.
 
 ## Getting Started
 
 ### Prerequisites
 - Node.js 18+ and npm
 - Python 3.12+ with uv
-- Environment variables set in `.env`:
-  ```
-  GEMINI_API_KEY=your_key_here
-  INTERVALS_API_KEY=your_key_here
-  ```
+- Environment variables set in `.env` (see root README)
 
 ### Installation
 
@@ -36,37 +33,26 @@ A lightweight proof-of-concept frontend for the Train-R cycling coach applicatio
 
 2. **Install Backend Dependencies** (from project root)
    ```bash
-   uv add fastapi uvicorn websockets
+   uv sync
    ```
 
 ### Running the Application
 
-You need **two terminal windows**:
+The easiest way to run the full stack is using the unified startup command from the project root:
 
-#### Terminal 1: Backend Server
 ```bash
-# From project root
-uv run scripts/dev_server.py
+uv run train-r
 ```
 
-This starts the FastAPI server at `http://localhost:8000` with:
-- WebSocket endpoint: `ws://localhost:8000/ws`
-- Health check: `http://localhost:8000/api/health`
-
-#### Terminal 2: Frontend Dev Server
-```bash
-# From project root
-cd frontend
-npm run dev
-```
-
-This starts the Vite dev server at `http://localhost:5173`
+This starts:
+- **Backend API** at `http://localhost:3000`
+- **Frontend** at `http://localhost:3001`
 
 ### Using the Application
 
-1. Open http://localhost:5173 in your browser
-2. You'll see the welcome screen in the display panel (75% left side)
-3. Use the chat panel (25% right side) to interact with the AI coach
+1. Open http://localhost:3001 in your browser
+2. You'll see the welcome screen in the display panel
+3. Use the chat panel to interact with the AI coach
 4. Try asking:
    - "Create a sweet spot workout for me"
    - "I want a 60-minute endurance ride"
@@ -77,25 +63,23 @@ This starts the Vite dev server at `http://localhost:5173`
 ```
 frontend/
 ├── src/
+│   ├── app/
+│   │   ├── globals.css      # Global styles & theme variables
+│   │   ├── layout.tsx       # Root layout
+│   │   └── page.tsx         # Main application page
 │   ├── components/
-│   │   ├── ui/              # Basic UI components (Button, Input, Card)
+│   │   ├── ui/              # shadcn/ui components (Button, Input, Card, etc.)
 │   │   ├── chat/            # Chat-specific components
-│   │   │   ├── ChatMessage.tsx
-│   │   │   └── ChatPanel.tsx
-│   │   └── display/         # Display panel components
-│   │       └── DisplayPanel.tsx
+│   │   ├── display/         # Display panel components
+│   │   └── charts/          # Recharts visualizations
 │   ├── hooks/
 │   │   └── useWebSocket.ts  # WebSocket connection hook
 │   ├── types/
 │   │   └── messages.ts      # TypeScript type definitions
-│   ├── lib/
-│   │   └── utils.ts         # Utility functions (cn)
-│   ├── App.tsx              # Main application component
-│   ├── index.css            # Tailwind + theme configuration
-│   └── main.tsx             # Entry point
+│   └── lib/
+│       └── utils.ts         # Utility functions
 ├── package.json
-├── vite.config.ts
-├── tailwind.config.js
+├── tailwind.config.ts
 └── tsconfig.json
 ```
 
@@ -105,116 +89,30 @@ The display panel can show different views based on the conversation:
 
 1. **Welcome** - Initial greeting and capabilities overview
 2. **Tool Execution** - Real-time status when executing tool calls
-3. **Workout** - Shows created workout details and schedule
-4. **Charts** - Training analytics (placeholder for future implementation)
-
-## Message Flow
-
-1. User types message in chat input → sends via WebSocket
-2. Backend processes with Gemini API
-3. If tool call needed:
-   - Backend executes tool (e.g., create workout)
-   - Sends `tool_call` message
-   - Sends `tool_result` message
-   - Sends `display_update` to change display panel
-4. Backend sends final `assistant_message` with text response
-5. Frontend updates both chat and display panel
+3. **Workout** - Shows created workout details, profile chart, and schedule
+4. **Charts** - Training analytics
 
 ## Development Notes
 
-### Hot Module Replacement (HMR)
-Vite provides instant updates when you edit files - just save and see changes immediately.
-
-### WebSocket Reconnection
-The frontend automatically attempts to reconnect if the WebSocket connection drops.
-
 ### Styling
-- Uses Tailwind CSS utility classes
-- Custom theme colors defined in `index.css`
-- shadcn/ui-inspired component patterns
+- Uses Tailwind CSS v4
+- Theme colors are defined in `src/app/globals.css` using CSS variables
+- Components are built with shadcn/ui patterns
 
-## Future Enhancements
-
-This is a POC. Potential improvements:
-
-- [ ] Parse ZWO files and visualize workout power profile
-- [ ] Add real training charts with Recharts
-- [ ] Implement dark mode toggle
-- [ ] Add user authentication
-- [ ] Persist conversation history
-- [ ] Mobile responsive design
-- [ ] Streaming LLM responses with typing indicators
-- [ ] Upload and analyze workout files
-- [ ] Integration with real intervals.icu data
+### WebSocket
+- Connects to `ws://localhost:3000/ws`
+- Automatically attempts to reconnect if the connection drops
 
 ## Troubleshooting
 
 ### WebSocket won't connect
-- Ensure backend is running on port 8000
-- Check CORS_ORIGINS in `.env` includes `http://localhost:5173`
-- Verify no firewall blocking local connections
+- Ensure backend is running on port 3000
+- Check browser console for errors
+- Verify `WS_URL` in `src/app/page.tsx` matches the backend port
 
-### Tailwind styles not working
-- Make sure `npm run dev` is running (Vite processes Tailwind)
-- Check `tailwind.config.js` content paths include your files
-
-### Import errors
-- Verify path aliases in `tsconfig.app.json` and `vite.config.ts`
-- Ensure all dependencies are installed with `npm install`
-
-## API Documentation
-
-### WebSocket Message Types
-
-**From Client:**
-```typescript
-{
-  type: "user_message",
-  content: string
-}
-```
-
-**From Server:**
-```typescript
-// Assistant response
-{
-  type: "assistant_message",
-  content: string,
-  timestamp: string
-}
-
-// Tool execution started
-{
-  type: "tool_call",
-  tool_name: string,
-  tool_args: object,
-  timestamp: string
-}
-
-// Tool execution completed
-{
-  type: "tool_result",
-  tool_name: string,
-  result: object,
-  success: boolean,
-  timestamp: string
-}
-
-// Update display panel
-{
-  type: "display_update",
-  display_type: "welcome" | "workout" | "charts" | "tool_execution",
-  data?: object,
-  timestamp: string
-}
-
-// Error occurred
-{
-  type: "error",
-  message: string,
-  timestamp: string
-}
-```
+### Styles missing
+- Ensure `globals.css` is imported in `layout.tsx`
+- Check `tailwind.config.ts` content paths
 
 ## License
 

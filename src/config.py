@@ -77,6 +77,8 @@ HISTORY_DEFAULT_LOOKBACK_DAYS = 365  # Default history window: 12 months
 POWER_CURVE_TIME_PERIODS_MONTHS = [1, 2, 3, 6, 12]  # Analysis periods: 1mo, 2mo, 3mo, 6mo, 12mo
 # Power curve durations: 15s, 30s, 1m, 2m, 3m, 5m, 10m, 15m, 20m, 30m, 45m, 60m
 POWER_CURVE_DURATIONS_SECONDS = [15, 30, 60, 120, 180, 300, 600, 900, 1200, 1800, 2700, 3600]
+# Workout-level power curve durations for test data: 5s, 1m, 5m, 20m (matching template)
+WORKOUT_POWER_CURVE_DURATIONS_SECONDS = [5, 60, 300, 1200]
 
 # ─────────────────────────────────────────────────────────────
 # Application Defaults
@@ -117,6 +119,7 @@ class AppConfig:
         tools_dir: Directory containing tool definitions
         workouts_dir: Directory for saved workout files
         history_dir: Directory for workout history data
+        athlete_data_dir: Directory for athlete test data templates
         model_name: LLM model identifier
         temperature: Model temperature setting
         llm_base_url: Base URL for LLM API
@@ -136,6 +139,7 @@ class AppConfig:
         history_default_lookback_days: Default history lookback period
         power_curve_time_periods_months: Time periods for power curve analysis
         power_curve_durations_seconds: Duration points for power curve
+        workout_power_curve_durations_seconds: Duration points for workout-level power curves
         workout_schedule_hours: Hours in the future to schedule workouts
         default_athlete_id: Default athlete ID for intervals.icu
         max_tool_iterations: Maximum iterations for tool calling loop
@@ -158,6 +162,7 @@ class AppConfig:
     tools_dir: Path
     workouts_dir: Path
     history_dir: Path
+    athlete_data_dir: Path
 
     # LLM Settings
     model_name: str = LLM_MODEL_NAME
@@ -187,6 +192,7 @@ class AppConfig:
     history_default_lookback_days: int = HISTORY_DEFAULT_LOOKBACK_DAYS
     power_curve_time_periods_months: list[int] = None
     power_curve_durations_seconds: list[int] = None
+    workout_power_curve_durations_seconds: list[int] = None
 
     # Application Settings
     workout_schedule_hours: int = DEFAULT_WORKOUT_SCHEDULE_HOURS
@@ -244,6 +250,7 @@ class AppConfig:
         tools_dir = PROJECT_ROOT / "src" / "tools" / "definitions"
         workouts_dir = data_dir / "created_workouts"
         history_dir = data_dir / "workout_history"
+        athlete_data_dir = data_dir / "athelete"  # Note: keeping existing "athelete" spelling for compatibility
 
         # Get CORS origins (default to localhost:3001 for frontend)
         cors_origins_str = os.getenv("CORS_ORIGINS", "http://localhost:3001")
@@ -271,6 +278,7 @@ class AppConfig:
             tools_dir=tools_dir,
             workouts_dir=workouts_dir,
             history_dir=history_dir,
+            athlete_data_dir=athlete_data_dir,
             cors_origins=cors_origins,
             default_athlete_id=athlete_id,
             reasoning_effort=reasoning_effort,
@@ -283,6 +291,7 @@ class AppConfig:
             log_level=log_level,
             power_curve_time_periods_months=POWER_CURVE_TIME_PERIODS_MONTHS.copy(),
             power_curve_durations_seconds=POWER_CURVE_DURATIONS_SECONDS.copy(),
+            workout_power_curve_durations_seconds=WORKOUT_POWER_CURVE_DURATIONS_SECONDS.copy(),
         )
 
     def create_directories(self):
@@ -294,6 +303,7 @@ class AppConfig:
         self.logs_dir.mkdir(exist_ok=True)
         self.workouts_dir.mkdir(parents=True, exist_ok=True)
         self.history_dir.mkdir(parents=True, exist_ok=True)
+        self.athlete_data_dir.mkdir(parents=True, exist_ok=True)
 
     def validate(self) -> bool:
         """Validate that all required paths and settings exist.

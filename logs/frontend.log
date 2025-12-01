@@ -14,3 +14,9 @@
 7:32:15 PM [vite] (client) hmr update /src/App.tsx, /src/index.css
 7:32:16 PM [vite] (client) hmr update /src/App.tsx, /src/index.css
 7:32:30 PM [vite] (client) hmr update /src/App.tsx, /src/index.css
+7:51:17 PM [vite] vite.config.ts changed, restarting server...
+7:51:17 PM [vite] (client) hmr update /src/App.tsx, /src/index.css
+7:51:17 PM [vite] server restarted.
+
+  ➜  Local:   http://localhost:3001/
+  ➜  Network: http://192.168.178.81:3001/

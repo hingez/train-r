@@ -140,6 +140,14 @@ def transform_to_template_format(
     Returns:
         Workout dict matching template format
     """
+    distance_meters = workout.get("distance_meters")
+    distance_km = None
+    if distance_meters is not None:
+        try:
+            distance_km = distance_meters / 1000
+        except Exception:
+            distance_km = None
+
     return {
         "date": workout.get("date"),
         "duration": workout.get("duration_seconds"),
@@ -148,7 +156,7 @@ def transform_to_template_format(
         "np": workout.get("normalized_power_watts"),
         "avg_power": workout.get("avg_power_watts"),
         "if": workout.get("intensity_factor"),
-        "distance_km": workout.get("distance_meters") / 1000,
+        "distance_km": distance_km,
         "elevation_gain_m": activity_details.get("total_elevation_gain") if activity_details else None,
         "time_in_zones": transform_zone_times(workout.get("power_zone_times"))
     }

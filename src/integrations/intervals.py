@@ -242,6 +242,7 @@ class IntervalsClient:
         transformed_activities = []
         for activity in result:
             transformed = {
+                "id": activity.get("id"),  # Preserve activity ID for enrichment
                 "date": activity.get("start_date_local"),
                 "type": activity.get("type"),
                 "duration_seconds": activity.get("moving_time"),
@@ -378,6 +379,158 @@ class IntervalsClient:
 
         logger.info(f"Retrieved power curves for {len(power_curves)} time periods")
         return power_curves
+
+    def get_activity_details(self, activity_id: str) -> dict:
+        """Retrieve detailed information for a single activity.
+
+        Args:
+            activity_id: intervals.icu activity ID
+
+        Returns:
+            Full activity object with name, intervals indicator, and all metrics
+
+        Raises:
+            requests.HTTPError: If API request fails
+        """
+        logger = logging.getLogger('train-r')
+        url = f"{self.config.intervals_base_url}/activity/{activity_id}"
+
+        def make_fetch_request() -> dict:
+            response = requests.get(
+                url,
+                auth=self.auth,
+                timeout=self.config.intervals_api_timeout
+            )
+            response.raise_for_status()
+            return response.json()
+
+        logger.info(f"Fetching activity details for {activity_id}")
+
+        result = retry_with_backoff(
+            func=make_fetch_request,
+            exception_types=(requests.RequestException, requests.HTTPError),
+            operation_name=f"intervals.icu fetch activity {activity_id}"
+        )
+
+        return result
+
+    def get_activity_power_curves(
+        self,
+        activity_id: str,
+        durations: Optional[list[int]] = None
+    ) -> dict:
+        """Retrieve power curve data for a single activity.
+
+        Args:
+            activity_id: intervals.icu activity ID
+            durations: List of durations in seconds (default: [5, 60, 300, 1200])
+
+        Returns:
+            Dict mapping duration keys to max watts, e.g.:
+            {"5_second": 450, "1_minute": 350, "5_minute": 324, "20_minute": 259}
+
+        Raises:
+            requests.HTTPError: If API request fails
+        """
+        logger = logging.getLogger('train-r')
+
+        # Default to template durations if not specified
+        if durations is None:
+            durations = [5, 60, 300, 1200]  # 5s, 1min, 5min, 20min
+
+        url = f"{self.config.intervals_base_url}/activity/{activity_id}/power-curves"
+        params = {
+            'secs': ','.join(str(s) for s in durations)
+        }
+
+        def make_fetch_request() -> dict:
+            response = requests.get(
+                url,
+                params=params,
+                auth=self.auth,
+                timeout=self.config.intervals_api_timeout
+            )
+            response.raise_for_status()
+            return response.json()
+
+        logger.info(f"Fetching power curves for activity {activity_id}")
+
+        try:
+            result = retry_with_backoff(
+                func=make_fetch_request,
+                exception_types=(requests.RequestException, requests.HTTPError),
+                operation_name=f"intervals.icu fetch power curves for activity {activity_id}"
+            )
+
+            # Transform to template format
+            power_curve_max = {}
+            if isinstance(result, dict) and 'secs' in result and 'watts' in result:
+                secs_array = result['secs']
+                watts_array = result['watts']
+
+                for idx, duration_secs in enumerate(secs_array):
+                    if idx < len(watts_array):
+                        # Format duration as template key
+                        if duration_secs < 60:
+                            duration_key = f"{duration_secs}_second"
+                        elif duration_secs < 3600:
+                            minutes = duration_secs // 60
+                            duration_key = f"{minutes}_minute"
+                        else:
+                            hours = duration_secs // 3600
+                            duration_key = f"{hours}_hour"
+
+                        power_curve_max[duration_key] = watts_array[idx]
+
+            return power_curve_max
+
+        except requests.HTTPError as e:
+            logger.warning(f"Failed to fetch power curves for activity {activity_id}: {str(e)}")
+            # Return empty dict if power data not available
+            return {}
+
+    def get_activity_intervals(self, activity_id: str) -> list[dict]:
+        """Retrieve detailed interval data for a single activity.
+
+        Args:
+            activity_id: intervals.icu activity ID
+
+        Returns:
+            List of interval objects with power, duration, TSS data
+
+        Raises:
+            requests.HTTPError: If API request fails
+        """
+        logger = logging.getLogger('train-r')
+        url = f"{self.config.intervals_base_url}/activity/{activity_id}/intervals"
+
+        def make_fetch_request() -> dict:
+            response = requests.get(
+                url,
+                auth=self.auth,
+                timeout=self.config.intervals_api_timeout
+            )
+            response.raise_for_status()
+            return response.json()
+
+        logger.info(f"Fetching intervals for activity {activity_id}")
+
+        try:
+            result = retry_with_backoff(
+                func=make_fetch_request,
+                exception_types=(requests.RequestException, requests.HTTPError),
+                operation_name=f"intervals.icu fetch intervals for activity {activity_id}"
+            )
+
+            # Extract icu_intervals array if present
+            if isinstance(result, dict) and 'icu_intervals' in result:
+                return result['icu_intervals']
+
+            return []
+
+        except requests.HTTPError as e:
+            logger.warning(f"Failed to fetch intervals for activity {activity_id}: {str(e)}")
+            return []
 
     def test_connection(self) -> bool:
         """Test API connection and authentication.
