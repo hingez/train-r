@@ -35,7 +35,7 @@ export default function Home() {
       </div>
 
       {/* Chat Panel - 25% */}
-      <div className="w-1/4 min-w-[300px] h-full border-l">
+      <div className="w-1/4 min-w-[300px] h-full border-l bg-muted/10">
         <ChatPanel
           messages={messages}
           onSendMessage={sendMessage}

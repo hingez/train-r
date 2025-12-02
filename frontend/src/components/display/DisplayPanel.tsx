@@ -3,6 +3,7 @@ import type { DisplayType } from "@/types/messages";
 import { Activity, Bike, TrendingUp } from "lucide-react";
 import { WorkoutChart } from "@/components/charts/WorkoutChart";
 import { generateMockWorkout } from "@/lib/mockWorkoutData";
+import { TrainingPlanDisplay } from "@/components/training-plan/TrainingPlanDisplay";
 
 interface DisplayPanelProps {
   displayType: DisplayType;
@@ -12,53 +13,70 @@ interface DisplayPanelProps {
 export function DisplayPanel({ displayType, displayData }: DisplayPanelProps) {
   if (displayType === "welcome") {
     return (
-      <div className="flex items-center justify-center h-full bg-gradient-to-br from-blue-50 to-indigo-50 p-8">
-        <div className="max-w-2xl text-center space-y-6">
-          <div className="flex justify-center">
-            <Bike className="h-16 w-16 text-primary" />
+      <div className="flex items-center justify-center h-full bg-background p-8">
+        <div className="max-w-3xl w-full space-y-8">
+          {/* Hero Section */}
+          <div className="text-center space-y-4">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-lg bg-primary-muted mb-4">
+              <Bike className="h-10 w-10 text-primary" />
+            </div>
+            <h1 className="text-4xl font-bold tracking-tight">Train-R</h1>
+            <p className="text-lg text-muted-foreground max-w-xl mx-auto">
+              AI-powered cycling coach ready to help you achieve your goals
+            </p>
           </div>
-          <h1 className="text-4xl font-bold">Welcome to Train-R</h1>
-          <p className="text-lg text-muted-foreground">
-            Your AI-powered cycling coach is ready to help you achieve your goals.
-          </p>
-          <div className="grid grid-cols-3 gap-4 mt-8">
-            <Card>
-              <CardHeader>
-                <Activity className="h-6 w-6 mb-2 text-primary" />
-                <CardTitle className="text-sm">Analyze History</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-xs text-muted-foreground">
-                  Review your training history and performance
-                </p>
+
+          {/* Feature Cards */}
+          <div className="grid grid-cols-3 gap-4">
+            <Card className="hover:shadow-md transition-shadow">
+              <CardContent className="pt-6 text-center space-y-3">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-muted">
+                  <Activity className="h-6 w-6 text-foreground" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">Analyze History</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Review training history and performance trends
+                  </p>
+                </div>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader>
-                <Bike className="h-6 w-6 mb-2 text-primary" />
-                <CardTitle className="text-sm">Create Workouts</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-xs text-muted-foreground">
-                  Generate custom workouts for your goals
-                </p>
+
+            <Card className="hover:shadow-md transition-shadow">
+              <CardContent className="pt-6 text-center space-y-3">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-muted">
+                  <Bike className="h-6 w-6 text-foreground" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">Create Workouts</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Generate custom workouts for your goals
+                  </p>
+                </div>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader>
-                <TrendingUp className="h-6 w-6 mb-2 text-primary" />
-                <CardTitle className="text-sm">Training Plans</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-xs text-muted-foreground">
-                  Build comprehensive training programs
-                </p>
+
+            <Card className="hover:shadow-md transition-shadow">
+              <CardContent className="pt-6 text-center space-y-3">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-muted">
+                  <TrendingUp className="h-6 w-6 text-foreground" />
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">Training Plans</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Build comprehensive training programs
+                  </p>
+                </div>
               </CardContent>
             </Card>
           </div>
-          <p className="text-sm text-muted-foreground mt-8">
-            Start by asking me to create a workout or analyze your training history.
-          </p>
+
+          {/* Call to Action */}
+          <div className="text-center pt-4">
+            <p className="text-sm text-muted-foreground">
+              Start by asking me to create a workout or analyze your training history
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -164,6 +182,15 @@ export function DisplayPanel({ displayType, displayData }: DisplayPanelProps) {
           </CardContent>
         </Card>
       </div>
+    );
+  }
+
+  if (displayType === "training_plan") {
+    return (
+      <TrainingPlanDisplay
+        planData={displayData?.plan}
+        summarizedData={displayData?.summarized}
+      />
     );
   }
 

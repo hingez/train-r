@@ -77,9 +77,9 @@ export function ChatPanel({ messages, onSendMessage, onSendConfirmation, connect
   return (
     <div className="flex flex-col h-screen bg-background border-l">
       {/* Header */}
-      <div className="border-b px-4 py-3">
-        <h2 className="font-semibold">Train-R Coach</h2>
-        <p className="text-xs text-muted-foreground">
+      <div className="border-b px-4 py-4 bg-muted/30">
+        <h2 className="text-base font-semibold tracking-tight">Train-R Coach</h2>
+        <p className="text-xs text-muted-foreground mt-0.5">
           {connectionStatus === "connected" && "Connected"}
           {connectionStatus === "connecting" && "Connecting..."}
           {connectionStatus === "disconnected" && "Disconnected"}
@@ -129,7 +129,7 @@ export function ChatPanel({ messages, onSendMessage, onSendConfirmation, connect
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Let's get started!"
+            placeholder="Ask about workouts, training plans, or your progress..."
             disabled={connectionStatus !== "connected"}
             className="flex-1 min-h-12 max-h-32 resize-none"
           />
