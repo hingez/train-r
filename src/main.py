@@ -181,6 +181,22 @@ async def lifespan(app: FastAPI):
             logger.error(f"Athlete data sync failed: {e}", exc_info=True)
             logger.info("Continuing with existing data if available")
 
+        # Initialize current plan service and sync with intervals.icu data
+        try:
+            from src.services.current_plan_service import CurrentPlanService
+            current_plan_service = CurrentPlanService(_config)
+
+            # Load or initialize current plan from master
+            current_plan = await asyncio.to_thread(current_plan_service.load_current_plan)
+            logger.info(f"Current plan loaded with {len(current_plan.get('workouts', {}))} workouts")
+
+            # Sync event_ids from intervals.icu data
+            synced_count = await asyncio.to_thread(current_plan_service.sync_intervals_data)
+            logger.info(f"Synced {synced_count} workouts with intervals.icu event IDs")
+        except Exception as e:
+            logger.error(f"Current plan initialization failed: {e}", exc_info=True)
+            logger.info("Continuing without current plan (upload will fail if active_plan.json doesn't exist)")
+
         # Start background workout upload (non-blocking)
         upload_task = asyncio.create_task(
             background_workout_upload(_coach_service, _config)

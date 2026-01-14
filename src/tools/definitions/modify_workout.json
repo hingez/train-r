@@ -1,0 +1,18 @@
+{
+  "name": "modify_workout",
+  "description": "Modifies a planned workout from the training plan. Takes an event ID and new workout description, generates updated ZWO file, and re-uploads to intervals.icu.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "event_id": {
+        "type": "integer",
+        "description": "The intervals.icu event ID of the workout to modify"
+      },
+      "workout_description": {
+        "type": "string",
+        "description": "New workout description with intervals, intensity, and purpose (e.g., 'Change to recovery ride @ 50-60% FTP for 45 minutes')"
+      }
+    },
+    "required": ["event_id", "workout_description"]
+  }
+}

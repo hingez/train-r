@@ -56,13 +56,17 @@ class PlanUploaderService:
         self.intervals_client = intervals_client
         self.config = config
         self.checkpoint_file = config.data_dir / "upload_checkpoint.json"
-        self.plan_file = config.data_dir / "plans" / "plan_v1.json"
+        # CRITICAL: Read from active_plan.json (current plan with modifications) instead of plan_v1.json (master plan)
+        self.plan_file = config.data_dir / "plans" / "current" / "active_plan.json"
 
     def load_and_filter_workouts(
         self,
         max_workouts: int
     ) -> tuple[List[WorkoutTask], int]:
-        """Load plan and extract future workouts.
+        """Load current plan and extract future workouts.
+
+        CRITICAL: Now reads from active_plan.json (flattened structure) instead of plan_v1.json (nested structure).
+        This ensures uploads reflect any modifications made via modify_workout tool.
 
         Args:
             max_workouts: Maximum number of future workouts to process
@@ -71,79 +75,56 @@ class PlanUploaderService:
             Tuple of (workout tasks list, athlete FTP)
         """
         if not self.plan_file.exists():
-            raise FileNotFoundError(f"Plan file not found: {self.plan_file}")
+            raise FileNotFoundError(f"Active plan not found: {self.plan_file}")
 
-        # Load plan JSON
+        # Load active plan (flattened structure)
         with open(self.plan_file, 'r') as f:
-            plan = json.load(f)
+            current_plan = json.load(f)
 
         # Validate structure
-        if "athlete_profile" not in plan or "ftp" not in plan["athlete_profile"]:
-            raise ValueError("Plan missing athlete_profile.ftp")
-        if "training_plan" not in plan:
-            raise ValueError("Plan missing training_plan")
+        athlete_ftp = current_plan.get("athlete_ftp")
+        if not athlete_ftp:
+            raise ValueError("Active plan missing athlete_ftp")
 
-        athlete_ftp = plan["athlete_profile"]["ftp"]
+        workouts_dict = current_plan.get("workouts", {})
 
-        # Day name to offset mapping
-        day_offsets = {
-            "monday": 0,
-            "tuesday": 1,
-            "wednesday": 2,
-            "thursday": 3,
-            "friday": 4,
-            "saturday": 5,
-            "sunday": 6
-        }
-
-        # Flatten nested structure (phases → weeks → days)
-        all_workouts = []
-        for phase in plan["training_plan"]:
-            phase_name = phase.get("phase_name", "Unknown Phase")
-
-            for week in phase.get("weeks", []):
-                iso_week = week.get("iso_week")
-                week_start_str = week.get("start_date")
-                week_target_tss = week.get("target_tss", 0)
-
-                if not week_start_str:
-                    logger.warning(f"Week in {phase_name} missing start_date, skipping")
-                    continue
-
-                week_start = datetime.fromisoformat(week_start_str).date()
-
-                for day_name, workout in week.get("schedule", {}).items():
-                    # Calculate actual date (Monday + day offset)
-                    day_offset = day_offsets.get(day_name.lower())
-                    if day_offset is None:
-                        logger.warning(f"Unknown day name: {day_name}, skipping")
-                        continue
-
-                    workout_date = week_start + timedelta(days=day_offset)
-
-                    all_workouts.append(WorkoutTask(
-                        date=workout_date.strftime("%Y-%m-%d"),
-                        day_name=day_name,
-                        workout_type=workout.get("type", "Unknown"),
-                        duration_min=workout.get("duration_min", 0),
-                        tss=workout.get("tss", 0),
-                        description=workout.get("desc", ""),
-                        phase_name=phase_name,
-                        week_target_tss=week_target_tss,
-                        iso_week=iso_week or 0
-                    ))
-
-        # Filter and limit
+        # Convert to WorkoutTask list, filter future dates
         today = datetime.now().date()
-        future_workouts = [
-            w for w in all_workouts
-            if datetime.fromisoformat(w.date).date() >= today
-        ]
+        all_workouts = []
+
+        for date_str, workout in workouts_dict.items():
+            try:
+                workout_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+            except ValueError:
+                logger.warning(f"Invalid date format in workout: {date_str}, skipping")
+                continue
+
+            # Only future workouts
+            if workout_date < today:
+                continue
+
+            # Skip rest days (duration_min == 0)
+            if workout.get("duration_min", 0) == 0:
+                continue
+
+            task = WorkoutTask(
+                date=date_str,
+                day_name=workout["day_name"],
+                workout_type=workout["type"],
+                duration_min=workout["duration_min"],
+                tss=workout["tss"],
+                description=workout["description"],
+                phase_name=workout["phase_name"],
+                week_target_tss=workout["week_target_tss"],
+                iso_week=workout["iso_week"]
+            )
+            all_workouts.append(task)
 
         # Sort by date
-        future_workouts.sort(key=lambda w: w.date)
+        all_workouts.sort(key=lambda w: w.date)
 
-        return future_workouts[:max_workouts], athlete_ftp
+        # Limit to max_workouts
+        return all_workouts[:max_workouts], athlete_ftp
 
     def build_llm_prompt(self, task: WorkoutTask, athlete_ftp: int) -> Optional[str]:
         """Construct LLM prompt from plan data.

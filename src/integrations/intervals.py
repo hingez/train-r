@@ -634,6 +634,52 @@ class IntervalsClient:
             logger.warning(f"intervals.icu API call failed: fetch intervals - duration={duration_ms}ms, error={str(e)}")
             return []
 
+    def delete_event(self, event_id: int) -> bool:
+        """Delete an event from intervals.icu calendar.
+
+        Args:
+            event_id: intervals.icu event ID
+
+        Returns:
+            True if deleted successfully
+
+        Raises:
+            requests.HTTPError: If API request fails
+        """
+        logger = logging.getLogger('train-r')
+        url = f"{self.config.intervals_base_url}/athlete/{self.athlete_id}/events/{event_id}"
+
+        # Define the delete function for retry wrapper
+        def make_delete_request() -> bool:
+            response = requests.delete(
+                url,
+                auth=self.auth,
+                timeout=self.config.intervals_api_timeout
+            )
+            response.raise_for_status()
+            return True
+
+        # Execute with retry logic and timing
+        logger.info(f"intervals.icu API call starting: delete event {event_id}")
+        start_time = time.time()
+
+        try:
+            result = retry_with_backoff(
+                func=make_delete_request,
+                exception_types=(requests.RequestException, requests.HTTPError),
+                operation_name=f"intervals.icu delete event {event_id}"
+            )
+
+            duration_ms = int((time.time() - start_time) * 1000)
+            logger.info(f"intervals.icu API call completed: delete event - duration={duration_ms}ms, event_id={event_id}")
+
+            return result
+
+        except requests.HTTPError as e:
+            duration_ms = int((time.time() - start_time) * 1000)
+            logger.error(f"intervals.icu API call failed: delete event - duration={duration_ms}ms, event_id={event_id}, error={str(e)}")
+            raise
+
     def test_connection(self) -> bool:
         """Test API connection and authentication.
 
