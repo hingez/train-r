@@ -1,0 +1,18 @@
+{
+    "name": "create_workout_plan",
+    "description": "Creates a comprehensive multi-week training plan tailored to an athlete's FTP and specific training goal. The plan includes structured phases (Base, Build, etc.) with daily workout prescriptions including type, duration, TSS, and detailed descriptions.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "athlete_ftp": {
+                "type": "integer",
+                "description": "The athlete's current Functional Threshold Power in watts"
+            },
+            "goal_description": {
+                "type": "string",
+                "description": " Detailed description of the athlete's training goal (e.g., '111km Gravel Event with 1,761m climbing in May 2026', 'Improve threshold power', 'Build endurance base')"
+            }
+        },
+        "required": ["athlete_ftp", "goal_description"]
+    }
+}

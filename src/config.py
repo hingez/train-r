@@ -40,9 +40,15 @@ PROJECT_ROOT = Path(__file__).parent.parent
 # ─────────────────────────────────────────────────────────────
 # LLM Configuration
 # ─────────────────────────────────────────────────────────────
-LLM_MODEL_NAME = "gemini-2.5-flash"  # AI model to use for coaching
+LLM_MODEL_NAME = "gemini-3-flash-preview"  # AI model to use for coaching
 LLM_TEMPERATURE = 0  # 0 = deterministic, higher = more creative
 LLM_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/openai/"  # Gemini's OpenAI-compatible endpoint
+
+# ─────────────────────────────────────────────────────────────
+# LangSmith Observability Configuration
+# ─────────────────────────────────────────────────────────────
+LANGSMITH_TRACING_ENABLED = True  # Enable LangSmith tracing by default
+LANGSMITH_PROJECT_NAME = "train-r"  # Default LangSmith project name
 
 # ─────────────────────────────────────────────────────────────
 # Network & API Configuration
@@ -74,11 +80,19 @@ WORKOUT_MAX_DURATION = 14400  # Maximum workout duration: 4 hours
 # History & Analysis Defaults
 # ─────────────────────────────────────────────────────────────
 HISTORY_DEFAULT_LOOKBACK_DAYS = 365  # Default history window: 12 months
+HISTORY_INITIAL_LOOKBACK_DAYS = 1095  # 3 years of ride data for initial sync
 POWER_CURVE_TIME_PERIODS_MONTHS = [1, 2, 3, 6, 12]  # Analysis periods: 1mo, 2mo, 3mo, 6mo, 12mo
 # Power curve durations: 15s, 30s, 1m, 2m, 3m, 5m, 10m, 15m, 20m, 30m, 45m, 60m
 POWER_CURVE_DURATIONS_SECONDS = [15, 30, 60, 120, 180, 300, 600, 900, 1200, 1800, 2700, 3600]
 # Workout-level power curve durations for test data: 5s, 1m, 5m, 20m (matching template)
 WORKOUT_POWER_CURVE_DURATIONS_SECONDS = [5, 60, 300, 1200]
+
+# ─────────────────────────────────────────────────────────────
+# Planned Events Configuration
+# ─────────────────────────────────────────────────────────────
+PLANNED_EVENTS_LOOKBACK_DAYS = 1095  # 3 years back for initial pull
+PLANNED_EVENTS_LOOKAHEAD_DAYS = 365  # 1 year forward for planning
+WORKOUT_MATCH_TSS_THRESHOLD = 0.20  # 20% TSS variance allowed for matching
 
 # ─────────────────────────────────────────────────────────────
 # Application Defaults
@@ -94,6 +108,8 @@ UPLOAD_DEFAULT_MINUTE = 0  # Default upload minute
 # ─────────────────────────────────────────────────────────────
 LOG_FILENAME = "train-r.log"  # Name of log file in logs/ directory
 LOG_LEVEL = "INFO"  # Logging level: DEBUG, INFO, WARNING, ERROR, CRITICAL
+LOG_MAX_FILE_SIZE_MB = 10  # Max size per log file before rotation
+LOG_BACKUP_COUNT = 5  # Number of backup files to keep (50MB total)
 
 # ─────────────────────────────────────────────────────────────
 # Application Metadata
@@ -124,6 +140,9 @@ class AppConfig:
         temperature: Model temperature setting
         llm_base_url: Base URL for LLM API
         reasoning_effort: Optional reasoning effort level
+        langsmith_tracing_enabled: Whether LangSmith tracing is enabled
+        langsmith_api_key: API key for LangSmith observability
+        langsmith_project: Project name for LangSmith tracing
         intervals_base_url: Base URL for intervals.icu API
         intervals_api_timeout: Timeout for intervals.icu requests (seconds)
         backend_host: Host for backend server
@@ -170,6 +189,11 @@ class AppConfig:
     llm_base_url: str = LLM_BASE_URL
     reasoning_effort: Optional[str] = None
 
+    # LangSmith Observability Settings
+    langsmith_tracing_enabled: bool = LANGSMITH_TRACING_ENABLED
+    langsmith_api_key: Optional[str] = None
+    langsmith_project: str = LANGSMITH_PROJECT_NAME
+
     # Network & API Configuration
     intervals_base_url: str = INTERVALS_BASE_URL
     intervals_api_timeout: int = INTERVALS_API_TIMEOUT
@@ -190,9 +214,15 @@ class AppConfig:
 
     # History & Analysis Defaults
     history_default_lookback_days: int = HISTORY_DEFAULT_LOOKBACK_DAYS
+    history_initial_lookback_days: int = HISTORY_INITIAL_LOOKBACK_DAYS
     power_curve_time_periods_months: list[int] = None
     power_curve_durations_seconds: list[int] = None
     workout_power_curve_durations_seconds: list[int] = None
+
+    # Planned Events Configuration
+    planned_events_lookback_days: int = PLANNED_EVENTS_LOOKBACK_DAYS
+    planned_events_lookahead_days: int = PLANNED_EVENTS_LOOKAHEAD_DAYS
+    workout_match_tss_threshold: float = WORKOUT_MATCH_TSS_THRESHOLD
 
     # Application Settings
     workout_schedule_hours: int = DEFAULT_WORKOUT_SCHEDULE_HOURS
@@ -250,7 +280,7 @@ class AppConfig:
         tools_dir = PROJECT_ROOT / "src" / "tools" / "definitions"
         workouts_dir = data_dir / "created_workouts"
         history_dir = data_dir / "workout_history"
-        athlete_data_dir = data_dir / "athelete"  # Note: keeping existing "athelete" spelling for compatibility
+        athlete_data_dir = data_dir / "athlete"
 
         # Get CORS origins (default to localhost:3001 for frontend)
         cors_origins_str = os.getenv("CORS_ORIGINS", "http://localhost:3001")
@@ -258,6 +288,11 @@ class AppConfig:
 
         # Get reasoning effort if specified
         reasoning_effort = os.getenv("REASONING_EFFORT")  # Can be "low", "medium", "high", "none", or None
+
+        # Get LangSmith configuration
+        langsmith_api_key = os.getenv("LANGSMITH_API_KEY")
+        langsmith_project = os.getenv("LANGSMITH_PROJECT", LANGSMITH_PROJECT_NAME)
+        langsmith_tracing_enabled = os.getenv("LANGSMITH_TRACING", "true").lower() == "true"
 
         # Get optional overrides from environment
         backend_host = os.getenv("BACKEND_HOST", BACKEND_HOST)
@@ -282,6 +317,9 @@ class AppConfig:
             cors_origins=cors_origins,
             default_athlete_id=athlete_id,
             reasoning_effort=reasoning_effort,
+            langsmith_api_key=langsmith_api_key,
+            langsmith_project=langsmith_project,
+            langsmith_tracing_enabled=langsmith_tracing_enabled,
             backend_host=backend_host,
             backend_port=backend_port,
             frontend_port=frontend_port,

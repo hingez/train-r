@@ -1,11 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { ChatMessage } from "./ChatMessage";
 import { ConfirmationDialog } from "./ConfirmationDialog";
 import { CyclingLoadingSpinner } from "@/components/ui/cycling-loading-spinner";
 import type { Message, ConfirmationResponse } from "@/types/messages";
-import { Send } from "lucide-react";
+import { Send, Bot, Sparkles } from "lucide-react";
 
 interface ChatPanelProps {
   messages: Message[];
@@ -34,8 +33,7 @@ export function ChatPanel({ messages, onSendMessage, onSendConfirmation, connect
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    // Submit on Enter, new line on Shift+Enter
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       if (input.trim() && connectionStatus === "connected") {
@@ -53,54 +51,70 @@ export function ChatPanel({ messages, onSendMessage, onSendConfirmation, connect
     });
   };
 
-  // Filter out display_update messages from chat view and find pending confirmations
-  const chatMessages = messages.filter(m => m.type !== "display_update");
+  // Filter out display updates and completed tool_call messages
+  const toolResults = messages.filter(m => m.type === "tool_result");
+  const completedToolNames = new Set(
+    toolResults.map(m => m.type === "tool_result" ? m.tool_name : null).filter(Boolean)
+  );
+
+  const chatMessages = messages.filter(m => {
+    if (m.type === "display_update") return false;
+    // Hide tool_call if its corresponding tool_result exists
+    if (m.type === "tool_call" && completedToolNames.has(m.tool_name)) {
+      return false;
+    }
+    return true;
+  });
+
   const pendingConfirmation = messages.find(
     m => m.type === "confirmation_request"
   ) as Message & { type: "confirmation_request" } | undefined;
 
-  // Determine if we're waiting for a response from the model
   const isWaitingForResponse = () => {
     if (chatMessages.length === 0) return false;
-
     const lastMessage = chatMessages[chatMessages.length - 1];
-
-    // If last message is from user, we're waiting for assistant response
     if (lastMessage.type === "user_message") return true;
-
-    // If last message is a tool_call, we're still processing
     if (lastMessage.type === "tool_call") return true;
-
     return false;
   };
 
   return (
-    <div className="flex flex-col h-screen bg-background border-l">
+    <div className="flex flex-col h-full bg-card-light dark:bg-card-dark border-l border-gray-200 dark:border-gray-700 shadow-xl z-20">
       {/* Header */}
-      <div className="border-b px-4 py-4 bg-muted/30">
-        <h2 className="text-base font-semibold tracking-tight">Train-R Coach</h2>
-        <p className="text-xs text-muted-foreground mt-0.5">
-          {connectionStatus === "connected" && "Connected"}
-          {connectionStatus === "connecting" && "Connecting..."}
-          {connectionStatus === "disconnected" && "Disconnected"}
-          {connectionStatus === "error" && "Connection Error"}
-        </p>
+      <div className="border-b border-gray-100 dark:border-gray-700 p-4 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-purple-400 flex items-center justify-center text-white font-bold shadow-lg">
+              <Bot className="w-5 h-5" />
+            </div>
+            <div className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white dark:border-gray-800 ${connectionStatus === 'connected' ? 'bg-green-500' : 'bg-gray-400'}`}></div>
+          </div>
+          <div>
+            <h2 className="text-sm font-bold tracking-tight text-text-light dark:text-text-dark">Train-R Coach</h2>
+            <p className="text-[10px] text-subtext-light dark:text-subtext-dark font-medium uppercase tracking-wider">AI Assistant</p>
+          </div>
+        </div>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-4">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-background-light/50 dark:bg-background-dark/50">
         {chatMessages.length === 0 && (
-          <div className="text-center text-muted-foreground text-sm mt-8">
-            Send a message to start chatting with your cycling coach!
+          <div className="flex flex-col items-center justify-center h-full text-center p-6 space-y-3 opacity-60">
+            <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary">
+              <Sparkles className="w-6 h-6" />
+            </div>
+            <p className="text-sm text-subtext-light dark:text-subtext-dark">
+              Ready to help you crush your goals. Ask me to analyze your data or build a plan!
+            </p>
           </div>
         )}
+
         {chatMessages.map((message, index) => (
           <ChatMessage key={index} message={message} />
         ))}
 
-        {/* Show confirmation dialog if there's a pending confirmation */}
         {pendingConfirmation && (
-          <div className="mt-4">
+          <div className="mt-4 animate-in fade-in slide-in-from-bottom-2">
             <ConfirmationDialog
               question={pendingConfirmation.question}
               context={pendingConfirmation.context}
@@ -110,10 +124,9 @@ export function ChatPanel({ messages, onSendMessage, onSendConfirmation, connect
           </div>
         )}
 
-        {/* Show loading spinner when waiting for model response */}
         {isWaitingForResponse() && (
-          <div className="flex justify-start mb-4">
-            <div className="bg-muted rounded-lg px-4 py-3">
+          <div className="flex justify-start animate-in fade-in slide-in-from-bottom-1">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl rounded-tl-sm px-4 py-3 shadow-sm border border-gray-100 dark:border-gray-700">
               <CyclingLoadingSpinner />
             </div>
           </div>
@@ -123,19 +136,22 @@ export function ChatPanel({ messages, onSendMessage, onSendConfirmation, connect
       </div>
 
       {/* Input */}
-      <div className="border-t px-4 py-4">
-        <form onSubmit={handleSubmit} className="flex gap-2 items-end">
-          <Textarea
+      <div className="p-4 bg-card-light dark:bg-card-dark border-t border-gray-100 dark:border-gray-700">
+        <form onSubmit={handleSubmit} className="relative flex items-center gap-2">
+          <input
+            type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Ask about workouts, training plans, or your progress..."
+            placeholder="Ask about workouts..."
             disabled={connectionStatus !== "connected"}
-            className="flex-1 min-h-12 max-h-32 resize-none"
+            className="w-full bg-gray-100 dark:bg-gray-800 border-0 rounded-full py-3 px-4 pl-4 pr-12 text-sm text-text-light dark:text-text-dark placeholder-subtext-light dark:placeholder-subtext-dark focus:ring-2 focus:ring-primary focus:bg-white dark:focus:bg-gray-900 transition-all shadow-inner"
           />
           <Button
             type="submit"
+            size="icon"
             disabled={!input.trim() || connectionStatus !== "connected"}
+            className="absolute right-1.5 top-1.5 h-8 w-8 rounded-full bg-primary hover:bg-primary-dark text-white shadow-md transition-transform active:scale-95"
           >
             <Send className="h-4 w-4" />
           </Button>

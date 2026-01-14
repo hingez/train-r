@@ -1,12 +1,13 @@
 """Centralized logging configuration for Train-R."""
 import logging
+from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
-from src.config import LOG_FILENAME, LOG_LEVEL, PROJECT_ROOT
+from src.config import LOG_FILENAME, LOG_LEVEL, LOG_MAX_FILE_SIZE_MB, LOG_BACKUP_COUNT, PROJECT_ROOT
 
 
 def setup_logger():
-    """Set up centralized logger. Clears log file on each run.
+    """Set up centralized logger with rotation.
 
     Returns:
         Logger instance that can be used throughout the application
@@ -16,10 +17,6 @@ def setup_logger():
     log_dir.mkdir(exist_ok=True)
 
     log_path = log_dir / LOG_FILENAME
-
-    # Clear the log file
-    with open(log_path, 'w') as f:
-        f.write("")
 
     # Get or create logger
     logger = logging.getLogger('train-r')
@@ -31,8 +28,12 @@ def setup_logger():
     # Remove existing handlers to avoid duplicates
     logger.handlers.clear()
 
-    # File handler
-    file_handler = logging.FileHandler(log_path)
+    # Rotating file handler
+    file_handler = RotatingFileHandler(
+        log_path,
+        maxBytes=LOG_MAX_FILE_SIZE_MB * 1024 * 1024,
+        backupCount=LOG_BACKUP_COUNT
+    )
     file_handler.setLevel(numeric_level)
 
     # Formatter with timestamp

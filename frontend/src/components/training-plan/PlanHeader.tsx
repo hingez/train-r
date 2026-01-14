@@ -1,3 +1,5 @@
+"use client";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, Target, TrendingUp } from "lucide-react";
 import type { AthleteProfile } from "@/types/trainingPlan";
@@ -14,56 +16,42 @@ export function PlanHeader({ profile }: PlanHeaderProps) {
   });
 
   return (
-    <Card className="mb-6">
-      <CardContent className="pt-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <div className="flex items-start gap-3">
-            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-muted shrink-0">
-              <Target className="h-5 w-5 text-primary" />
-            </div>
-            <div className="min-w-0">
-              <h4 className="metric-label mb-1">Goal Event</h4>
-              <p className="text-sm font-medium truncate">{profile.goal_event}</p>
-            </div>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <Card className="hover:shadow-md transition-shadow">
+        <CardContent className="p-4 flex items-center gap-4">
+          <div className="h-12 w-12 rounded-xl bg-purple-50 dark:bg-purple-900/20 text-primary flex items-center justify-center ring-1 ring-primary/10">
+            <Target className="h-6 w-6" />
           </div>
+          <div>
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Goal Event</h3>
+            <p className="font-bold text-foreground truncate max-w-[150px]">{profile.goal_event}</p>
+          </div>
+        </CardContent>
+      </Card>
 
-          <div className="flex items-start gap-3">
-            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-muted shrink-0">
-              <Calendar className="h-5 w-5 text-primary" />
-            </div>
-            <div className="min-w-0">
-              <h4 className="metric-label mb-1">Race Date</h4>
-              <p className="text-sm font-medium">{goalDate}</p>
-            </div>
+      <Card className="hover:shadow-md transition-shadow">
+        <CardContent className="p-4 flex items-center gap-4">
+          <div className="h-12 w-12 rounded-xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center ring-1 ring-blue-500/10">
+            <Calendar className="h-6 w-6" />
           </div>
+          <div>
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Race Date</h3>
+            <p className="font-bold text-foreground">{goalDate}</p>
+          </div>
+        </CardContent>
+      </Card>
 
-          <div className="flex items-start gap-3">
-            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary-muted shrink-0">
-              <TrendingUp className="h-5 w-5 text-primary" />
-            </div>
-            <div className="min-w-0">
-              <h4 className="metric-label mb-1">Philosophy</h4>
-              <p className="text-sm font-medium truncate">{profile.training_philosophy}</p>
-            </div>
+      <Card className="hover:shadow-md transition-shadow">
+        <CardContent className="p-4 flex items-center gap-4">
+          <div className="h-12 w-12 rounded-xl bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 flex items-center justify-center ring-1 ring-green-500/10">
+            <TrendingUp className="h-6 w-6" />
           </div>
-        </div>
-
-        <div className="pt-4 border-t space-y-3">
-          <h4 className="metric-label">Current Status</h4>
-          <p className="text-sm text-foreground/80 leading-relaxed">{profile.current_status}</p>
-        </div>
-
-        <div className="mt-4 pt-4 border-t flex gap-6 text-sm">
-          <div className="flex items-baseline gap-2">
-            <span className="metric-label">FTP:</span>
-            <span className="text-lg font-semibold">{profile.ftp}W</span>
+          <div>
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Stats</h3>
+            <p className="font-bold text-foreground">{profile.ftp}W <span className="text-muted-foreground font-normal sm:text-xs">• {profile.weight_kg}kg</span></p>
           </div>
-          <div className="flex items-baseline gap-2">
-            <span className="metric-label">Weight:</span>
-            <span className="text-lg font-semibold">{profile.weight_kg}kg</span>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

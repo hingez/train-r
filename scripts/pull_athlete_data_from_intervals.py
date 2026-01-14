@@ -1,17 +1,17 @@
-"""Generate structured test data from intervals.icu API.
+"""Pull athlete data from intervals.icu API.
 
 This script fetches athlete workout history and power data from intervals.icu
-and populates the template files with real data for testing purposes.
+and stores it for the Train-R dashboard and AI coach.
 
 Usage:
     # Default: fetch last 12 months of workouts
-    uv run python scripts/generate_test_data.py
+    uv run python scripts/pull_athlete_data_from_intervals.py
 
-    # Fetch only last 10 workouts (faster for testing)
-    uv run python scripts/generate_test_data.py --limit 10
+    # Fetch only last 10 workouts
+    uv run python scripts/pull_athlete_data_from_intervals.py --limit 10
 
     # Custom date range
-    uv run python scripts/generate_test_data.py --oldest 2025-01-01 --newest 2025-10-31
+    uv run python scripts/pull_athlete_data_from_intervals.py --oldest 2025-01-01 --newest 2025-10-31
 """
 import argparse
 import json
@@ -311,10 +311,10 @@ def generate_test_data(
         "weekly_summary": weekly_stats
     }
 
-    # Save to template file locations
-    workout_history_path = config.athlete_data_dir / "athelete_workout_history.json"
-    power_history_path = config.athlete_data_dir / "athelete_power_history.json"
-    weekly_summary_path = config.athlete_data_dir / "athelete_weekly_summary.json"
+    # Save to athlete data directory
+    workout_history_path = config.athlete_data_dir / "athlete_workout_history.json"
+    power_history_path = config.athlete_data_dir / "athlete_power_history.json"
+    weekly_summary_path = config.athlete_data_dir / "athlete_weekly_summary.json"
 
     logger.info(f"Saving workout history to {workout_history_path}")
     with open(workout_history_path, 'w', encoding='utf-8') as f:

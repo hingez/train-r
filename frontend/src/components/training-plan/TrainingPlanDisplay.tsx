@@ -3,6 +3,7 @@ import { PlanHeader } from "./PlanHeader";
 import { PlanOverview } from "./overview/PlanOverview";
 import { WeeklyCalendar } from "./weekly/WeeklyCalendar";
 import { DailyDetails } from "./daily/DailyDetails";
+import { HomeButton } from "@/components/ui/HomeButton";
 import type { TrainingPlan, DailySummary } from "@/types/trainingPlan";
 
 type ViewMode = "overview" | "weekly" | "daily";
@@ -10,9 +11,10 @@ type ViewMode = "overview" | "weekly" | "daily";
 interface TrainingPlanDisplayProps {
   planData: TrainingPlan;
   summarizedData: DailySummary[];
+  onGoHome?: () => void;
 }
 
-export function TrainingPlanDisplay({ planData }: TrainingPlanDisplayProps) {
+export function TrainingPlanDisplay({ planData, onGoHome }: TrainingPlanDisplayProps) {
   const [currentView, setCurrentView] = useState<ViewMode>("overview");
   const [selectedWeekIndex, setSelectedWeekIndex] = useState<number>(0);
   const [selectedPhase, setSelectedPhase] = useState<string | null>(null);
@@ -59,6 +61,11 @@ export function TrainingPlanDisplay({ planData }: TrainingPlanDisplayProps) {
   return (
     <div className="p-8 overflow-y-auto h-full">
       <div className="max-w-7xl mx-auto">
+        {onGoHome && (
+          <div className="mb-4">
+            <HomeButton onClick={onGoHome} />
+          </div>
+        )}
         <div className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight mb-2">Training Plan</h1>
           {currentView !== "overview" && (

@@ -50,16 +50,14 @@ class WorkoutGenerator:
 
     def generate_workout(
         self,
-        client_ftp: int,
-        workout_duration: int,
-        workout_type: str
+        workout_description: str,
+        session_id: str = None
     ) -> str:
         """Generate a ZWO workout file using LLM.
 
         Args:
-            client_ftp: Client's FTP in watts
-            workout_duration: Duration in seconds
-            workout_type: Type of workout (e.g., "Sweet Spot", "Threshold")
+            workout_description: Description of the workout to generate
+            session_id: Optional session ID for LangSmith thread grouping
 
         Returns:
             ZWO file content as string
@@ -71,13 +69,11 @@ class WorkoutGenerator:
         # Build user prompt with parameters
         user_prompt = f"""Generate a workout with the following parameters:
 
-FTP: {client_ftp}W
-Duration: {workout_duration} seconds ({workout_duration // 60} minutes)
-Type: {workout_type}
+Workout Description: {workout_description}
 
 Return ONLY the ZWO XML file content, nothing else."""
 
-        logger.info(f"Generating {workout_type} workout (FTP: {client_ftp}W, Duration: {workout_duration}s)")
+        logger.info(f"Generating workout with description: {workout_description}")
 
         # Build messages with system instruction and user prompt
         messages = [
@@ -90,7 +86,9 @@ Return ONLY the ZWO XML file content, nothing else."""
             messages=messages,
             model=self.config.model_name,
             temperature=self.config.temperature,
-            reasoning_effort=self.config.reasoning_effort
+            reasoning_effort=self.config.reasoning_effort,
+            session_id=session_id,
+            run_name="WorkoutGenerator"
         )
 
         # Extract and validate ZWO content
@@ -102,12 +100,12 @@ Return ONLY the ZWO XML file content, nothing else."""
         logger.info("Workout generated successfully")
         return zwo_content
 
-    def save_workout(self, zwo_content: str, workout_type: str) -> str:
+    def save_workout(self, zwo_content: str, workout_name: str) -> str:
         """Save ZWO workout to file.
 
         Args:
             zwo_content: ZWO file content
-            workout_type: Type of workout for filename
+            workout_name: Name of the workout for filename
 
         Returns:
             Path to saved file as string
@@ -116,12 +114,12 @@ Return ONLY the ZWO XML file content, nothing else."""
         output_dir = self.config.workouts_dir
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        # Sanitize workout type for filename
-        safe_type = re.sub(r'[^a-z0-9]+', '_', workout_type.lower()).strip('_')
+        # Sanitize workout name for filename
+        safe_name = re.sub(r'[^a-z0-9]+', '_', workout_name.lower()).strip('_')
 
         # Generate filename with timestamp
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"{safe_type}_{timestamp}.zwo"
+        filename = f"{safe_name}_{timestamp}.zwo"
         filepath = output_dir / filename
 
         # Save file

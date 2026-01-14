@@ -6,17 +6,17 @@
         "properties": {
             "client_ftp": {
                 "type": "integer",
-                "description": "Client FTP"
+                "description": "Client's FTP in watts"
             },
-            "workout_duration": { 
+            "workout_duration": {
                 "type": "integer",
                 "description": "Workout duration in seconds"
             },
-            "workout_type": {
+            "workout_description": {
                 "type": "string",
-                "description": "Workout type"
+                "description": "Detailed description of the workout structure and goals (e.g., 'Sweet spot intervals with progressive overload', '5x5min VO2max intervals', 'Endurance ride with tempo bursts')"
             }
         },
-        "required": ["client_ftp", "workout_duration", "workout_type"]
+        "required": ["client_ftp", "workout_duration", "workout_description"]
     }
 }

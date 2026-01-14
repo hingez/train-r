@@ -6,6 +6,8 @@ description = "LLM-powered cycling coach with Gemini and intervals.icu integrati
 requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.119.0",
+    "langchain>=1.2.3",
+    "langsmith>=0.6.2",
     "openai>=1.0.0",
     "python-dotenv>=1.0.0",
     "requests>=2.32.0",

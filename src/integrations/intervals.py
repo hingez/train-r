@@ -2,6 +2,7 @@
 import base64
 import os
 import logging
+import time
 from pathlib import Path
 from typing import Optional
 import requests
@@ -89,6 +90,10 @@ class IntervalsClient:
         payload = [event]
         url = f"{self.config.intervals_base_url}/athlete/{self.athlete_id}/events/bulk"
 
+        logger = logging.getLogger('train-r')
+        logger.info(f"intervals.icu API call starting: upload workout {filename}")
+        start_time = time.time()
+
         # Define custom retry logic for HTTP errors
         def should_retry(exception: Exception) -> bool:
             """Determine if HTTP error should be retried.
@@ -118,12 +123,18 @@ class IntervalsClient:
             return result[0] if isinstance(result, list) and result else result
 
         # Execute with retry logic
-        return retry_with_backoff(
+        result = retry_with_backoff(
             func=make_upload_request,
             exception_types=(requests.RequestException, requests.HTTPError),
             operation_name="intervals.icu upload",
             should_retry_func=should_retry
         )
+
+        duration_ms = int((time.time() - start_time) * 1000)
+        event_id = result.get('id', 'unknown') if isinstance(result, dict) else 'unknown'
+        logger.info(f"intervals.icu API call completed: upload workout - duration={duration_ms}ms, event_id={event_id}")
+
+        return result
 
     def upload_workout_content(
         self,
@@ -227,8 +238,9 @@ class IntervalsClient:
             response.raise_for_status()
             return response.json()
 
-        # Execute with retry logic
-        logger.info(f"Fetching activity history from intervals.icu (oldest={oldest_date}, newest={newest_date})")
+        # Execute with retry logic and timing
+        logger.info(f"intervals.icu API call starting: fetch activities (oldest={oldest_date}, newest={newest_date})")
+        start_time = time.time()
 
         result = retry_with_backoff(
             func=make_fetch_request,
@@ -236,7 +248,8 @@ class IntervalsClient:
             operation_name="intervals.icu fetch activities"
         )
 
-        logger.info(f"Successfully fetched {len(result)} completed activities from intervals.icu")
+        duration_ms = int((time.time() - start_time) * 1000)
+        logger.info(f"intervals.icu API call completed: fetch activities - duration={duration_ms}ms, count={len(result)}")
 
         # Transform activities to use standardized field names
         transformed_activities = []
@@ -253,12 +266,83 @@ class IntervalsClient:
                 "training_stress_score": activity.get("icu_training_load"),
                 "power_zone_times": activity.get("icu_zone_times"),
                 "acute_training_load": activity.get("icu_atl"),
-                "chronic_training_load": activity.get("icu_ctl")
+                "chronic_training_load": activity.get("icu_ctl"),
+                "paired_event_id": activity.get("paired_event_id")  # Link to planned event
             }
             transformed_activities.append(transformed)
 
         logger.info(f"Transformed {len(transformed_activities)} activities with standardized field names")
         return transformed_activities
+
+    def get_planned_events(
+        self,
+        oldest_date: Optional[str] = None,
+        newest_date: Optional[str] = None,
+        category: str = "WORKOUT"
+    ) -> list[dict]:
+        """Retrieve planned workout events from intervals.icu calendar.
+
+        Uses the /events endpoint to fetch planned workouts from the athlete's calendar.
+        Returns events with category=WORKOUT by default (planned workouts).
+
+        Args:
+            oldest_date: Start date in YYYY-MM-DD format (optional)
+            newest_date: End date in YYYY-MM-DD format (optional)
+            category: Event category to filter (default: WORKOUT for planned workouts)
+
+        Returns:
+            List of event dicts with workout details
+
+        Raises:
+            requests.HTTPError: If API request fails
+        """
+        logger = logging.getLogger('train-r')
+
+        # Default to today if not specified
+        if not oldest_date:
+            oldest_date = datetime.now().strftime("%Y-%m-%d")
+
+        if not newest_date:
+            # Default to today + 7 days if not specified
+            newest_date = (datetime.now() + timedelta(days=7)).strftime("%Y-%m-%d")
+
+        # Use events endpoint for planned workouts
+        # Format parameter empty for JSON (not .csv)
+        url = f"{self.config.intervals_base_url}/athlete/{self.athlete_id}/events"
+        params = {
+            'oldest': oldest_date,
+            'newest': newest_date,
+            'category': category
+        }
+
+        # Define the fetch function for retry wrapper
+        def make_fetch_request() -> list[dict]:
+            response = requests.get(
+                url,
+                params=params,
+                auth=self.auth,
+                timeout=self.config.intervals_api_timeout
+            )
+            response.raise_for_status()
+            return response.json()
+
+        # Execute with retry logic and timing
+        logger.info(f"intervals.icu API call starting: fetch events (oldest={oldest_date}, newest={newest_date}, category={category})")
+        start_time = time.time()
+
+        result = retry_with_backoff(
+            func=make_fetch_request,
+            exception_types=(requests.RequestException, requests.HTTPError),
+            operation_name="intervals.icu fetch events"
+        )
+
+        duration_ms = int((time.time() - start_time) * 1000)
+        logger.info(f"intervals.icu API call completed: fetch events - duration={duration_ms}ms, count={len(result)}")
+
+        # Events are returned with good field names, but we'll preserve key ones
+        # No transformation needed - keep original structure for now
+        logger.info(f"Retrieved {len(result)} planned events")
+        return result
 
     def get_power_curves(
         self,
@@ -325,8 +409,9 @@ class IntervalsClient:
                 response.raise_for_status()
                 return response.json()
 
-            # Execute with retry logic
-            logger.info(f"Fetching {months}-month power curve from intervals.icu")
+            # Execute with retry logic and timing
+            logger.info(f"intervals.icu API call starting: fetch {months}-month power curve")
+            start_time = time.time()
 
             try:
                 result = retry_with_backoff(
@@ -334,6 +419,8 @@ class IntervalsClient:
                     exception_types=(requests.RequestException, requests.HTTPError),
                     operation_name=f"intervals.icu fetch {months}-month power curve"
                 )
+
+                duration_ms = int((time.time() - start_time) * 1000)
 
                 # Transform the result to extract best power values for requested durations
                 # The API returns: {secs: [15, 30, ...], curves: [{watts: [...]}, ...]}
@@ -365,14 +452,15 @@ class IntervalsClient:
 
                         power_curves[period_key][duration_key] = max_watts
 
-                    logger.info(f"Successfully fetched {months}-month power curve with {len(power_curves[period_key])} data points")
+                    logger.info(f"intervals.icu API call completed: fetch {months}-month power curve - duration={duration_ms}ms, data_points={len(power_curves[period_key])}")
                 else:
                     # If response structure is different, log the structure for debugging
                     logger.warning(f"Unexpected response structure for {months}-month curve: {result.keys() if isinstance(result, dict) else type(result)}")
                     power_curves[period_key] = result
 
             except requests.HTTPError as e:
-                logger.error(f"Failed to fetch {months}-month power curve: {str(e)}")
+                duration_ms = int((time.time() - start_time) * 1000)
+                logger.error(f"intervals.icu API call failed: fetch {months}-month power curve - duration={duration_ms}ms, error={str(e)}")
                 # Continue with other time periods even if one fails
                 period_key = f"{months}_month_max_power" if months == 1 else f"{months}_months_max_power"
                 power_curves[period_key] = {"error": str(e)}
@@ -404,13 +492,17 @@ class IntervalsClient:
             response.raise_for_status()
             return response.json()
 
-        logger.info(f"Fetching activity details for {activity_id}")
+        logger.info(f"intervals.icu API call starting: fetch activity {activity_id} details")
+        start_time = time.time()
 
         result = retry_with_backoff(
             func=make_fetch_request,
             exception_types=(requests.RequestException, requests.HTTPError),
             operation_name=f"intervals.icu fetch activity {activity_id}"
         )
+
+        duration_ms = int((time.time() - start_time) * 1000)
+        logger.info(f"intervals.icu API call completed: fetch activity details - duration={duration_ms}ms")
 
         return result
 
@@ -453,7 +545,8 @@ class IntervalsClient:
             response.raise_for_status()
             return response.json()
 
-        logger.info(f"Fetching power curves for activity {activity_id}")
+        logger.info(f"intervals.icu API call starting: fetch power curves for activity {activity_id}")
+        start_time = time.time()
 
         try:
             result = retry_with_backoff(
@@ -461,6 +554,8 @@ class IntervalsClient:
                 exception_types=(requests.RequestException, requests.HTTPError),
                 operation_name=f"intervals.icu fetch power curves for activity {activity_id}"
             )
+
+            duration_ms = int((time.time() - start_time) * 1000)
 
             # Transform to template format
             power_curve_max = {}
@@ -482,10 +577,12 @@ class IntervalsClient:
 
                         power_curve_max[duration_key] = watts_array[idx]
 
+            logger.info(f"intervals.icu API call completed: fetch power curves - duration={duration_ms}ms, data_points={len(power_curve_max)}")
             return power_curve_max
 
         except requests.HTTPError as e:
-            logger.warning(f"Failed to fetch power curves for activity {activity_id}: {str(e)}")
+            duration_ms = int((time.time() - start_time) * 1000)
+            logger.warning(f"intervals.icu API call failed: fetch power curves - duration={duration_ms}ms, error={str(e)}")
             # Return empty dict if power data not available
             return {}
 
@@ -513,7 +610,8 @@ class IntervalsClient:
             response.raise_for_status()
             return response.json()
 
-        logger.info(f"Fetching intervals for activity {activity_id}")
+        logger.info(f"intervals.icu API call starting: fetch intervals for activity {activity_id}")
+        start_time = time.time()
 
         try:
             result = retry_with_backoff(
@@ -523,13 +621,17 @@ class IntervalsClient:
             )
 
             # Extract icu_intervals array if present
+            intervals = []
             if isinstance(result, dict) and 'icu_intervals' in result:
-                return result['icu_intervals']
+                intervals = result['icu_intervals']
 
-            return []
+            duration_ms = int((time.time() - start_time) * 1000)
+            logger.info(f"intervals.icu API call completed: fetch intervals - duration={duration_ms}ms, count={len(intervals)}")
+            return intervals
 
         except requests.HTTPError as e:
-            logger.warning(f"Failed to fetch intervals for activity {activity_id}: {str(e)}")
+            duration_ms = int((time.time() - start_time) * 1000)
+            logger.warning(f"intervals.icu API call failed: fetch intervals - duration={duration_ms}ms, error={str(e)}")
             return []
 
     def test_connection(self) -> bool:

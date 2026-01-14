@@ -44,7 +44,7 @@ class ToolResult(BaseModel):
 class DisplayUpdate(BaseModel):
     """Display panel update instruction."""
     type: Literal["display_update"] = "display_update"
-    display_type: Literal["welcome", "workout", "charts", "tool_execution"]
+    display_type: Literal["welcome", "workout", "charts", "tool_execution", "training_plan", "dashboard", "loading"]
     data: Optional[dict[str, Any]] = None
     timestamp: datetime = Field(default_factory=datetime.now)
 
@@ -70,6 +70,29 @@ class ConfirmationResponse(BaseModel):
     type: Literal["confirmation_response"] = "confirmation_response"
     confirmation_id: str
     confirmed: bool
+
+
+class UploadProgress(BaseModel):
+    """Upload progress notification."""
+    type: Literal["upload_progress"] = "upload_progress"
+    current: int
+    total: int
+    workout_date: str
+    timestamp: datetime = Field(default_factory=datetime.now)
+
+
+class UploadComplete(BaseModel):
+    """Upload completion notification."""
+    type: Literal["upload_complete"] = "upload_complete"
+    summary: dict[str, Any]
+    timestamp: datetime = Field(default_factory=datetime.now)
+
+
+class UploadError(BaseModel):
+    """Upload error notification."""
+    type: Literal["upload_error"] = "upload_error"
+    error: str
+    timestamp: datetime = Field(default_factory=datetime.now)
 
 
 class ConnectionStatus(BaseModel):

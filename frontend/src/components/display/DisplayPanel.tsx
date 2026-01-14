@@ -1,16 +1,22 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { DisplayType } from "@/types/messages";
+import type { DashboardData } from "@/types/dashboard";
 import { Activity, Bike, TrendingUp } from "lucide-react";
 import { WorkoutChart } from "@/components/charts/WorkoutChart";
 import { generateMockWorkout } from "@/lib/mockWorkoutData";
 import { TrainingPlanDisplay } from "@/components/training-plan/TrainingPlanDisplay";
+import { Dashboard } from "@/components/dashboard/Dashboard";
+import { LoadingDisplay } from "@/components/dashboard/LoadingDisplay";
+import { HomeButton } from "@/components/ui/HomeButton";
+import { CyclistClimbingAnimation } from "@/components/ui/cyclist-climbing-animation";
 
 interface DisplayPanelProps {
   displayType: DisplayType;
   displayData?: Record<string, any>;
+  onGoHome?: () => void;
 }
 
-export function DisplayPanel({ displayType, displayData }: DisplayPanelProps) {
+export function DisplayPanel({ displayType, displayData, onGoHome }: DisplayPanelProps) {
   if (displayType === "welcome") {
     return (
       <div className="flex items-center justify-center h-full bg-background p-8">
@@ -84,20 +90,20 @@ export function DisplayPanel({ displayType, displayData }: DisplayPanelProps) {
 
   if (displayType === "tool_execution") {
     return (
-      <div className="flex items-center justify-center h-full">
-        <Card className="max-w-md">
-          <CardHeader>
-            <CardTitle>Executing: {displayData?.tool_name}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center justify-center py-8">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-            </div>
-            <p className="text-sm text-muted-foreground text-center">
+      <div className="flex items-center justify-center h-full bg-gradient-to-b from-background-light to-gray-50 dark:from-background-dark dark:to-gray-900">
+        <div className="flex flex-col items-center gap-4">
+          <div className="scale-75">
+            <CyclistClimbingAnimation />
+          </div>
+          <div className="text-center">
+            <p className="text-lg font-semibold text-foreground mb-1">
+              {displayData?.tool_name || "Working"}
+            </p>
+            <p className="text-sm text-muted-foreground">
               {displayData?.status === "executing" && "Processing your request..."}
             </p>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     );
   }
@@ -110,15 +116,13 @@ export function DisplayPanel({ displayType, displayData }: DisplayPanelProps) {
 
     return (
       <div className="p-8 space-y-6 overflow-y-auto h-full">
+        {onGoHome && (
+          <div className="mb-4">
+            <HomeButton onClick={onGoHome} />
+          </div>
+        )}
         {/* Workout Profile Chart */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Workout Profile</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <WorkoutChart workoutData={workoutData} showFTPLine={true} />
-          </CardContent>
-        </Card>
+        <WorkoutChart workoutData={workoutData} showFTPLine={true} />
 
         {/* Workout Details */}
         <Card>
@@ -171,6 +175,11 @@ export function DisplayPanel({ displayType, displayData }: DisplayPanelProps) {
   if (displayType === "charts") {
     return (
       <div className="p-8">
+        {onGoHome && (
+          <div className="mb-4">
+            <HomeButton onClick={onGoHome} />
+          </div>
+        )}
         <Card>
           <CardHeader>
             <CardTitle>Training Analytics</CardTitle>
@@ -190,8 +199,21 @@ export function DisplayPanel({ displayType, displayData }: DisplayPanelProps) {
       <TrainingPlanDisplay
         planData={displayData?.plan}
         summarizedData={displayData?.summarized}
+        onGoHome={onGoHome}
       />
     );
+  }
+
+  if (displayType === "dashboard") {
+    return (
+      <div className="h-full overflow-y-auto">
+        <Dashboard dashboardData={displayData as DashboardData} />
+      </div>
+    );
+  }
+
+  if (displayType === "loading") {
+    return <LoadingDisplay message={displayData?.message} />;
   }
 
   return null;

@@ -9,6 +9,7 @@ from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 
 from src.api.websocket import manager
 from src.api.schemas import UserMessage, ConfirmationResponse
+from src.services.dashboard_service import DashboardService
 
 logger = logging.getLogger('train-r')
 
@@ -57,12 +58,56 @@ async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket, client_id)
 
     try:
-        # Send welcome message
+        # Send loading screen first
         await manager.send_display_update(
-            display_type="welcome",
-            data={"message": "Welcome to Train-R!"},
+            display_type="loading",
+            data={"message": "Refreshing workouts from intervals.icu..."},
             client_id=client_id
         )
+
+        # Sync athlete data on every page refresh
+        try:
+            from src.integrations.intervals import IntervalsClient
+            from src.services.data_sync import DataSyncService
+            import asyncio
+
+            intervals_client = IntervalsClient(
+                api_key=coach_service.config.intervals_api_key,
+                config=coach_service.config
+            )
+            sync_service = DataSyncService(intervals_client, coach_service.config)
+
+            # Run sync in thread pool with timeout (skip power curves for speed)
+            sync_result = await asyncio.wait_for(
+                asyncio.to_thread(sync_service.sync_athlete_data, skip_power_curves=True),
+                timeout=30.0
+            )
+            logger.info(f"Data sync complete for client {client_id[:8]}: {sync_result}")
+
+        except asyncio.TimeoutError:
+            logger.warning(f"Data sync timed out for client {client_id[:8]}, using existing data")
+        except Exception as e:
+            logger.error(f"Data sync failed for client {client_id[:8]}: {e}", exc_info=True)
+
+        # Send dashboard data automatically (replaces welcome screen)
+        try:
+            dashboard_service = DashboardService(coach_service.config)
+            dashboard_data = dashboard_service.get_dashboard_data()
+
+            await manager.send_display_update(
+                display_type="dashboard",
+                data=dashboard_data,
+                client_id=client_id
+            )
+            logger.info(f"Dashboard data sent to client {client_id[:8]}")
+        except Exception as e:
+            logger.error(f"Error sending dashboard data: {e}", exc_info=True)
+            # Fallback to welcome screen if dashboard fails
+            await manager.send_display_update(
+                display_type="welcome",
+                data={"message": "Welcome to Train-R!"},
+                client_id=client_id
+            )
 
         # Message loop
         while True:
@@ -79,51 +124,67 @@ async def websocket_endpoint(websocket: WebSocket):
                     if client_id in pending_confirmations and confirmation.confirmation_id in pending_confirmations[client_id]:
                         action_data = pending_confirmations[client_id][confirmation.confirmation_id]
 
-                        if confirmation.confirmed:
-                            # User confirmed - save and upload the workout
-                            from src.integrations.intervals import IntervalsClient
-                            from src.main import get_coach_service
-
-                            coach_service = get_coach_service()
-
-                            try:
-                                # Save the workout first
-                                filepath = coach_service.workout_generator.save_workout(
-                                    action_data["zwo_content"],
-                                    action_data["workout_type"]
-                                )
-                                logger.info(f"Workout saved to: {filepath}")
-
-                                # Upload to intervals.icu
-                                intervals_client = IntervalsClient(
-                                    api_key=coach_service.config.intervals_api_key,
-                                    config=coach_service.config
-                                )
-
-                                response = intervals_client.upload_workout(
-                                    file_path=filepath,
-                                    start_date=action_data["scheduled_time"],
-                                    external_id=action_data["external_id"]
-                                )
-
-                                logger.info(f"Upload successful - Event ID: {response.get('id')}")
-
-                                # Send success message
+                        # Handle training plan upload
+                        if action_data.get("action") == "upload_training_plan":
+                            if confirmation.confirmed:
+                                # TODO: Future implementation - bulk upload to intervals.icu
                                 await manager.send_assistant_message(
-                                    f"Workout saved and uploaded successfully to intervals.icu! Scheduled for {action_data['scheduled_time']}",
+                                    "Uploading workouts to intervals.icu... (Feature coming soon!)",
+                                    client_id
+                                )
+                            else:
+                                await manager.send_assistant_message(
+                                    "Plan created but not uploaded. You can view and manage it here.",
                                     client_id
                                 )
 
-                            except Exception as e:
-                                logger.error(f"Error saving/uploading workout: {str(e)}", exc_info=True)
-                                await manager.send_error(f"Failed to save/upload workout: {str(e)}", client_id)
-
+                        # Handle single workout upload
                         else:
-                            # User rejected - send rejection message without saving
-                            await manager.send_assistant_message(
-                                "Workout not saved or sent to intervals.icu as requested.",
-                                client_id
-                            )
+                            if confirmation.confirmed:
+                                # User confirmed - save and upload the workout
+                                from src.integrations.intervals import IntervalsClient
+                                from src.main import get_coach_service
+
+                                coach_service = get_coach_service()
+
+                                try:
+                                    # Save the workout first
+                                    filepath = coach_service.workout_generator.save_workout(
+                                        action_data["zwo_content"],
+                                        action_data.get("workout_name", "workout")
+                                    )
+                                    logger.info(f"Workout saved to: {filepath}")
+
+                                    # Upload to intervals.icu
+                                    intervals_client = IntervalsClient(
+                                        api_key=coach_service.config.intervals_api_key,
+                                        config=coach_service.config
+                                    )
+
+                                    response = intervals_client.upload_workout(
+                                        file_path=filepath,
+                                        start_date=action_data["scheduled_time"],
+                                        external_id=action_data["external_id"]
+                                    )
+
+                                    logger.info(f"Upload successful - Event ID: {response.get('id')}")
+
+                                    # Send success message
+                                    await manager.send_assistant_message(
+                                        f"Workout saved and uploaded successfully to intervals.icu! Scheduled for {action_data['scheduled_time']}",
+                                        client_id
+                                    )
+
+                                except Exception as e:
+                                    logger.error(f"Error saving/uploading workout: {str(e)}", exc_info=True)
+                                    await manager.send_error(f"Failed to save/upload workout: {str(e)}", client_id)
+
+                            else:
+                                # User rejected - send rejection message without saving
+                                await manager.send_assistant_message(
+                                    "Workout not saved or sent to intervals.icu as requested.",
+                                    client_id
+                                )
 
                         # Clean up the pending confirmation
                         del pending_confirmations[client_id][confirmation.confirmation_id]
@@ -134,7 +195,10 @@ async def websocket_endpoint(websocket: WebSocket):
 
                 # Parse user message
                 user_msg = UserMessage(**data)
-                logger.info(f"Received from {client_id}: {user_msg.content}")
+
+                # Generate request ID for correlation
+                request_id = str(uuid.uuid4())[:8]  # Short UUID for readability
+                logger.info(f"[client={client_id[:8]}] [req={request_id}] Received: {user_msg.content[:100]}")
 
                 # Define callbacks for tool execution
                 async def on_tool_call(tool_name: str, tool_args: dict):
@@ -167,7 +231,8 @@ async def websocket_endpoint(websocket: WebSocket):
                         pending_confirmations[client_id][confirmation_id] = {
                             "zwo_content": result.get("zwo_content"),
                             "filename": result.get("filename"),
-                            "workout_type": result.get("workout_type"),
+                            "workout_name": result.get("workout_name"),
+                            "workout_description": result.get("workout_description"),
                             "scheduled_time": result.get("scheduled_time"),
                             "external_id": result.get("external_id")
                         }
@@ -177,7 +242,7 @@ async def websocket_endpoint(websocket: WebSocket):
                             confirmation_id=confirmation_id,
                             question="Send to intervals.icu?",
                             context={
-                                "Workout Type": result.get("workout_type"),
+                                "Workout": result.get("workout_name"),
                                 "Scheduled Time": result.get("scheduled_time")
                             },
                             client_id=client_id
@@ -187,7 +252,8 @@ async def websocket_endpoint(websocket: WebSocket):
                         await manager.send_display_update(
                             display_type="workout",
                             data={
-                                "workout_type": result.get("workout_type"),
+                                "workout_name": result.get("workout_name"),
+                                "workout_description": result.get("workout_description"),
                                 "scheduled_time": result.get("scheduled_time"),
                                 "workout_data": result.get("workout_data"),
                                 "workout_file": result.get("filename")
@@ -195,9 +261,48 @@ async def websocket_endpoint(websocket: WebSocket):
                             client_id=client_id
                         )
 
+                    # Handle training plan creation
+                    if tool_name == "create_workout_plan" and success:
+                        # Send display update for plan visualization
+                        await manager.send_display_update(
+                            display_type="training_plan",
+                            data={
+                                "plan": result.get("plan"),
+                                "summarized": result.get("summarized"),
+                                "total_weeks": result.get("total_weeks"),
+                                "total_workouts": result.get("total_workouts")
+                            },
+                            client_id=client_id
+                        )
+
+                        # Send confirmation request for uploading workouts
+                        confirmation_id = str(uuid.uuid4())
+
+                        if client_id not in pending_confirmations:
+                            pending_confirmations[client_id] = {}
+
+                        pending_confirmations[client_id][confirmation_id] = {
+                            "action": "upload_training_plan",
+                            "plan_data": result.get("plan"),
+                            "summarized_data": result.get("summarized")
+                        }
+
+                        await manager.send_confirmation_request(
+                            confirmation_id=confirmation_id,
+                            question=f"Upload all {result.get('total_workouts', 168)} workouts to intervals.icu?",
+                            context={
+                                "total_weeks": result.get("total_weeks"),
+                                "total_workouts": result.get("total_workouts")
+                            },
+                            client_id=client_id
+                        )
+
                 # Process message through coach service
+                # Pass client_id as session_id for LangSmith thread grouping
                 response = await coach_service.process_message(
                     user_msg.content,
+                    request_id=request_id,
+                    session_id=client_id,
                     on_tool_call=on_tool_call,
                     on_tool_result=on_tool_result
                 )

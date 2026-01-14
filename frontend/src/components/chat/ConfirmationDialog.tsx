@@ -22,14 +22,14 @@ export function ConfirmationDialog({
   onReject,
 }: ConfirmationDialogProps) {
   return (
-    <Card className="border-primary">
-      <CardHeader>
-        <CardTitle className="text-lg">Confirmation Required</CardTitle>
-        <CardDescription>{question}</CardDescription>
-      </CardHeader>
-      {context && Object.keys(context).length > 0 && (
-        <CardContent className="text-sm">
-          <div className="space-y-1">
+    <Card className="border-primary max-w-md p-4">
+      <div className="space-y-2">
+        <div className="space-y-1">
+          <h3 className="text-base font-semibold">Confirmation Required</h3>
+          <p className="text-sm text-muted-foreground">{question}</p>
+        </div>
+        {context && Object.keys(context).length > 0 && (
+          <div className="text-xs space-y-0.5">
             {Object.entries(context).map(([key, value]) => (
               <div key={key} className="flex gap-2">
                 <span className="font-medium">{key}:</span>
@@ -37,14 +37,14 @@ export function ConfirmationDialog({
               </div>
             ))}
           </div>
-        </CardContent>
-      )}
-      <CardFooter className="flex gap-2 justify-end">
-        <Button variant="outline" onClick={onReject}>
-          No
-        </Button>
-        <Button onClick={onConfirm}>Yes</Button>
-      </CardFooter>
+        )}
+        <div className="flex gap-2 justify-end pt-2">
+          <Button variant="outline" onClick={onReject} size="sm" className="h-8 px-3">
+            No
+          </Button>
+          <Button onClick={onConfirm} size="sm" className="h-8 px-3">Yes</Button>
+        </div>
+      </div>
     </Card>
   );
 }

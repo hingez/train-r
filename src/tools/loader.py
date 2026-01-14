@@ -102,11 +102,11 @@ def load_tool_executors(tools_dir: str = "tools") -> Dict[str, Callable]:
 
         # Map tool definition name to module name
         # create_one_off_workout -> create_workout_tool
-        # get_user_workout_history -> get_user_workout_history_tool
+        # create_workout_plan -> create_workout_plan_tool
         if module_name == "create_one_off_workout":
             module_name = "create_workout_tool"
-        elif module_name == "get_user_workout_history":
-            module_name = "get_user_workout_history_tool"
+        elif module_name == "create_workout_plan":
+            module_name = "create_workout_plan_tool"
         else:
             # For future tools, assume they follow the pattern
             module_name = f"{module_name}_tool"

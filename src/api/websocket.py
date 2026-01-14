@@ -118,6 +118,79 @@ class ConnectionManager:
         message = ConfirmationRequest(confirmation_id=confirmation_id, question=question, context=context)
         await self.send_message(message, client_id)
 
+    async def broadcast_upload_progress(self, current: int, total: int, workout_date: str):
+        """Broadcast upload progress to all connected clients.
+
+        Args:
+            current: Number of workouts uploaded so far
+            total: Total number of workouts to upload
+            workout_date: Date of the workout being uploaded
+        """
+        from datetime import datetime
+
+        message = {
+            "type": "upload_progress",
+            "current": current,
+            "total": total,
+            "workout_date": workout_date,
+            "timestamp": datetime.now().isoformat()
+        }
+
+        for client_id in list(self.active_connections.keys()):
+            websocket = self.active_connections.get(client_id)
+            if websocket:
+                try:
+                    await websocket.send_json(message)
+                except Exception as e:
+                    logger.error(f"Failed to send upload progress to {client_id}: {e}")
+                    self.disconnect(client_id)
+
+    async def broadcast_upload_complete(self, summary: Dict):
+        """Broadcast upload completion to all connected clients.
+
+        Args:
+            summary: Upload summary with success/skip/fail counts
+        """
+        from datetime import datetime
+
+        message = {
+            "type": "upload_complete",
+            "summary": summary,
+            "timestamp": datetime.now().isoformat()
+        }
+
+        for client_id in list(self.active_connections.keys()):
+            websocket = self.active_connections.get(client_id)
+            if websocket:
+                try:
+                    await websocket.send_json(message)
+                except Exception as e:
+                    logger.error(f"Failed to send upload complete to {client_id}: {e}")
+                    self.disconnect(client_id)
+
+    async def broadcast_upload_error(self, error: str):
+        """Broadcast upload error to all connected clients.
+
+        Args:
+            error: Error message
+        """
+        from datetime import datetime
+
+        message = {
+            "type": "upload_error",
+            "error": error,
+            "timestamp": datetime.now().isoformat()
+        }
+
+        for client_id in list(self.active_connections.keys()):
+            websocket = self.active_connections.get(client_id)
+            if websocket:
+                try:
+                    await websocket.send_json(message)
+                except Exception as e:
+                    logger.error(f"Failed to send upload error to {client_id}: {e}")
+                    self.disconnect(client_id)
+
     async def close_all(self):
         """Close all active WebSocket connections gracefully.
 

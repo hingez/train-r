@@ -4,7 +4,7 @@
  */
 export const TOOL_ALIASES: Record<string, string> = {
   create_one_off_workout: "Creating workout",
-  get_user_workout_history: "Fetching workout history",
+  create_workout_plan: "Creating training plan",
 };
 
 /**

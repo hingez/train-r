@@ -1,5 +1,6 @@
 """Create workout tool implementation."""
 import logging
+import time
 from datetime import datetime, timedelta
 from typing import Any, Dict, Optional, Tuple, TYPE_CHECKING
 
@@ -14,7 +15,7 @@ if TYPE_CHECKING:
 def _validate_workout_params(
     client_ftp: Optional[int],
     workout_duration: Optional[int],
-    workout_type: Optional[str],
+    workout_description: Optional[str],
     config: AppConfig
 ) -> Tuple[bool, Optional[str]]:
     """Validate workout parameters before processing.
@@ -22,7 +23,7 @@ def _validate_workout_params(
     Args:
         client_ftp: Client's FTP in watts
         workout_duration: Duration in seconds
-        workout_type: Type of workout
+        workout_description: Description of workout structure and goals
         config: Application configuration with validation limits
 
     Returns:
@@ -33,8 +34,8 @@ def _validate_workout_params(
         return False, "client_ftp is required"
     if workout_duration is None:
         return False, "workout_duration is required"
-    if workout_type is None:
-        return False, "workout_type is required"
+    if workout_description is None:
+        return False, "workout_description is required"
 
     # Validate FTP
     if not isinstance(client_ftp, int):
@@ -52,11 +53,11 @@ def _validate_workout_params(
     if workout_duration > config.workout_max_duration:
         return False, f"workout_duration must be at most {config.workout_max_duration}s (4 hours), got {workout_duration}s"
 
-    # Validate workout type
-    if not isinstance(workout_type, str):
-        return False, f"workout_type must be a string, got {type(workout_type).__name__}"
-    if not workout_type.strip():
-        return False, "workout_type cannot be empty"
+    # Validate workout description
+    if not isinstance(workout_description, str):
+        return False, f"workout_description must be a string, got {type(workout_description).__name__}"
+    if not workout_description.strip():
+        return False, "workout_description cannot be empty"
 
     return True, None
 
@@ -69,7 +70,7 @@ def execute(
     """Execute create_one_off_workout tool.
 
     Args:
-        args: Tool arguments (client_ftp, workout_duration, workout_type)
+        args: Tool arguments (client_ftp, workout_duration, workout_description)
         config: Application configuration with API keys
         coach_service: CoachService instance for workout generation
 
@@ -78,29 +79,39 @@ def execute(
     """
     logger = logging.getLogger('train-r')
 
+    # Log tool start and begin timing
+    logger.info(f"TOOL_START tool=create_one_off_workout args={args}")
+    start_time = time.time()
+
     try:
         # Extract parameters
         client_ftp = args.get("client_ftp")
         workout_duration = args.get("workout_duration")
-        workout_type = args.get("workout_type")
+        workout_description = args.get("workout_description")
 
         # Validate parameters
-        is_valid, error_msg = _validate_workout_params(client_ftp, workout_duration, workout_type, config)
+        is_valid, error_msg = _validate_workout_params(client_ftp, workout_duration, workout_description, config)
         if not is_valid:
-            logger.error(f"Parameter validation failed: {error_msg}")
+            duration_ms = int((time.time() - start_time) * 1000)
+            logger.error(f"TOOL_ERROR tool=create_one_off_workout duration={duration_ms}ms error=Parameter validation failed: {error_msg}")
             return {
                 "success": False,
                 "error": f"Invalid parameters: {error_msg}",
                 "message": f"Validation error: {error_msg}"
             }
 
-        logger.info(f"Generating workout: FTP={client_ftp}W, Duration={workout_duration}s, Type={workout_type}")
+        logger.info(f"Generating workout: FTP={client_ftp}W, Duration={workout_duration}s, Description={workout_description[:50]}...")
+
+        # Build complete workout description with structured parameters
+        full_description = f"""FTP: {client_ftp}W
+Duration: {workout_duration} seconds ({workout_duration // 60} minutes)
+Workout: {workout_description}"""
 
         # Generate workout using workout generator (but don't save yet)
+        # Pass session_id for LangSmith thread grouping
         zwo_content = coach_service.workout_generator.generate_workout(
-            client_ftp=client_ftp,
-            workout_duration=workout_duration,
-            workout_type=workout_type
+            workout_description=full_description,
+            session_id=coach_service.current_session_id
         )
 
         logger.info("Workout generated successfully")
@@ -123,14 +134,16 @@ def execute(
         # Generate external ID and filename for later use
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         external_id = f"train-r-{timestamp}"
-        filename = f"{workout_type.replace(' ', '_')}_{timestamp}.zwo"
+        # Extract workout name from description (first 30 chars, sanitized)
+        workout_name = workout_description[:30].strip()
 
         # Return success result with workout content (will be saved/uploaded after user confirmation)
         result = {
             "success": True,
             "zwo_content": zwo_content,
-            "filename": filename,
-            "workout_type": workout_type,
+            "filename": f"{timestamp}.zwo",  # Will be renamed when saved
+            "workout_name": workout_name,
+            "workout_description": workout_description,
             "scheduled_time": schedule_time_str,
             "external_id": external_id,
             "message": f"Workout created and ready to schedule for {schedule_time_str}"
@@ -140,10 +153,15 @@ def execute(
         if workout_data:
             result["workout_data"] = workout_data
 
+        # Log successful completion with timing
+        duration_ms = int((time.time() - start_time) * 1000)
+        logger.info(f"TOOL_END tool=create_one_off_workout duration={duration_ms}ms success=True")
+
         return result
 
     except Exception as e:
-        logger.error(f"Error creating workout: {str(e)}", exc_info=True)
+        duration_ms = int((time.time() - start_time) * 1000)
+        logger.error(f"TOOL_ERROR tool=create_one_off_workout duration={duration_ms}ms error={str(e)}", exc_info=True)
         return {
             "success": False,
             "error": str(e),
