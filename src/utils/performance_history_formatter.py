@@ -12,7 +12,12 @@ logger = logging.getLogger('train-r')
 
 
 def format_performance_history(data_dir: Path) -> str:
-    """Load and format last 4 weeks of workout data + next 4 weeks of planned workouts for LLM context.
+    """Load and format workout data for LLM context.
+
+    Includes:
+    - Last 28 days: Detailed daily workouts + weekly summaries
+    - 28 days to 9 months: Weekly summaries only (for trend analysis)
+    - Next 28 days: Planned workouts
 
     Args:
         data_dir: Path to athlete data directory
@@ -44,23 +49,36 @@ def format_performance_history(data_dir: Path) -> str:
                 planned_data = json.load(f)
                 planned_events = planned_data.get("events", [])
 
-        # Filter last 28 days for history
-        cutoff_date_past = datetime.now() - timedelta(days=28)
-        start_date_past = cutoff_date_past.strftime("%Y-%m-%d")
-        end_date = datetime.now().strftime("%Y-%m-%d")
+        # Define time periods
+        now = datetime.now()
 
-        # Next 28 days for future workouts
-        cutoff_date_future = datetime.now() + timedelta(days=28)
-        end_date_future = cutoff_date_future.strftime("%Y-%m-%d")
+        # Recent detailed period: last 28 days
+        cutoff_recent = now - timedelta(days=28)
+
+        # Extended period: 28 days to 9 months ago (for weekly summaries only)
+        cutoff_extended = now - timedelta(days=270)  # ~9 months
+
+        # Future period: next 28 days
+        cutoff_future = now + timedelta(days=28)
 
         # Build JSON structure
         performance_data = {
-            "past_period": f"{start_date_past} to {end_date}",
-            "future_period": f"{end_date} to {end_date_future}",
-            "past_weeks": _format_weekly_overview(weekly_summary, activities_data, cutoff_date_past),
-            "past_workouts": _format_workout_log(workout_index, cutoff_date_past),
+            "recent_period": f"{cutoff_recent.strftime('%Y-%m-%d')} to {now.strftime('%Y-%m-%d')}",
+            "extended_period": f"{cutoff_extended.strftime('%Y-%m-%d')} to {cutoff_recent.strftime('%Y-%m-%d')}",
+            "future_period": f"{now.strftime('%Y-%m-%d')} to {cutoff_future.strftime('%Y-%m-%d')}",
+
+            # Recent detailed data (last 28 days)
+            "recent_weeks": _format_weekly_overview(weekly_summary, activities_data, cutoff_recent),
+            "recent_workouts": _format_workout_log(workout_index, cutoff_recent),
+
+            # Extended historical data (28 days to 9 months - weekly summaries only)
+            "extended_weeks": _format_extended_weekly_summary(weekly_summary, activities_data, cutoff_extended, cutoff_recent),
+
+            # Future planned workouts
             "future_workouts": _format_future_workouts(planned_events),
-            "summary": _calculate_summary_statistics(workout_index, cutoff_date_past)
+
+            # Summary statistics
+            "summary": _calculate_summary_statistics(workout_index, cutoff_recent)
         }
 
         # Return compact JSON (no indentation for token efficiency)
@@ -72,6 +90,62 @@ def format_performance_history(data_dir: Path) -> str:
     except Exception as e:
         logger.error(f"Error formatting performance history: {e}", exc_info=True)
         return json.dumps({"error": "Performance history unavailable."})
+
+
+def _format_extended_weekly_summary(
+    weekly_summary: Dict,
+    activities_data: Dict,
+    cutoff_start: datetime,
+    cutoff_end: datetime
+) -> List[Dict]:
+    """Format weekly summaries for extended period (28 days to 9 months ago).
+
+    Minimal data for trend analysis: TSS, hours, CTL/ATL, workout count.
+
+    Args:
+        weekly_summary: Weekly summary data
+        activities_data: Completed activities data with CTL/ATL
+        cutoff_start: Start of extended period (9 months ago)
+        cutoff_end: End of extended period (28 days ago)
+
+    Returns:
+        List of simplified week dictionaries
+    """
+    weeks_list = []
+
+    # Get weeks within extended date range
+    weeks = []
+    for week_start, data in weekly_summary.get("weekly_summary", {}).items():
+        week_date = datetime.fromisoformat(week_start)
+        if cutoff_start <= week_date < cutoff_end:
+            weeks.append((week_date, week_start, data))
+
+    weeks.sort(reverse=True)  # Most recent first
+
+    if not weeks:
+        return []
+
+    for week_date, week_start, data in weeks:
+        # Get CTL/ATL from last activity of the week
+        ctl, atl = _get_training_load_for_week(activities_data, week_date)
+
+        # Build simplified week object (minimal data for long-term trends)
+        week_obj = {
+            "start": week_start,
+            "workouts": data.get('workout_count', 0),
+            "hours": round(data.get('total_time_hours', 0), 1),
+            "tss": int(data.get('total_tss', 0))
+        }
+
+        # Add CTL/ATL if available (important for fitness/fatigue trends)
+        if ctl is not None:
+            week_obj["ctl"] = int(ctl)
+        if atl is not None:
+            week_obj["atl"] = int(atl)
+
+        weeks_list.append(week_obj)
+
+    return weeks_list
 
 
 def _format_weekly_overview(weekly_summary: Dict, activities_data: Dict, cutoff_date: datetime) -> List[Dict]:
