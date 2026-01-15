@@ -61,7 +61,7 @@ class CoachService:
 
         # Populate template variables
         system_prompt = system_prompt_template.format(
-            atheleteWorkoutContext=performance_history,  # Note: matches typo in system_prompt.txt
+            athleteWorkoutContext=performance_history,
             date_time=date_time
         )
 
