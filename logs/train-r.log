@@ -36949,3 +36949,329 @@ NameError: name '_format_extended_weekly_summary' is not defined
 2026-01-15 20:02:09 - INFO - Uploading 0 workouts (14 already uploaded)
 2026-01-15 20:02:09 - INFO - All workouts already uploaded!
 2026-01-15 20:02:09 - INFO - Background upload complete: {'success': 0, 'skipped': 14, 'failed': 0, 'total': 14}
+2026-01-15 20:02:48 - INFO - ============================================================
+2026-01-15 20:02:48 - INFO - Shutting down Train-R API Server
+2026-01-15 20:02:48 - INFO - ============================================================
+2026-01-15 20:02:48 - INFO - Closing 0 active WebSocket connections...
+2026-01-15 20:02:48 - INFO - All WebSocket connections closed
+2026-01-15 20:02:48 - INFO - Shutdown complete
+2026-01-15 20:02:50 - INFO - ============================================================
+2026-01-15 20:02:50 - INFO - Train-R Application Started
+2026-01-15 20:02:50 - INFO - ============================================================
+2026-01-15 20:02:50 - INFO - CORS configured for origins: http://localhost:3001
+2026-01-15 20:02:50 - INFO - FastAPI application created and configured
+2026-01-15 20:02:50 - INFO - ============================================================
+2026-01-15 20:02:50 - INFO - Starting Train-R API Server (Refactored Architecture)
+2026-01-15 20:02:50 - INFO - ============================================================
+2026-01-15 20:02:50 - INFO - LLM messages log file will be created on first LLM call
+2026-01-15 20:02:50 - INFO - Configuration validated
+2026-01-15 20:02:50 - INFO - LangSmith tracing enabled for project: Train-R
+2026-01-15 20:02:50 - INFO - LLMClient initialized with endpoint: https://generativelanguage.googleapis.com/v1beta/openai/
+2026-01-15 20:02:50 - INFO - LLM messages will be logged to: /Users/zeph/Projects/train-r/logs/llm_messages.json
+2026-01-15 20:02:50 - INFO - LLM client initialized: gemini-3-flash-preview
+2026-01-15 20:02:50 - INFO - CoachService initialized with 3 tools: create_one_off_workout, create_workout_plan, modify_workout
+2026-01-15 20:02:50 - INFO - Coach service initialized with tool support
+2026-01-15 20:02:50 - INFO - Data already migrated to v2 structure
+2026-01-15 20:02:50 - INFO - Starting full data sync (including power curves)...
+2026-01-15 20:02:50 - INFO - ============================================================
+2026-01-15 20:02:50 - INFO - Starting athlete data sync (synchronous)
+2026-01-15 20:02:50 - INFO - ============================================================
+2026-01-15 20:02:50 - INFO - Performing INCREMENTAL sync (new activities only)
+2026-01-15 20:02:50 - INFO - Fetching activities from 2026-01-01 to 2026-01-15 (refreshing last 2 weeks)
+2026-01-15 20:02:50 - INFO - intervals.icu API call starting: fetch activities (oldest=2026-01-01, newest=2026-01-15)
+2026-01-15 20:02:51 - INFO - intervals.icu API call completed: fetch activities - duration=375ms, count=7
+2026-01-15 20:02:51 - INFO - Transformed 7 activities with standardized field names
+2026-01-15 20:02:51 - INFO - Fetched 7 activities
+2026-01-15 20:02:51 - INFO - Activity merge: 164 existing + 7 new = 164 total
+2026-01-15 20:02:51 - INFO - Merged 7 new activities with 164 existing = 164 total
+2026-01-15 20:02:51 - INFO - Fetching planned events
+2026-01-15 20:02:51 - INFO - Fetching events (incremental, refreshing last 2 weeks): 2026-01-01 to 2027-01-15
+2026-01-15 20:02:51 - INFO - intervals.icu API call starting: fetch events (oldest=2026-01-01, newest=2027-01-15, category=WORKOUT)
+2026-01-15 20:02:51 - INFO - intervals.icu API call completed: fetch events - duration=326ms, count=20
+2026-01-15 20:02:51 - INFO - Retrieved 20 planned events
+2026-01-15 20:02:51 - INFO - Fetched 20 planned events
+2026-01-15 20:02:51 - INFO - Event merge: 24 existing + 20 new = 24 total
+2026-01-15 20:02:51 - INFO - Total events after merge: 24
+2026-01-15 20:02:51 - INFO - Fetching fresh power curves from intervals.icu
+2026-01-15 20:02:51 - INFO - intervals.icu API call starting: fetch 1-month power curve
+2026-01-15 20:02:51 - INFO - intervals.icu API call completed: fetch 1-month power curve - duration=328ms, data_points=12
+2026-01-15 20:02:51 - INFO - intervals.icu API call starting: fetch 2-month power curve
+2026-01-15 20:02:52 - INFO - intervals.icu API call completed: fetch 2-month power curve - duration=459ms, data_points=12
+2026-01-15 20:02:52 - INFO - intervals.icu API call starting: fetch 3-month power curve
+2026-01-15 20:02:52 - INFO - intervals.icu API call completed: fetch 3-month power curve - duration=200ms, data_points=12
+2026-01-15 20:02:52 - INFO - intervals.icu API call starting: fetch 6-month power curve
+2026-01-15 20:02:52 - INFO - intervals.icu API call completed: fetch 6-month power curve - duration=199ms, data_points=12
+2026-01-15 20:02:52 - INFO - intervals.icu API call starting: fetch 12-month power curve
+2026-01-15 20:02:52 - INFO - intervals.icu API call completed: fetch 12-month power curve - duration=339ms, data_points=12
+2026-01-15 20:02:52 - INFO - Retrieved power curves for 5 time periods
+2026-01-15 20:02:52 - INFO - Matching planned events with completed activities
+2026-01-15 20:02:52 - INFO - Matching 164 activities with 24 events
+2026-01-15 20:02:52 - INFO - Phase 1 (paired_event_id): Matched 7 activities
+2026-01-15 20:02:52 - INFO - Phase 2 (fuzzy match): Matched 4 additional activities
+2026-01-15 20:02:52 - INFO - Total matched: 11/164 activities
+2026-01-15 20:02:52 - INFO - Building workout indices
+2026-01-15 20:02:52 - INFO - Building workout index from activities and events
+2026-01-15 20:02:52 - INFO - Index built: 168 dates, 50 weeks, 23 types
+2026-01-15 20:02:52 - INFO - Aggregating weekly summaries
+2026-01-15 20:02:52 - INFO - Saved 164 activities to /Users/zeph/Projects/train-r/data/athlete/raw/completed_activities.json
+2026-01-15 20:02:52 - INFO - Saved 24 events to /Users/zeph/Projects/train-r/data/athlete/raw/planned_events.json
+2026-01-15 20:02:52 - INFO - Saved power curves to /Users/zeph/Projects/train-r/data/athlete/raw/power_curves.json
+2026-01-15 20:02:52 - INFO - Saved workout index to /Users/zeph/Projects/train-r/data/athlete/processed/workout_index.json
+2026-01-15 20:02:52 - INFO - Saved 48 weeks to /Users/zeph/Projects/train-r/data/athlete/processed/weekly_summary.json
+2026-01-15 20:02:52 - INFO - ============================================================
+2026-01-15 20:02:52 - INFO - Athlete data sync complete
+2026-01-15 20:02:52 - INFO - Total activities: 164
+2026-01-15 20:02:52 - INFO - Total events: 24
+2026-01-15 20:02:52 - INFO - Total weeks: 48
+2026-01-15 20:02:52 - INFO - ============================================================
+2026-01-15 20:02:52 - INFO - Athlete data sync complete: {'success': True, 'sync_type': 'incremental', 'total_activities': 164, 'new_activities': 7, 'total_events': 24, 'total_weeks': 48}
+2026-01-15 20:02:52 - INFO - Current plan loaded with 126 workouts
+2026-01-15 20:02:52 - INFO - Syncing with 24 planned events from intervals.icu
+2026-01-15 20:02:52 - INFO - Synced 14 workouts with intervals.icu event IDs
+2026-01-15 20:02:52 - INFO - Synced 14 workouts with intervals.icu event IDs
+2026-01-15 20:02:52 - INFO - Background workout upload task started
+2026-01-15 20:02:52 - INFO - ============================================================
+2026-01-15 20:02:52 - INFO - Train-R API Server ready
+2026-01-15 20:02:52 - INFO - ============================================================
+2026-01-15 20:02:52 - INFO - Starting background workout upload...
+2026-01-15 20:02:52 - INFO - Found 14 future workouts to process
+2026-01-15 20:02:52 - INFO - Uploading 0 workouts (14 already uploaded)
+2026-01-15 20:02:52 - INFO - All workouts already uploaded!
+2026-01-15 20:02:52 - INFO - Background upload complete: {'success': 0, 'skipped': 14, 'failed': 0, 'total': 14}
+2026-01-15 20:03:06 - INFO - Client 082a698c-2bd9-4ac6-8f70-8fbcf1525c6d connected. Total connections: 1
+2026-01-15 20:03:06 - INFO - ============================================================
+2026-01-15 20:03:06 - INFO - Starting athlete data sync (synchronous)
+2026-01-15 20:03:06 - INFO - ============================================================
+2026-01-15 20:03:06 - INFO - Performing INCREMENTAL sync (new activities only)
+2026-01-15 20:03:06 - INFO - Fetching activities from 2026-01-01 to 2026-01-15 (refreshing last 2 weeks)
+2026-01-15 20:03:06 - INFO - intervals.icu API call starting: fetch activities (oldest=2026-01-01, newest=2026-01-15)
+2026-01-15 20:03:07 - INFO - intervals.icu API call completed: fetch activities - duration=312ms, count=7
+2026-01-15 20:03:07 - INFO - Transformed 7 activities with standardized field names
+2026-01-15 20:03:07 - INFO - Fetched 7 activities
+2026-01-15 20:03:07 - INFO - Activity merge: 164 existing + 7 new = 164 total
+2026-01-15 20:03:07 - INFO - Merged 7 new activities with 164 existing = 164 total
+2026-01-15 20:03:07 - INFO - Fetching planned events
+2026-01-15 20:03:07 - INFO - Fetching events (incremental, refreshing last 2 weeks): 2026-01-01 to 2027-01-15
+2026-01-15 20:03:07 - INFO - intervals.icu API call starting: fetch events (oldest=2026-01-01, newest=2027-01-15, category=WORKOUT)
+2026-01-15 20:03:07 - INFO - intervals.icu API call completed: fetch events - duration=349ms, count=20
+2026-01-15 20:03:07 - INFO - Retrieved 20 planned events
+2026-01-15 20:03:07 - INFO - Fetched 20 planned events
+2026-01-15 20:03:07 - INFO - Event merge: 24 existing + 20 new = 24 total
+2026-01-15 20:03:07 - INFO - Total events after merge: 24
+2026-01-15 20:03:07 - INFO - Using cached power curves (skipped for speed)
+2026-01-15 20:03:07 - INFO - Matching planned events with completed activities
+2026-01-15 20:03:07 - INFO - Matching 164 activities with 24 events
+2026-01-15 20:03:07 - INFO - Phase 1 (paired_event_id): Matched 7 activities
+2026-01-15 20:03:07 - INFO - Phase 2 (fuzzy match): Matched 4 additional activities
+2026-01-15 20:03:07 - INFO - Total matched: 11/164 activities
+2026-01-15 20:03:07 - INFO - Building workout indices
+2026-01-15 20:03:07 - INFO - Building workout index from activities and events
+2026-01-15 20:03:07 - INFO - Index built: 168 dates, 50 weeks, 23 types
+2026-01-15 20:03:07 - INFO - Aggregating weekly summaries
+2026-01-15 20:03:07 - INFO - Saved 164 activities to /Users/zeph/Projects/train-r/data/athlete/raw/completed_activities.json
+2026-01-15 20:03:07 - INFO - Saved 24 events to /Users/zeph/Projects/train-r/data/athlete/raw/planned_events.json
+2026-01-15 20:03:07 - INFO - Saved power curves to /Users/zeph/Projects/train-r/data/athlete/raw/power_curves.json
+2026-01-15 20:03:07 - INFO - Saved workout index to /Users/zeph/Projects/train-r/data/athlete/processed/workout_index.json
+2026-01-15 20:03:07 - INFO - Saved 48 weeks to /Users/zeph/Projects/train-r/data/athlete/processed/weekly_summary.json
+2026-01-15 20:03:07 - INFO - ============================================================
+2026-01-15 20:03:07 - INFO - Athlete data sync complete
+2026-01-15 20:03:07 - INFO - Total activities: 164
+2026-01-15 20:03:07 - INFO - Total events: 24
+2026-01-15 20:03:07 - INFO - Total weeks: 48
+2026-01-15 20:03:07 - INFO - ============================================================
+2026-01-15 20:03:07 - INFO - Data sync complete for client 082a698c: {'success': True, 'sync_type': 'incremental', 'total_activities': 164, 'new_activities': 7, 'total_events': 24, 'total_weeks': 48}
+2026-01-15 20:03:07 - INFO - Dashboard data sent to client 082a698c
+2026-01-15 20:03:12 - INFO - [client=082a698c] [req=502b2a4f] Received: Hello
+2026-01-15 20:03:12 - INFO - [req=502b2a4f] USER: Hello
+2026-01-15 20:03:12 - INFO - [req=502b2a4f] LLM_REQUEST model=gemini-3-flash-preview temp=0 messages=2 tools=3
+2026-01-15 20:03:15 - INFO - [req=502b2a4f] LLM_RESPONSE duration=3065ms tokens=4029 (prompt=3803, completion=110) finish=stop
+2026-01-15 20:03:15 - INFO - [req=502b2a4f] ASSISTANT: Hello! I'm Train-R, your cycling coach. 
+
+It looks like you've been putting in some solid work lately, particularly with those Sweet Spot sessions over the last week. Your FTP is sitting at a very strong 365W, and we've got a good foundation to build on.
+
+How can I help you with your training today? We can review your recent performance in more detail, design a specific workout for you, or look at building out a longer-term training plan for an upcoming goal.
+2026-01-15 20:05:16 - INFO - [client=082a698c] [req=04e1c6bf] Received: So i was suppose to do 1.5 hour 2x20 min sweet spot, i couldnt face that logn so shorted to an hour 
+2026-01-15 20:05:16 - INFO - [req=04e1c6bf] USER: So i was suppose to do 1.5 hour 2x20 min sweet spot, i couldnt face that logn so shorted to an hour but keep the same 2x20, should there ne issues there?
+2026-01-15 20:05:16 - INFO - [req=04e1c6bf] LLM_REQUEST model=gemini-3-flash-preview temp=0 messages=4 tools=3
+2026-01-15 20:05:24 - INFO - [req=04e1c6bf] LLM_RESPONSE duration=7999ms tokens=4974 (prompt=3963, completion=276) finish=stop
+2026-01-15 20:05:24 - INFO - [req=04e1c6bf] ASSISTANT: No issues at all. In fact, you made the right call by prioritizing the "meat" of the workout.
+
+The primary goal of a Sweet Spot session is the **Time in Zone (TiZ)**. By keeping the 2x20 minute intervals, you still achieved 40 minutes of high-quality work at 88-94% of your FTP. That is the specific physiological stimulus we are looking for to drive aerobic adaptations and muscular endurance.
+
+By shortening the workout from 90 minutes to 60 minutes, all you really "lost" was:
+1.  **Total Volume/TSS:** You missed out on about 30 minutes of Zone 2 (Endurance) riding, which results in a slightly lower Training Stress Score for the day.
+2.  **Aerobic Fatigue:** Longer rides help build resilience, but for a mid-week interval session, this is a secondary goal.
+
+As long as you felt you had enough of a warm-up to hit the first interval safely and your heart rate/power stayed stable during the sets, the workout was a success. Quality over quantity is a key principle, especially when you're balancing a high FTP of 365W—those efforts are demanding!
+
+How did the legs feel during that second 20-minute block?
+2026-01-15 20:06:09 - INFO - [client=082a698c] [req=da10e1ea] Received: The last block was quite hard at the end, was a mental struggle but i wasnt on the limit
+2026-01-15 20:06:09 - INFO - [req=da10e1ea] USER: The last block was quite hard at the end, was a mental struggle but i wasnt on the limit
+2026-01-15 20:06:09 - INFO - [req=da10e1ea] LLM_REQUEST model=gemini-3-flash-preview temp=0 messages=6 tools=3
+2026-01-15 20:06:14 - INFO - [req=da10e1ea] LLM_RESPONSE duration=5755ms tokens=4948 (prompt=4261, completion=246) finish=stop
+2026-01-15 20:06:14 - INFO - [req=da10e1ea] ASSISTANT: That "comfortably hard" feeling—where it’s a mental grind but you know you have another gear if you absolutely had to use it—is exactly where Sweet Spot should sit. 
+
+Since you've been hitting several of these sessions recently (3x10, 3x15, and now 2x20), that mental struggle at the end of the second block is likely a bit of accumulated fatigue. At 365W, you're moving a lot of air and generating a lot of heat, so the metabolic cost of those 20-minute blocks is significant.
+
+Looking ahead at your calendar, you have a **Threshold Introduction** session scheduled for next Thursday (Jan 22nd). Threshold work (95-105% FTP) is a step up in intensity from what you did today. It will feel less like a "grind" and more like a "burn."
+
+Given that today was a bit of a mental battle, how are you feeling about moving into that higher intensity next week? We can always keep the intervals shorter for that first session to make sure you nail the power targets without it becoming a "limit" effort.
+2026-01-15 20:07:15 - INFO - [client=082a698c] [req=0e8b6fa4] Received: I was thinking of making up the time at the weekedn with a longer endurnace ride, im trainign for th
+2026-01-15 20:07:15 - INFO - [req=0e8b6fa4] USER: I was thinking of making up the time at the weekedn with a longer endurnace ride, im trainign for the gralloch, so i feel time onthe biek is a big tihing escepily doing longer rides
+2026-01-15 20:07:15 - INFO - [req=0e8b6fa4] LLM_REQUEST model=gemini-3-flash-preview temp=0 messages=8 tools=3
+2026-01-15 20:07:27 - INFO - [req=0e8b6fa4] LLM_RESPONSE duration=11911ms tokens=5965 (prompt=4558, completion=491) finish=tool_calls
+2026-01-15 20:07:27 - INFO - [req=0e8b6fa4] LLM_TOOL_CALLS count=1 tools=['modify_workout']
+2026-01-15 20:07:27 - INFO - [req=0e8b6fa4] TOOL_CALL: modify_workout
+2026-01-15 20:07:27 - INFO - TOOL_START tool=modify_workout args={'workout_description': 'Gralloch Prep: Long Endurance + Strength Endurance. \n4.5 hours total. \n- Warm up: 30 mins building to Zone 2. \n- Main Set: 4 hours of steady Zone 2 (200-240W). \n- Within the ride, include 3 x 15-minute Tempo blocks (275-310W) at a lower cadence of 70-80 RPM. Space these out by at least 45 minutes. \n- Focus on fueling strategy: 60-90g carbs/hour. \n- Cool down: 15 mins easy spinning.', 'event_id': 88597860}
+2026-01-15 20:07:27 - ERROR - TOOL_ERROR tool=modify_workout duration=0ms error=intervals_client not available
+2026-01-15 20:07:27 - INFO - TOOL_RESULT: {
+  "success": false,
+  "message": "intervals.icu client not available"
+}
+2026-01-15 20:07:27 - INFO - [req=0e8b6fa4] LLM_REQUEST model=gemini-3-flash-preview temp=0 messages=10 tools=3
+2026-01-15 20:07:31 - INFO - [req=0e8b6fa4] LLM_RESPONSE duration=3842ms tokens=6443 (prompt=5994, completion=274) finish=stop
+2026-01-15 20:07:31 - INFO - [req=0e8b6fa4] ASSISTANT: I've run into a quick technical sync issue with your calendar, but the plan remains the same: **let's extend that Saturday ride to 4.5 hours.**
+
+Since you're training for The Gralloch, that extra hour is worth its weight in gold. Here is how I want you to structure it:
+
+*   **Total Time:** 4 hours 30 minutes.
+*   **The "Base":** Keep the majority of the ride in your Zone 2 (around 200-240W).
+*   **The "Gravel Grinds":** To simulate the climbs in the Galloway Forest, include **3 x 15-minute Tempo efforts** (approx. 275-310W). 
+    *   **Crucial detail:** Do these at a lower cadence (70-80 RPM). This builds the muscular endurance needed for steep gravel sectors where you can't always spin a high cadence.
+*   **Nutrition:** Use this ride as a "dress rehearsal." Try to consume 60-90g of carbohydrates per hour to see how your stomach handles it at this duration.
+
+Does 4.5 hours fit into your schedule for Saturday, or would you prefer to split that extra volume across Saturday and Sunday?
+2026-01-15 20:08:47 - INFO - Client 082a698c-2bd9-4ac6-8f70-8fbcf1525c6d disconnected. Total connections: 0
+2026-01-15 20:08:47 - INFO - Client 082a698c-2bd9-4ac6-8f70-8fbcf1525c6d disconnected
+2026-01-15 20:08:48 - INFO - ============================================================
+2026-01-15 20:08:48 - INFO - Shutting down Train-R API Server
+2026-01-15 20:08:48 - INFO - ============================================================
+2026-01-15 20:08:48 - INFO - Closing 0 active WebSocket connections...
+2026-01-15 20:08:48 - INFO - All WebSocket connections closed
+2026-01-15 20:08:48 - INFO - Shutdown complete
+2026-01-15 20:08:48 - INFO - ============================================================
+2026-01-15 20:08:48 - INFO - Train-R Application Started
+2026-01-15 20:08:48 - INFO - ============================================================
+2026-01-15 20:08:48 - INFO - CORS configured for origins: http://localhost:3001
+2026-01-15 20:08:48 - INFO - FastAPI application created and configured
+2026-01-15 20:08:48 - INFO - ============================================================
+2026-01-15 20:08:48 - INFO - Starting Train-R API Server (Refactored Architecture)
+2026-01-15 20:08:48 - INFO - ============================================================
+2026-01-15 20:08:48 - INFO - Flushed LLM messages log file
+2026-01-15 20:08:48 - INFO - Configuration validated
+2026-01-15 20:08:48 - INFO - LangSmith tracing enabled for project: Train-R
+2026-01-15 20:08:48 - INFO - LLMClient initialized with endpoint: https://generativelanguage.googleapis.com/v1beta/openai/
+2026-01-15 20:08:48 - INFO - LLM messages will be logged to: /Users/zeph/Projects/train-r/logs/llm_messages.json
+2026-01-15 20:08:48 - INFO - LLM client initialized: gemini-3-flash-preview
+2026-01-15 20:08:48 - INFO - CoachService initialized with 3 tools: create_one_off_workout, create_workout_plan, modify_workout
+2026-01-15 20:08:48 - INFO - Coach service initialized with tool support
+2026-01-15 20:08:48 - INFO - Data already migrated to v2 structure
+2026-01-15 20:08:48 - INFO - Starting full data sync (including power curves)...
+2026-01-15 20:08:48 - INFO - ============================================================
+2026-01-15 20:08:48 - INFO - Starting athlete data sync (synchronous)
+2026-01-15 20:08:48 - INFO - ============================================================
+2026-01-15 20:08:48 - INFO - Performing INCREMENTAL sync (new activities only)
+2026-01-15 20:08:48 - INFO - Fetching activities from 2026-01-01 to 2026-01-15 (refreshing last 2 weeks)
+2026-01-15 20:08:48 - INFO - intervals.icu API call starting: fetch activities (oldest=2026-01-01, newest=2026-01-15)
+2026-01-15 20:08:48 - INFO - intervals.icu API call completed: fetch activities - duration=450ms, count=7
+2026-01-15 20:08:48 - INFO - Transformed 7 activities with standardized field names
+2026-01-15 20:08:48 - INFO - Fetched 7 activities
+2026-01-15 20:08:48 - INFO - Activity merge: 164 existing + 7 new = 164 total
+2026-01-15 20:08:48 - INFO - Merged 7 new activities with 164 existing = 164 total
+2026-01-15 20:08:48 - INFO - Fetching planned events
+2026-01-15 20:08:48 - INFO - Fetching events (incremental, refreshing last 2 weeks): 2026-01-01 to 2027-01-15
+2026-01-15 20:08:48 - INFO - intervals.icu API call starting: fetch events (oldest=2026-01-01, newest=2027-01-15, category=WORKOUT)
+2026-01-15 20:08:49 - INFO - intervals.icu API call completed: fetch events - duration=378ms, count=20
+2026-01-15 20:08:49 - INFO - Retrieved 20 planned events
+2026-01-15 20:08:49 - INFO - Fetched 20 planned events
+2026-01-15 20:08:49 - INFO - Event merge: 24 existing + 20 new = 24 total
+2026-01-15 20:08:49 - INFO - Total events after merge: 24
+2026-01-15 20:08:49 - INFO - Fetching fresh power curves from intervals.icu
+2026-01-15 20:08:49 - INFO - intervals.icu API call starting: fetch 1-month power curve
+2026-01-15 20:08:49 - INFO - intervals.icu API call completed: fetch 1-month power curve - duration=316ms, data_points=12
+2026-01-15 20:08:49 - INFO - intervals.icu API call starting: fetch 2-month power curve
+2026-01-15 20:08:50 - INFO - intervals.icu API call completed: fetch 2-month power curve - duration=594ms, data_points=12
+2026-01-15 20:08:50 - INFO - intervals.icu API call starting: fetch 3-month power curve
+2026-01-15 20:08:50 - INFO - intervals.icu API call completed: fetch 3-month power curve - duration=458ms, data_points=12
+2026-01-15 20:08:50 - INFO - intervals.icu API call starting: fetch 6-month power curve
+2026-01-15 20:08:51 - INFO - intervals.icu API call completed: fetch 6-month power curve - duration=609ms, data_points=12
+2026-01-15 20:08:51 - INFO - intervals.icu API call starting: fetch 12-month power curve
+2026-01-15 20:08:51 - INFO - intervals.icu API call completed: fetch 12-month power curve - duration=339ms, data_points=12
+2026-01-15 20:08:51 - INFO - Retrieved power curves for 5 time periods
+2026-01-15 20:08:51 - INFO - Matching planned events with completed activities
+2026-01-15 20:08:51 - INFO - Matching 164 activities with 24 events
+2026-01-15 20:08:51 - INFO - Phase 1 (paired_event_id): Matched 7 activities
+2026-01-15 20:08:51 - INFO - Phase 2 (fuzzy match): Matched 4 additional activities
+2026-01-15 20:08:51 - INFO - Total matched: 11/164 activities
+2026-01-15 20:08:51 - INFO - Building workout indices
+2026-01-15 20:08:51 - INFO - Building workout index from activities and events
+2026-01-15 20:08:51 - INFO - Index built: 168 dates, 50 weeks, 23 types
+2026-01-15 20:08:51 - INFO - Aggregating weekly summaries
+2026-01-15 20:08:51 - INFO - Saved 164 activities to /Users/zeph/Projects/train-r/data/athlete/raw/completed_activities.json
+2026-01-15 20:08:51 - INFO - Saved 24 events to /Users/zeph/Projects/train-r/data/athlete/raw/planned_events.json
+2026-01-15 20:08:51 - INFO - Saved power curves to /Users/zeph/Projects/train-r/data/athlete/raw/power_curves.json
+2026-01-15 20:08:51 - INFO - Saved workout index to /Users/zeph/Projects/train-r/data/athlete/processed/workout_index.json
+2026-01-15 20:08:51 - INFO - Saved 48 weeks to /Users/zeph/Projects/train-r/data/athlete/processed/weekly_summary.json
+2026-01-15 20:08:51 - INFO - ============================================================
+2026-01-15 20:08:51 - INFO - Athlete data sync complete
+2026-01-15 20:08:51 - INFO - Total activities: 164
+2026-01-15 20:08:51 - INFO - Total events: 24
+2026-01-15 20:08:51 - INFO - Total weeks: 48
+2026-01-15 20:08:51 - INFO - ============================================================
+2026-01-15 20:08:51 - INFO - Athlete data sync complete: {'success': True, 'sync_type': 'incremental', 'total_activities': 164, 'new_activities': 7, 'total_events': 24, 'total_weeks': 48}
+2026-01-15 20:08:51 - INFO - Current plan loaded with 126 workouts
+2026-01-15 20:08:51 - INFO - Syncing with 24 planned events from intervals.icu
+2026-01-15 20:08:51 - INFO - Synced 14 workouts with intervals.icu event IDs
+2026-01-15 20:08:51 - INFO - Synced 14 workouts with intervals.icu event IDs
+2026-01-15 20:08:51 - INFO - Background workout upload task started
+2026-01-15 20:08:51 - INFO - ============================================================
+2026-01-15 20:08:51 - INFO - Train-R API Server ready
+2026-01-15 20:08:51 - INFO - ============================================================
+2026-01-15 20:08:51 - INFO - Starting background workout upload...
+2026-01-15 20:08:51 - INFO - Found 14 future workouts to process
+2026-01-15 20:08:51 - INFO - Uploading 0 workouts (14 already uploaded)
+2026-01-15 20:08:51 - INFO - All workouts already uploaded!
+2026-01-15 20:08:51 - INFO - Client 5a905096-1228-4624-93ba-989cba70f6bd connected. Total connections: 1
+2026-01-15 20:08:51 - INFO - Background upload complete: {'success': 0, 'skipped': 14, 'failed': 0, 'total': 14}
+2026-01-15 20:08:51 - INFO - ============================================================
+2026-01-15 20:08:51 - INFO - Starting athlete data sync (synchronous)
+2026-01-15 20:08:51 - INFO - ============================================================
+2026-01-15 20:08:51 - INFO - Performing INCREMENTAL sync (new activities only)
+2026-01-15 20:08:51 - INFO - Fetching activities from 2026-01-01 to 2026-01-15 (refreshing last 2 weeks)
+2026-01-15 20:08:51 - INFO - intervals.icu API call starting: fetch activities (oldest=2026-01-01, newest=2026-01-15)
+2026-01-15 20:08:52 - INFO - intervals.icu API call completed: fetch activities - duration=383ms, count=7
+2026-01-15 20:08:52 - INFO - Transformed 7 activities with standardized field names
+2026-01-15 20:08:52 - INFO - Fetched 7 activities
+2026-01-15 20:08:52 - INFO - Activity merge: 164 existing + 7 new = 164 total
+2026-01-15 20:08:52 - INFO - Merged 7 new activities with 164 existing = 164 total
+2026-01-15 20:08:52 - INFO - Fetching planned events
+2026-01-15 20:08:52 - INFO - Fetching events (incremental, refreshing last 2 weeks): 2026-01-01 to 2027-01-15
+2026-01-15 20:08:52 - INFO - intervals.icu API call starting: fetch events (oldest=2026-01-01, newest=2027-01-15, category=WORKOUT)
+2026-01-15 20:08:52 - INFO - intervals.icu API call completed: fetch events - duration=370ms, count=20
+2026-01-15 20:08:52 - INFO - Retrieved 20 planned events
+2026-01-15 20:08:52 - INFO - Fetched 20 planned events
+2026-01-15 20:08:52 - INFO - Event merge: 24 existing + 20 new = 24 total
+2026-01-15 20:08:52 - INFO - Total events after merge: 24
+2026-01-15 20:08:52 - INFO - Using cached power curves (skipped for speed)
+2026-01-15 20:08:52 - INFO - Matching planned events with completed activities
+2026-01-15 20:08:52 - INFO - Matching 164 activities with 24 events
+2026-01-15 20:08:52 - INFO - Phase 1 (paired_event_id): Matched 7 activities
+2026-01-15 20:08:52 - INFO - Phase 2 (fuzzy match): Matched 4 additional activities
+2026-01-15 20:08:52 - INFO - Total matched: 11/164 activities
+2026-01-15 20:08:52 - INFO - Building workout indices
+2026-01-15 20:08:52 - INFO - Building workout index from activities and events
+2026-01-15 20:08:52 - INFO - Index built: 168 dates, 50 weeks, 23 types
+2026-01-15 20:08:52 - INFO - Aggregating weekly summaries
+2026-01-15 20:08:52 - INFO - Saved 164 activities to /Users/zeph/Projects/train-r/data/athlete/raw/completed_activities.json
+2026-01-15 20:08:52 - INFO - Saved 24 events to /Users/zeph/Projects/train-r/data/athlete/raw/planned_events.json
+2026-01-15 20:08:52 - INFO - Saved power curves to /Users/zeph/Projects/train-r/data/athlete/raw/power_curves.json
+2026-01-15 20:08:52 - INFO - Saved workout index to /Users/zeph/Projects/train-r/data/athlete/processed/workout_index.json
+2026-01-15 20:08:52 - INFO - Saved 48 weeks to /Users/zeph/Projects/train-r/data/athlete/processed/weekly_summary.json
+2026-01-15 20:08:52 - INFO - ============================================================
+2026-01-15 20:08:52 - INFO - Athlete data sync complete
+2026-01-15 20:08:52 - INFO - Total activities: 164
+2026-01-15 20:08:52 - INFO - Total events: 24
+2026-01-15 20:08:52 - INFO - Total weeks: 48
+2026-01-15 20:08:52 - INFO - ============================================================
+2026-01-15 20:08:52 - INFO - Data sync complete for client 5a905096: {'success': True, 'sync_type': 'incremental', 'total_activities': 164, 'new_activities': 7, 'total_events': 24, 'total_weeks': 48}
+2026-01-15 20:08:52 - INFO - Dashboard data sent to client 5a905096

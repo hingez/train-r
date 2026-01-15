@@ -63,16 +63,20 @@ def execute(args: dict, config: AppConfig, coach_service: "CoachService" = None)
         # Initialize CurrentPlanService
         current_plan_service = CurrentPlanService(config)
 
-        # Get intervals client from coach service
-        if not coach_service or not hasattr(coach_service, 'intervals_client'):
+        # Create IntervalsClient
+        from src.integrations.intervals import IntervalsClient
+        try:
+            intervals_client = IntervalsClient(
+                api_key=config.intervals_api_key,
+                config=config
+            )
+        except Exception as e:
             duration_ms = int((time.time() - start_time) * 1000)
-            logger.error(f"TOOL_ERROR tool=modify_workout duration={duration_ms}ms error=intervals_client not available")
+            logger.error(f"TOOL_ERROR tool=modify_workout duration={duration_ms}ms error=Failed to create intervals client: {str(e)}")
             return {
                 "success": False,
-                "message": "intervals.icu client not available"
+                "message": f"Failed to connect to intervals.icu: {str(e)}"
             }
-
-        intervals_client = coach_service.intervals_client
 
         # Validate modification parameters
         is_valid, error_message, workout_result = _validate_modify_params(
