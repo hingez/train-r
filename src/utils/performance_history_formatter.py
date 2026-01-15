@@ -349,6 +349,11 @@ def _format_future_workouts(planned_events: List[Dict]) -> List[Dict]:
                 "name": event.get("name", "Unnamed workout")
             }
 
+            # Add event_id for modify_workout tool
+            event_id = event.get("id")
+            if event_id:
+                workout_obj["event_id"] = event_id
+
             # Add TSS if available (icu_training_load)
             if event.get("icu_training_load"):
                 workout_obj["tss"] = int(event.get("icu_training_load"))

@@ -34439,3 +34439,2122 @@ Hotel Bike. Warm up 10m. 10 x 2m HARD (RPE 8/10) with 2m easy recovery. Cool dow
 2026-01-14 21:15:33 - INFO - Closing 0 active WebSocket connections...
 2026-01-14 21:15:33 - INFO - All WebSocket connections closed
 2026-01-14 21:15:33 - INFO - Shutdown complete
+2026-01-14 21:35:51 - INFO - ============================================================
+2026-01-14 21:35:51 - INFO - Train-R Application Started
+2026-01-14 21:35:51 - INFO - ============================================================
+2026-01-14 21:35:51 - INFO - CORS configured for origins: http://localhost:3001
+2026-01-14 21:35:51 - INFO - FastAPI application created and configured
+2026-01-14 21:35:51 - INFO - ============================================================
+2026-01-14 21:35:51 - INFO - Starting Train-R API Server (Refactored Architecture)
+2026-01-14 21:35:51 - INFO - ============================================================
+2026-01-14 21:35:51 - INFO - Flushed LLM messages log file
+2026-01-14 21:35:51 - INFO - Configuration validated
+2026-01-14 21:35:51 - INFO - LangSmith tracing enabled for project: Train-R
+2026-01-14 21:35:51 - INFO - LLMClient initialized with endpoint: https://generativelanguage.googleapis.com/v1beta/openai/
+2026-01-14 21:35:51 - INFO - LLM messages will be logged to: /Users/zeph/Projects/train-r/logs/llm_messages.json
+2026-01-14 21:35:51 - INFO - LLM client initialized: gemini-3-flash-preview
+2026-01-14 21:35:51 - INFO - CoachService initialized with 3 tools: create_one_off_workout, create_workout_plan, modify_workout
+2026-01-14 21:35:51 - INFO - Coach service initialized with tool support
+2026-01-14 21:35:51 - INFO - Data already migrated to v2 structure
+2026-01-14 21:35:51 - INFO - Starting full data sync (including power curves)...
+2026-01-14 21:35:51 - INFO - ============================================================
+2026-01-14 21:35:51 - INFO - Starting athlete data sync (synchronous)
+2026-01-14 21:35:51 - INFO - ============================================================
+2026-01-14 21:35:51 - INFO - Performing INCREMENTAL sync (new activities only)
+2026-01-14 21:35:51 - INFO - Fetching activities from 2025-12-31 to 2026-01-14 (refreshing last 2 weeks)
+2026-01-14 21:35:51 - INFO - intervals.icu API call starting: fetch activities (oldest=2025-12-31, newest=2026-01-14)
+2026-01-14 21:35:52 - INFO - intervals.icu API call completed: fetch activities - duration=632ms, count=6
+2026-01-14 21:35:52 - INFO - Transformed 6 activities with standardized field names
+2026-01-14 21:35:52 - INFO - Fetched 6 activities
+2026-01-14 21:35:52 - INFO - Activity merge: 163 existing + 6 new = 163 total
+2026-01-14 21:35:52 - INFO - Merged 6 new activities with 163 existing = 163 total
+2026-01-14 21:35:52 - INFO - Fetching planned events
+2026-01-14 21:35:52 - INFO - Fetching events (incremental, refreshing last 2 weeks): 2025-12-31 to 2027-01-14
+2026-01-14 21:35:52 - INFO - intervals.icu API call starting: fetch events (oldest=2025-12-31, newest=2027-01-14, category=WORKOUT)
+2026-01-14 21:35:52 - INFO - intervals.icu API call completed: fetch events - duration=496ms, count=17
+2026-01-14 21:35:52 - INFO - Retrieved 17 planned events
+2026-01-14 21:35:52 - INFO - Fetched 17 planned events
+2026-01-14 21:35:52 - INFO - Event merge: 21 existing + 17 new = 21 total
+2026-01-14 21:35:52 - INFO - Total events after merge: 21
+2026-01-14 21:35:52 - INFO - Fetching fresh power curves from intervals.icu
+2026-01-14 21:35:52 - INFO - intervals.icu API call starting: fetch 1-month power curve
+2026-01-14 21:35:53 - INFO - intervals.icu API call completed: fetch 1-month power curve - duration=529ms, data_points=12
+2026-01-14 21:35:53 - INFO - intervals.icu API call starting: fetch 2-month power curve
+2026-01-14 21:35:53 - INFO - intervals.icu API call completed: fetch 2-month power curve - duration=515ms, data_points=12
+2026-01-14 21:35:53 - INFO - intervals.icu API call starting: fetch 3-month power curve
+2026-01-14 21:35:54 - INFO - intervals.icu API call completed: fetch 3-month power curve - duration=277ms, data_points=12
+2026-01-14 21:35:54 - INFO - intervals.icu API call starting: fetch 6-month power curve
+2026-01-14 21:35:54 - INFO - intervals.icu API call completed: fetch 6-month power curve - duration=646ms, data_points=12
+2026-01-14 21:35:54 - INFO - intervals.icu API call starting: fetch 12-month power curve
+2026-01-14 21:35:55 - INFO - intervals.icu API call completed: fetch 12-month power curve - duration=411ms, data_points=12
+2026-01-14 21:35:55 - INFO - Retrieved power curves for 5 time periods
+2026-01-14 21:35:55 - INFO - Matching planned events with completed activities
+2026-01-14 21:35:55 - INFO - Matching 163 activities with 21 events
+2026-01-14 21:35:55 - INFO - Phase 1 (paired_event_id): Matched 6 activities
+2026-01-14 21:35:55 - INFO - Phase 2 (fuzzy match): Matched 4 additional activities
+2026-01-14 21:35:55 - INFO - Total matched: 10/163 activities
+2026-01-14 21:35:55 - INFO - Building workout indices
+2026-01-14 21:35:55 - INFO - Building workout index from activities and events
+2026-01-14 21:35:55 - INFO - Index built: 165 dates, 50 weeks, 20 types
+2026-01-14 21:35:55 - INFO - Aggregating weekly summaries
+2026-01-14 21:35:55 - INFO - Saved 163 activities to /Users/zeph/Projects/train-r/data/athlete/raw/completed_activities.json
+2026-01-14 21:35:55 - INFO - Saved 21 events to /Users/zeph/Projects/train-r/data/athlete/raw/planned_events.json
+2026-01-14 21:35:55 - INFO - Saved power curves to /Users/zeph/Projects/train-r/data/athlete/raw/power_curves.json
+2026-01-14 21:35:55 - INFO - Saved workout index to /Users/zeph/Projects/train-r/data/athlete/processed/workout_index.json
+2026-01-14 21:35:55 - INFO - Saved 48 weeks to /Users/zeph/Projects/train-r/data/athlete/processed/weekly_summary.json
+2026-01-14 21:35:55 - INFO - ============================================================
+2026-01-14 21:35:55 - INFO - Athlete data sync complete
+2026-01-14 21:35:55 - INFO - Total activities: 163
+2026-01-14 21:35:55 - INFO - Total events: 21
+2026-01-14 21:35:55 - INFO - Total weeks: 48
+2026-01-14 21:35:55 - INFO - ============================================================
+2026-01-14 21:35:55 - INFO - Athlete data sync complete: {'success': True, 'sync_type': 'incremental', 'total_activities': 163, 'new_activities': 6, 'total_events': 21, 'total_weeks': 48}
+2026-01-14 21:35:55 - INFO - Active plan not found, initializing from master plan
+2026-01-14 21:35:55 - INFO - Initializing current plan from master plan
+2026-01-14 21:35:55 - INFO - Initialized current plan with 126 workouts
+2026-01-14 21:35:55 - INFO - Syncing with 21 planned events from intervals.icu
+2026-01-14 21:35:55 - INFO - Synced 12 workouts with intervals.icu event IDs
+2026-01-14 21:35:55 - INFO - Synced 12 workouts with intervals.icu event IDs
+2026-01-14 21:35:55 - INFO - Current plan loaded with 126 workouts
+2026-01-14 21:35:55 - INFO - Syncing with 21 planned events from intervals.icu
+2026-01-14 21:35:55 - INFO - Synced 12 workouts with intervals.icu event IDs
+2026-01-14 21:35:55 - INFO - Synced 12 workouts with intervals.icu event IDs
+2026-01-14 21:35:55 - INFO - Background workout upload task started
+2026-01-14 21:35:55 - INFO - ============================================================
+2026-01-14 21:35:55 - INFO - Train-R API Server ready
+2026-01-14 21:35:55 - INFO - ============================================================
+2026-01-14 21:35:55 - INFO - Starting background workout upload...
+2026-01-14 21:35:55 - INFO - Found 14 future workouts to process
+2026-01-14 21:35:55 - INFO - Uploading 2 workouts (12 already uploaded)
+2026-01-14 21:35:55 - INFO - LangSmith session ID: plan-upload-20260114_213555
+2026-01-14 21:35:55 - INFO - Generating workout for 2026-01-28 (Hotel Gym Tempo)
+2026-01-14 21:35:55 - INFO - Generating workout with description: Training Phase: Re-Activation & Base 2
+Workout Type: Hotel Gym Tempo
+Duration: 45 minutes
+Target TSS: 50
+Athlete FTP: 365W
+
+Workout Details:
+Hotel Bike. 45m steady state. RPE 6/10. Sweat session.
+2026-01-14 21:35:55 - INFO - Generating workout for 2026-01-29 (Hotel Gym Threshold)
+2026-01-14 21:35:55 - INFO - Generating workout with description: Training Phase: Re-Activation & Base 2
+Workout Type: Hotel Gym Threshold
+Duration: 60 minutes
+Target TSS: 80
+Athlete FTP: 365W
+
+Workout Details:
+Hotel Bike. Warm up 10m. 3 x 10m @ RPE 7-8/10 (Threshold feel). 3m recovery. Cool down.
+2026-01-14 21:35:55 - INFO - LLM_REQUEST model=gemini-3-flash-preview temp=0 messages=2 tools=0
+2026-01-14 21:35:55 - INFO - LLM_REQUEST model=gemini-3-flash-preview temp=0 messages=2 tools=0
+2026-01-14 21:36:17 - INFO - LLM_RESPONSE duration=22371ms tokens=4187 (prompt=976, completion=222) finish=stop
+2026-01-14 21:36:17 - INFO - Workout generated successfully
+2026-01-14 21:36:17 - INFO - Uploading workout for 2026-01-29 to intervals.icu
+2026-01-14 21:36:17 - INFO - intervals.icu API call starting: upload workout 20260129_120000.zwo
+2026-01-14 21:36:17 - INFO - intervals.icu API call completed: upload workout - duration=354ms, event_id=88645187
+2026-01-14 21:36:17 - INFO - Successfully uploaded workout for 2026-01-29 (event_id: 88645187)
+2026-01-14 21:36:17 - INFO - Upload progress: 1/0 - 2026-01-29
+2026-01-14 21:36:35 - INFO - LLM_RESPONSE duration=40116ms tokens=7218 (prompt=958, completion=183) finish=stop
+2026-01-14 21:36:35 - INFO - Workout generated successfully
+2026-01-14 21:36:35 - INFO - Uploading workout for 2026-01-28 to intervals.icu
+2026-01-14 21:36:35 - INFO - intervals.icu API call starting: upload workout 20260128_120000.zwo
+2026-01-14 21:36:35 - INFO - intervals.icu API call completed: upload workout - duration=720ms, event_id=88645203
+2026-01-14 21:36:35 - INFO - Successfully uploaded workout for 2026-01-28 (event_id: 88645203)
+2026-01-14 21:36:35 - INFO - Upload progress: 2/0 - 2026-01-28
+2026-01-14 21:36:35 - INFO - Upload complete: {'success': 2, 'skipped': 12, 'failed': 0, 'total': 14}
+2026-01-14 21:36:35 - INFO - Background upload complete: {'success': 2, 'skipped': 12, 'failed': 0, 'total': 14}
+2026-01-14 21:53:17 - INFO - ============================================================
+2026-01-14 21:53:17 - INFO - Shutting down Train-R API Server
+2026-01-14 21:53:17 - INFO - ============================================================
+2026-01-14 21:53:17 - INFO - Closing 0 active WebSocket connections...
+2026-01-14 21:53:17 - INFO - All WebSocket connections closed
+2026-01-14 21:53:17 - INFO - Shutdown complete
+2026-01-15 17:39:15 - INFO - ============================================================
+2026-01-15 17:39:15 - INFO - Train-R Application Started
+2026-01-15 17:39:15 - INFO - ============================================================
+2026-01-15 17:39:15 - INFO - CORS configured for origins: http://localhost:3001
+2026-01-15 17:39:15 - INFO - FastAPI application created and configured
+2026-01-15 17:39:15 - INFO - ============================================================
+2026-01-15 17:39:15 - INFO - Starting Train-R API Server (Refactored Architecture)
+2026-01-15 17:39:15 - INFO - ============================================================
+2026-01-15 17:39:15 - INFO - Flushed LLM messages log file
+2026-01-15 17:39:15 - INFO - Configuration validated
+2026-01-15 17:39:15 - INFO - LangSmith tracing enabled for project: Train-R
+2026-01-15 17:39:15 - INFO - LLMClient initialized with endpoint: https://generativelanguage.googleapis.com/v1beta/openai/
+2026-01-15 17:39:15 - INFO - LLM messages will be logged to: /Users/zeph/Projects/train-r/logs/llm_messages.json
+2026-01-15 17:39:15 - INFO - LLM client initialized: gemini-3-flash-preview
+2026-01-15 17:39:15 - INFO - CoachService initialized with 3 tools: create_one_off_workout, create_workout_plan, modify_workout
+2026-01-15 17:39:15 - INFO - Coach service initialized with tool support
+2026-01-15 17:39:15 - INFO - Data already migrated to v2 structure
+2026-01-15 17:39:15 - INFO - Starting full data sync (including power curves)...
+2026-01-15 17:39:15 - INFO - ============================================================
+2026-01-15 17:39:15 - INFO - Starting athlete data sync (synchronous)
+2026-01-15 17:39:15 - INFO - ============================================================
+2026-01-15 17:39:15 - INFO - Performing INCREMENTAL sync (new activities only)
+2026-01-15 17:39:15 - INFO - Fetching activities from 2026-01-01 to 2026-01-15 (refreshing last 2 weeks)
+2026-01-15 17:39:15 - INFO - intervals.icu API call starting: fetch activities (oldest=2026-01-01, newest=2026-01-15)
+2026-01-15 17:39:17 - INFO - intervals.icu API call completed: fetch activities - duration=2427ms, count=6
+2026-01-15 17:39:17 - INFO - Transformed 6 activities with standardized field names
+2026-01-15 17:39:17 - INFO - Fetched 6 activities
+2026-01-15 17:39:17 - INFO - Activity merge: 163 existing + 6 new = 163 total
+2026-01-15 17:39:17 - INFO - Merged 6 new activities with 163 existing = 163 total
+2026-01-15 17:39:17 - INFO - Fetching planned events
+2026-01-15 17:39:17 - INFO - Fetching events (incremental, refreshing last 2 weeks): 2026-01-01 to 2027-01-15
+2026-01-15 17:39:17 - INFO - intervals.icu API call starting: fetch events (oldest=2026-01-01, newest=2027-01-15, category=WORKOUT)
+2026-01-15 17:39:18 - INFO - intervals.icu API call completed: fetch events - duration=230ms, count=19
+2026-01-15 17:39:18 - INFO - Retrieved 19 planned events
+2026-01-15 17:39:18 - INFO - Fetched 19 planned events
+2026-01-15 17:39:18 - INFO - Event merge: 21 existing + 19 new = 23 total
+2026-01-15 17:39:18 - INFO - Total events after merge: 23
+2026-01-15 17:39:18 - INFO - Fetching fresh power curves from intervals.icu
+2026-01-15 17:39:18 - INFO - intervals.icu API call starting: fetch 1-month power curve
+2026-01-15 17:39:18 - INFO - intervals.icu API call completed: fetch 1-month power curve - duration=439ms, data_points=12
+2026-01-15 17:39:18 - INFO - intervals.icu API call starting: fetch 2-month power curve
+2026-01-15 17:39:18 - INFO - intervals.icu API call completed: fetch 2-month power curve - duration=389ms, data_points=12
+2026-01-15 17:39:18 - INFO - intervals.icu API call starting: fetch 3-month power curve
+2026-01-15 17:39:19 - INFO - intervals.icu API call completed: fetch 3-month power curve - duration=362ms, data_points=12
+2026-01-15 17:39:19 - INFO - intervals.icu API call starting: fetch 6-month power curve
+2026-01-15 17:39:19 - INFO - intervals.icu API call completed: fetch 6-month power curve - duration=419ms, data_points=12
+2026-01-15 17:39:19 - INFO - intervals.icu API call starting: fetch 12-month power curve
+2026-01-15 17:39:20 - INFO - intervals.icu API call completed: fetch 12-month power curve - duration=438ms, data_points=12
+2026-01-15 17:39:20 - INFO - Retrieved power curves for 5 time periods
+2026-01-15 17:39:20 - INFO - Matching planned events with completed activities
+2026-01-15 17:39:20 - INFO - Matching 163 activities with 23 events
+2026-01-15 17:39:20 - INFO - Phase 1 (paired_event_id): Matched 6 activities
+2026-01-15 17:39:20 - INFO - Phase 2 (fuzzy match): Matched 4 additional activities
+2026-01-15 17:39:20 - INFO - Total matched: 10/163 activities
+2026-01-15 17:39:20 - INFO - Building workout indices
+2026-01-15 17:39:20 - INFO - Building workout index from activities and events
+2026-01-15 17:39:20 - INFO - Index built: 167 dates, 50 weeks, 22 types
+2026-01-15 17:39:20 - INFO - Aggregating weekly summaries
+2026-01-15 17:39:20 - INFO - Saved 163 activities to /Users/zeph/Projects/train-r/data/athlete/raw/completed_activities.json
+2026-01-15 17:39:20 - INFO - Saved 23 events to /Users/zeph/Projects/train-r/data/athlete/raw/planned_events.json
+2026-01-15 17:39:20 - INFO - Saved power curves to /Users/zeph/Projects/train-r/data/athlete/raw/power_curves.json
+2026-01-15 17:39:20 - INFO - Saved workout index to /Users/zeph/Projects/train-r/data/athlete/processed/workout_index.json
+2026-01-15 17:39:20 - INFO - Saved 48 weeks to /Users/zeph/Projects/train-r/data/athlete/processed/weekly_summary.json
+2026-01-15 17:39:20 - INFO - ============================================================
+2026-01-15 17:39:20 - INFO - Athlete data sync complete
+2026-01-15 17:39:20 - INFO - Total activities: 163
+2026-01-15 17:39:20 - INFO - Total events: 23
+2026-01-15 17:39:20 - INFO - Total weeks: 48
+2026-01-15 17:39:20 - INFO - ============================================================
+2026-01-15 17:39:20 - INFO - Athlete data sync complete: {'success': True, 'sync_type': 'incremental', 'total_activities': 163, 'new_activities': 6, 'total_events': 23, 'total_weeks': 48}
+2026-01-15 17:39:20 - INFO - Current plan loaded with 126 workouts
+2026-01-15 17:39:20 - INFO - Syncing with 23 planned events from intervals.icu
+2026-01-15 17:39:20 - INFO - Synced 14 workouts with intervals.icu event IDs
+2026-01-15 17:39:20 - INFO - Synced 14 workouts with intervals.icu event IDs
+2026-01-15 17:39:20 - INFO - Background workout upload task started
+2026-01-15 17:39:20 - INFO - ============================================================
+2026-01-15 17:39:20 - INFO - Train-R API Server ready
+2026-01-15 17:39:20 - INFO - ============================================================
+2026-01-15 17:39:20 - INFO - Starting background workout upload...
+2026-01-15 17:39:20 - INFO - Found 14 future workouts to process
+2026-01-15 17:39:20 - INFO - Uploading 1 workouts (13 already uploaded)
+2026-01-15 17:39:20 - INFO - LangSmith session ID: plan-upload-20260115_173920
+2026-01-15 17:39:20 - INFO - Generating workout for 2026-01-31 (Long Ride)
+2026-01-15 17:39:20 - INFO - Generating workout with description: Training Phase: Re-Activation & Base 2
+Workout Type: Long Ride
+Duration: 180 minutes
+Target TSS: 140
+Athlete FTP: 365W
+
+Workout Details:
+3 hours Zone 2 outdoor. Flush out the travel legs.
+2026-01-15 17:39:20 - INFO - LLM_REQUEST model=gemini-3-flash-preview temp=0 messages=2 tools=0
+2026-01-15 17:39:25 - INFO - Client 25d84aab-c171-424b-b108-c4bfad45be4f connected. Total connections: 1
+2026-01-15 17:39:25 - INFO - ============================================================
+2026-01-15 17:39:25 - INFO - Starting athlete data sync (synchronous)
+2026-01-15 17:39:25 - INFO - ============================================================
+2026-01-15 17:39:25 - INFO - Performing INCREMENTAL sync (new activities only)
+2026-01-15 17:39:25 - INFO - Fetching activities from 2026-01-01 to 2026-01-15 (refreshing last 2 weeks)
+2026-01-15 17:39:25 - INFO - intervals.icu API call starting: fetch activities (oldest=2026-01-01, newest=2026-01-15)
+2026-01-15 17:39:25 - INFO - intervals.icu API call completed: fetch activities - duration=414ms, count=6
+2026-01-15 17:39:25 - INFO - Transformed 6 activities with standardized field names
+2026-01-15 17:39:25 - INFO - Fetched 6 activities
+2026-01-15 17:39:25 - INFO - Activity merge: 163 existing + 6 new = 163 total
+2026-01-15 17:39:25 - INFO - Merged 6 new activities with 163 existing = 163 total
+2026-01-15 17:39:25 - INFO - Fetching planned events
+2026-01-15 17:39:25 - INFO - Fetching events (incremental, refreshing last 2 weeks): 2026-01-01 to 2027-01-15
+2026-01-15 17:39:25 - INFO - intervals.icu API call starting: fetch events (oldest=2026-01-01, newest=2027-01-15, category=WORKOUT)
+2026-01-15 17:39:25 - INFO - Client 2896e16e-cba5-4153-bd2d-852b7f2d9b88 connected. Total connections: 2
+2026-01-15 17:39:25 - INFO - ============================================================
+2026-01-15 17:39:25 - INFO - Starting athlete data sync (synchronous)
+2026-01-15 17:39:25 - INFO - ============================================================
+2026-01-15 17:39:25 - INFO - Performing INCREMENTAL sync (new activities only)
+2026-01-15 17:39:25 - INFO - Fetching activities from 2026-01-01 to 2026-01-15 (refreshing last 2 weeks)
+2026-01-15 17:39:25 - INFO - intervals.icu API call starting: fetch activities (oldest=2026-01-01, newest=2026-01-15)
+2026-01-15 17:39:26 - INFO - intervals.icu API call completed: fetch events - duration=260ms, count=19
+2026-01-15 17:39:26 - INFO - Retrieved 19 planned events
+2026-01-15 17:39:26 - INFO - Fetched 19 planned events
+2026-01-15 17:39:26 - INFO - Event merge: 23 existing + 19 new = 23 total
+2026-01-15 17:39:26 - INFO - Total events after merge: 23
+2026-01-15 17:39:26 - INFO - Using cached power curves (skipped for speed)
+2026-01-15 17:39:26 - INFO - Matching planned events with completed activities
+2026-01-15 17:39:26 - INFO - Matching 163 activities with 23 events
+2026-01-15 17:39:26 - INFO - Phase 1 (paired_event_id): Matched 6 activities
+2026-01-15 17:39:26 - INFO - Phase 2 (fuzzy match): Matched 4 additional activities
+2026-01-15 17:39:26 - INFO - Total matched: 10/163 activities
+2026-01-15 17:39:26 - INFO - Building workout indices
+2026-01-15 17:39:26 - INFO - Building workout index from activities and events
+2026-01-15 17:39:26 - INFO - Index built: 167 dates, 50 weeks, 22 types
+2026-01-15 17:39:26 - INFO - Aggregating weekly summaries
+2026-01-15 17:39:26 - INFO - Saved 163 activities to /Users/zeph/Projects/train-r/data/athlete/raw/completed_activities.json
+2026-01-15 17:39:26 - INFO - Saved 23 events to /Users/zeph/Projects/train-r/data/athlete/raw/planned_events.json
+2026-01-15 17:39:26 - INFO - Saved power curves to /Users/zeph/Projects/train-r/data/athlete/raw/power_curves.json
+2026-01-15 17:39:26 - INFO - Saved workout index to /Users/zeph/Projects/train-r/data/athlete/processed/workout_index.json
+2026-01-15 17:39:26 - INFO - Saved 48 weeks to /Users/zeph/Projects/train-r/data/athlete/processed/weekly_summary.json
+2026-01-15 17:39:26 - INFO - ============================================================
+2026-01-15 17:39:26 - INFO - Athlete data sync complete
+2026-01-15 17:39:26 - INFO - Total activities: 163
+2026-01-15 17:39:26 - INFO - Total events: 23
+2026-01-15 17:39:26 - INFO - Total weeks: 48
+2026-01-15 17:39:26 - INFO - ============================================================
+2026-01-15 17:39:26 - INFO - Data sync complete for client 25d84aab: {'success': True, 'sync_type': 'incremental', 'total_activities': 163, 'new_activities': 6, 'total_events': 23, 'total_weeks': 48}
+2026-01-15 17:39:26 - ERROR - Error sending message to client 25d84aab-c171-424b-b108-c4bfad45be4f: 
+2026-01-15 17:39:26 - INFO - Client 25d84aab-c171-424b-b108-c4bfad45be4f disconnected. Total connections: 1
+2026-01-15 17:39:26 - INFO - Dashboard data sent to client 25d84aab
+2026-01-15 17:39:26 - ERROR - WebSocket error: WebSocket is not connected. Need to call "accept" first.
+Traceback (most recent call last):
+  File "/Users/zeph/Projects/train-r/src/api/routes.py", line 115, in websocket_endpoint
+    data = await websocket.receive_json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zeph/Projects/train-r/.venv/lib/python3.12/site-packages/starlette/websockets.py", line 134, in receive_json
+    raise RuntimeError('WebSocket is not connected. Need to call "accept" first.')
+RuntimeError: WebSocket is not connected. Need to call "accept" first.
+2026-01-15 17:39:26 - INFO - intervals.icu API call completed: fetch activities - duration=455ms, count=6
+2026-01-15 17:39:26 - INFO - Transformed 6 activities with standardized field names
+2026-01-15 17:39:26 - INFO - Fetched 6 activities
+2026-01-15 17:39:26 - INFO - Activity merge: 163 existing + 6 new = 163 total
+2026-01-15 17:39:26 - INFO - Merged 6 new activities with 163 existing = 163 total
+2026-01-15 17:39:26 - INFO - Fetching planned events
+2026-01-15 17:39:26 - INFO - Fetching events (incremental, refreshing last 2 weeks): 2026-01-01 to 2027-01-15
+2026-01-15 17:39:26 - INFO - intervals.icu API call starting: fetch events (oldest=2026-01-01, newest=2027-01-15, category=WORKOUT)
+2026-01-15 17:39:26 - INFO - Client 9002b8d0-d76b-4b7d-a872-de169af514e9 connected. Total connections: 2
+2026-01-15 17:39:26 - INFO - ============================================================
+2026-01-15 17:39:26 - INFO - Starting athlete data sync (synchronous)
+2026-01-15 17:39:26 - INFO - ============================================================
+2026-01-15 17:39:26 - INFO - Performing INCREMENTAL sync (new activities only)
+2026-01-15 17:39:26 - INFO - Fetching activities from 2026-01-01 to 2026-01-15 (refreshing last 2 weeks)
+2026-01-15 17:39:26 - INFO - intervals.icu API call starting: fetch activities (oldest=2026-01-01, newest=2026-01-15)
+2026-01-15 17:39:26 - INFO - intervals.icu API call completed: fetch activities - duration=238ms, count=6
+2026-01-15 17:39:26 - INFO - Transformed 6 activities with standardized field names
+2026-01-15 17:39:26 - INFO - Fetched 6 activities
+2026-01-15 17:39:26 - INFO - Activity merge: 163 existing + 6 new = 163 total
+2026-01-15 17:39:26 - INFO - Merged 6 new activities with 163 existing = 163 total
+2026-01-15 17:39:26 - INFO - Fetching planned events
+2026-01-15 17:39:26 - INFO - Fetching events (incremental, refreshing last 2 weeks): 2026-01-01 to 2027-01-15
+2026-01-15 17:39:26 - INFO - intervals.icu API call starting: fetch events (oldest=2026-01-01, newest=2027-01-15, category=WORKOUT)
+2026-01-15 17:39:27 - INFO - intervals.icu API call completed: fetch events - duration=586ms, count=19
+2026-01-15 17:39:27 - INFO - Retrieved 19 planned events
+2026-01-15 17:39:27 - INFO - Fetched 19 planned events
+2026-01-15 17:39:27 - INFO - Event merge: 23 existing + 19 new = 23 total
+2026-01-15 17:39:27 - INFO - Total events after merge: 23
+2026-01-15 17:39:27 - INFO - Using cached power curves (skipped for speed)
+2026-01-15 17:39:27 - INFO - Matching planned events with completed activities
+2026-01-15 17:39:27 - INFO - Matching 163 activities with 23 events
+2026-01-15 17:39:27 - INFO - Phase 1 (paired_event_id): Matched 6 activities
+2026-01-15 17:39:27 - INFO - Phase 2 (fuzzy match): Matched 4 additional activities
+2026-01-15 17:39:27 - INFO - Total matched: 10/163 activities
+2026-01-15 17:39:27 - INFO - Building workout indices
+2026-01-15 17:39:27 - INFO - Building workout index from activities and events
+2026-01-15 17:39:27 - INFO - Index built: 167 dates, 50 weeks, 22 types
+2026-01-15 17:39:27 - INFO - Aggregating weekly summaries
+2026-01-15 17:39:27 - INFO - Saved 163 activities to /Users/zeph/Projects/train-r/data/athlete/raw/completed_activities.json
+2026-01-15 17:39:27 - INFO - Saved 23 events to /Users/zeph/Projects/train-r/data/athlete/raw/planned_events.json
+2026-01-15 17:39:27 - INFO - Saved power curves to /Users/zeph/Projects/train-r/data/athlete/raw/power_curves.json
+2026-01-15 17:39:27 - INFO - Saved workout index to /Users/zeph/Projects/train-r/data/athlete/processed/workout_index.json
+2026-01-15 17:39:27 - INFO - Saved 48 weeks to /Users/zeph/Projects/train-r/data/athlete/processed/weekly_summary.json
+2026-01-15 17:39:27 - INFO - ============================================================
+2026-01-15 17:39:27 - INFO - Athlete data sync complete
+2026-01-15 17:39:27 - INFO - Total activities: 163
+2026-01-15 17:39:27 - INFO - Total events: 23
+2026-01-15 17:39:27 - INFO - Total weeks: 48
+2026-01-15 17:39:27 - INFO - ============================================================
+2026-01-15 17:39:27 - INFO - Data sync complete for client 2896e16e: {'success': True, 'sync_type': 'incremental', 'total_activities': 163, 'new_activities': 6, 'total_events': 23, 'total_weeks': 48}
+2026-01-15 17:39:27 - ERROR - Error sending message to client 2896e16e-cba5-4153-bd2d-852b7f2d9b88: 
+2026-01-15 17:39:27 - INFO - Client 2896e16e-cba5-4153-bd2d-852b7f2d9b88 disconnected. Total connections: 1
+2026-01-15 17:39:27 - INFO - Dashboard data sent to client 2896e16e
+2026-01-15 17:39:27 - ERROR - WebSocket error: WebSocket is not connected. Need to call "accept" first.
+Traceback (most recent call last):
+  File "/Users/zeph/Projects/train-r/src/api/routes.py", line 115, in websocket_endpoint
+    data = await websocket.receive_json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zeph/Projects/train-r/.venv/lib/python3.12/site-packages/starlette/websockets.py", line 134, in receive_json
+    raise RuntimeError('WebSocket is not connected. Need to call "accept" first.')
+RuntimeError: WebSocket is not connected. Need to call "accept" first.
+2026-01-15 17:39:27 - INFO - intervals.icu API call completed: fetch events - duration=312ms, count=19
+2026-01-15 17:39:27 - INFO - Retrieved 19 planned events
+2026-01-15 17:39:27 - INFO - Fetched 19 planned events
+2026-01-15 17:39:27 - INFO - Event merge: 23 existing + 19 new = 23 total
+2026-01-15 17:39:27 - INFO - Total events after merge: 23
+2026-01-15 17:39:27 - INFO - Using cached power curves (skipped for speed)
+2026-01-15 17:39:27 - INFO - Matching planned events with completed activities
+2026-01-15 17:39:27 - INFO - Matching 163 activities with 23 events
+2026-01-15 17:39:27 - INFO - Phase 1 (paired_event_id): Matched 6 activities
+2026-01-15 17:39:27 - INFO - Phase 2 (fuzzy match): Matched 4 additional activities
+2026-01-15 17:39:27 - INFO - Total matched: 10/163 activities
+2026-01-15 17:39:27 - INFO - Building workout indices
+2026-01-15 17:39:27 - INFO - Building workout index from activities and events
+2026-01-15 17:39:27 - INFO - Index built: 167 dates, 50 weeks, 22 types
+2026-01-15 17:39:27 - INFO - Aggregating weekly summaries
+2026-01-15 17:39:27 - INFO - Saved 163 activities to /Users/zeph/Projects/train-r/data/athlete/raw/completed_activities.json
+2026-01-15 17:39:27 - INFO - Saved 23 events to /Users/zeph/Projects/train-r/data/athlete/raw/planned_events.json
+2026-01-15 17:39:27 - INFO - Saved power curves to /Users/zeph/Projects/train-r/data/athlete/raw/power_curves.json
+2026-01-15 17:39:27 - INFO - Saved workout index to /Users/zeph/Projects/train-r/data/athlete/processed/workout_index.json
+2026-01-15 17:39:27 - INFO - Saved 48 weeks to /Users/zeph/Projects/train-r/data/athlete/processed/weekly_summary.json
+2026-01-15 17:39:27 - INFO - ============================================================
+2026-01-15 17:39:27 - INFO - Athlete data sync complete
+2026-01-15 17:39:27 - INFO - Total activities: 163
+2026-01-15 17:39:27 - INFO - Total events: 23
+2026-01-15 17:39:27 - INFO - Total weeks: 48
+2026-01-15 17:39:27 - INFO - ============================================================
+2026-01-15 17:39:27 - INFO - Data sync complete for client 9002b8d0: {'success': True, 'sync_type': 'incremental', 'total_activities': 163, 'new_activities': 6, 'total_events': 23, 'total_weeks': 48}
+2026-01-15 17:39:27 - INFO - Dashboard data sent to client 9002b8d0
+2026-01-15 17:39:38 - INFO - LLM_RESPONSE duration=18294ms tokens=3679 (prompt=951, completion=276) finish=stop
+2026-01-15 17:39:38 - INFO - Workout generated successfully
+2026-01-15 17:39:38 - INFO - Uploading workout for 2026-01-31 to intervals.icu
+2026-01-15 17:39:38 - INFO - intervals.icu API call starting: upload workout 20260131_120000.zwo
+2026-01-15 17:39:38 - INFO - intervals.icu API call completed: upload workout - duration=416ms, event_id=88745658
+2026-01-15 17:39:38 - INFO - Successfully uploaded workout for 2026-01-31 (event_id: 88745658)
+2026-01-15 17:39:38 - INFO - Upload progress: 1/0 - 2026-01-31
+2026-01-15 17:39:38 - INFO - Upload complete: {'success': 1, 'skipped': 13, 'failed': 0, 'total': 14}
+2026-01-15 17:39:38 - INFO - Background upload complete: {'success': 1, 'skipped': 13, 'failed': 0, 'total': 14}
+2026-01-15 17:40:06 - INFO - [client=9002b8d0] [req=f30aa6de] Received: Can you alter todays workout, i want to do 2x20 with 5 min break inbetwen, with a 5 min warm up/down
+2026-01-15 17:40:06 - INFO - [req=f30aa6de] USER: Can you alter todays workout, i want to do 2x20 with 5 min break inbetwen, with a 5 min warm up/down eitehr side.
+2026-01-15 17:40:06 - INFO - [req=f30aa6de] LLM_REQUEST model=gemini-3-flash-preview temp=0 messages=2 tools=3
+2026-01-15 17:40:17 - INFO - [req=f30aa6de] LLM_RESPONSE duration=10858ms tokens=3734 (prompt=2216, completion=104) finish=tool_calls
+2026-01-15 17:40:17 - INFO - [req=f30aa6de] LLM_TOOL_CALLS count=1 tools=['create_one_off_workout']
+2026-01-15 17:40:17 - INFO - [req=f30aa6de] TOOL_CALL: create_one_off_workout
+2026-01-15 17:40:17 - INFO - TOOL_START tool=create_one_off_workout args={'client_ftp': 365, 'workout_duration': 3300, 'workout_description': '5 minute warm up ramping from 50% to 75% FTP. 20 minutes at Sweet Spot (90% FTP). 5 minutes recovery at 50% FTP. 20 minutes at Sweet Spot (90% FTP). 5 minute cool down at 50% FTP.'}
+2026-01-15 17:40:17 - INFO - Generating workout: FTP=365W, Duration=3300s, Description=5 minute warm up ramping from 50% to 75% FTP. 20 m...
+2026-01-15 17:40:17 - INFO - Generating workout with description: FTP: 365W
+Duration: 3300 seconds (55 minutes)
+Workout: 5 minute warm up ramping from 50% to 75% FTP. 20 minutes at Sweet Spot (90% FTP). 5 minutes recovery at 50% FTP. 20 minutes at Sweet Spot (90% FTP). 5 minute cool down at 50% FTP.
+2026-01-15 17:40:17 - INFO - LLM_REQUEST model=gemini-3-flash-preview temp=0 messages=2 tools=0
+2026-01-15 17:40:32 - INFO - LLM_RESPONSE duration=14934ms tokens=3451 (prompt=983, completion=207) finish=stop
+2026-01-15 17:40:32 - INFO - Workout generated successfully
+2026-01-15 17:40:32 - INFO - Workout generated successfully
+2026-01-15 17:40:32 - INFO - Parsing workout: Sweet Spot 2x20, Duration: 3300s, Granularity: 60s
+2026-01-15 17:40:32 - INFO - Parsed workout into 55 segments
+2026-01-15 17:40:32 - INFO - Workout created for scheduling at: 2026-01-15T18:40:32
+2026-01-15 17:40:32 - INFO - TOOL_END tool=create_one_off_workout duration=14936ms success=True
+2026-01-15 17:40:32 - INFO - TOOL_RESULT: {
+  "success": true,
+  "zwo_content": "<workout_file>\n  <author>Train-R</author>\n  <name>Sweet Spot 2x20</name>\n  <description>A 55-minute session focused on building aerobic engine and muscular endurance with two 20-minute intervals at 90% FTP (Sweet Spot).</description>\n  <sportType>bike</sportType>\n  <workout>\n    <Warmup Duration=\"300\" PowerLow=\"0.50\" PowerHigh=\"0.75\"/>\n    <SteadyState Duration=\"1200\" Power=\"0.90\"/>\n    <SteadyState Duration=\"300\" Power=\"0.50\"/>\n    <SteadyState Duration=\"1200\" Power=\"0.90\"/>\n    <Cooldown Duration=\"300\" PowerLow=\"0.50\" PowerHigh=\"0.30\"/>\n  </workout>\n</workout_file>",
+  "filename": "20260115_174032.zwo",
+  "workout_name": "5 minute warm up ramping from",
+  "workout_description": "5 minute warm up ramping from 50% to 75% FTP. 20 minutes at Sweet Spot (90% FTP). 5 minutes recovery at 50% FTP. 20 minutes at Sweet Spot (90% FTP). 5 minute cool down at 50% FTP.",
+  "scheduled_time": "2026-01-15T18:40:32",
+  "external_id": "train-r-20260115_174032",
+  "message": "Workout created and ready to schedule for 2026-01-15T18:40:32",
+  "workout_data": {
+    "segments": [
+      {
+        "time": "0:00",
+        "duration": 60,
+        "power": 182,
+        "zone": "warmup",
+        "trainingZone": "Z1",
+        "label": "Warmup"
+      },
+      {
+        "time": "1:00",
+        "duration": 60,
+        "power": 205,
+        "zone": "warmup",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "2:00",
+        "duration": 60,
+        "power": 228,
+        "zone": "warmup",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "3:00",
+        "duration": 60,
+        "power": 250,
+        "zone": "warmup",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "4:00",
+        "duration": 60,
+        "power": 273,
+        "zone": "warmup",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "5:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": "Interval 1"
+      },
+      {
+        "time": "6:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "7:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "8:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "9:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "10:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "11:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "12:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "13:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "14:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "15:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "16:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "17:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "18:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "19:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "20:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "21:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "22:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "23:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "24:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "25:00",
+        "duration": 60,
+        "power": 182,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": "Recovery"
+      },
+      {
+        "time": "26:00",
+        "duration": 60,
+        "power": 182,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "27:00",
+        "duration": 60,
+        "power": 182,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "28:00",
+        "duration": 60,
+        "power": 182,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "29:00",
+        "duration": 60,
+        "power": 182,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "30:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": "Interval 2"
+      },
+      {
+        "time": "31:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "32:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "33:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "34:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "35:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "36:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "37:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "38:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "39:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "40:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "41:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "42:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "43:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "44:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "45:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "46:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "47:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "48:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "49:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "50:00",
+        "duration": 60,
+        "power": 182,
+        "zone": "cooldown",
+        "trainingZone": "Z1",
+        "label": "Cooldown"
+      },
+      {
+        "time": "51:00",
+        "duration": 60,
+        "power": 164,
+        "zone": "cooldown",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "52:00",
+        "duration": 60,
+        "power": 146,
+        "zone": "cooldown",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "53:00",
+        "duration": 60,
+        "power": 127,
+        "zone": "cooldown",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "54:00",
+        "duration": 60,
+        "power": 109,
+        "zone": "cooldown",
+        "trainingZone": "Z1",
+        "label": null
+      }
+    ],
+    "ftp": 365,
+    "totalDuration": 3300,
+    "workoutName": "Sweet Spot 2x20",
+    "description": "A 55-minute session focused on building aerobic engine and muscular endurance with two 20-minute intervals at 90% FTP (Sweet Spot)."
+  }
+}
+2026-01-15 17:40:32 - INFO - [req=f30aa6de] LLM_REQUEST model=gemini-3-flash-preview temp=0 messages=4 tools=3
+2026-01-15 17:40:34 - INFO - [req=f30aa6de] LLM_RESPONSE duration=2099ms tokens=6898 (prompt=6718, completion=180) finish=stop
+2026-01-15 17:40:34 - INFO - [req=f30aa6de] ASSISTANT: No problem! I've updated today's session to a **2x20 Sweet Spot** workout. 
+
+The structure is now:
+*   **Warm-up:** 5 minutes ramping from 50% to 75% FTP (182W - 273W).
+*   **Interval 1:** 20 minutes at 90% FTP (328W).
+*   **Recovery:** 5 minutes at 50% FTP (182W).
+*   **Interval 2:** 20 minutes at 90% FTP (328W).
+*   **Cool-down:** 5 minutes ramping down from 50% FTP.
+
+The total duration is 55 minutes. You can find the new workout file ready for your session. Enjoy the ride!
+2026-01-15 17:41:22 - INFO - Received confirmation from 9002b8d0-d76b-4b7d-a872-de169af514e9: True
+2026-01-15 17:41:22 - INFO - Workout saved to: /Users/zeph/Projects/train-r/data/created_workouts/5_minute_warm_up_ramping_from_20260115_174122.zwo
+2026-01-15 17:41:22 - INFO - Workout saved to: /Users/zeph/Projects/train-r/data/created_workouts/5_minute_warm_up_ramping_from_20260115_174122.zwo
+2026-01-15 17:41:22 - INFO - intervals.icu API call starting: upload workout 5_minute_warm_up_ramping_from_20260115_174122.zwo
+2026-01-15 17:41:23 - INFO - intervals.icu API call completed: upload workout - duration=679ms, event_id=88745788
+2026-01-15 17:41:23 - INFO - Upload successful - Event ID: 88745788
+2026-01-15 17:42:31 - INFO - [client=9002b8d0] [req=809e46df] Received: I'd like a new worjout dor today, 2x20 @ 90%, 5 min rest inbeween, warm up/ cool down fro the rest o
+2026-01-15 17:42:31 - INFO - [req=809e46df] USER: I'd like a new worjout dor today, 2x20 @ 90%, 5 min rest inbeween, warm up/ cool down fro the rest of the 1 hour
+2026-01-15 17:42:31 - INFO - [req=809e46df] LLM_REQUEST model=gemini-3-flash-preview temp=0 messages=6 tools=3
+2026-01-15 17:42:35 - INFO - [req=809e46df] LLM_RESPONSE duration=4416ms tokens=6037 (prompt=5529, completion=105) finish=tool_calls
+2026-01-15 17:42:35 - INFO - [req=809e46df] LLM_TOOL_CALLS count=1 tools=['create_one_off_workout']
+2026-01-15 17:42:35 - INFO - [req=809e46df] TOOL_CALL: create_one_off_workout
+2026-01-15 17:42:35 - INFO - TOOL_START tool=create_one_off_workout args={'client_ftp': 365, 'workout_duration': 3600, 'workout_description': '10 minute warm up ramping from 50% to 75% FTP. 20 minutes at Sweet Spot (90% FTP). 5 minutes recovery at 50% FTP. 20 minutes at Sweet Spot (90% FTP). 5 minute cool down at 50% FTP.'}
+2026-01-15 17:42:35 - INFO - Generating workout: FTP=365W, Duration=3600s, Description=10 minute warm up ramping from 50% to 75% FTP. 20 ...
+2026-01-15 17:42:35 - INFO - Generating workout with description: FTP: 365W
+Duration: 3600 seconds (60 minutes)
+Workout: 10 minute warm up ramping from 50% to 75% FTP. 20 minutes at Sweet Spot (90% FTP). 5 minutes recovery at 50% FTP. 20 minutes at Sweet Spot (90% FTP). 5 minute cool down at 50% FTP.
+2026-01-15 17:42:35 - INFO - LLM_REQUEST model=gemini-3-flash-preview temp=0 messages=2 tools=0
+2026-01-15 17:42:44 - INFO - LLM_RESPONSE duration=8739ms tokens=2372 (prompt=984, completion=204) finish=stop
+2026-01-15 17:42:44 - INFO - Workout generated successfully
+2026-01-15 17:42:44 - INFO - Workout generated successfully
+2026-01-15 17:42:44 - INFO - Parsing workout: 2x20 Sweet Spot Intervals, Duration: 3600s, Granularity: 60s
+2026-01-15 17:42:44 - INFO - Parsed workout into 60 segments
+2026-01-15 17:42:44 - INFO - Workout created for scheduling at: 2026-01-15T18:42:44
+2026-01-15 17:42:44 - INFO - TOOL_END tool=create_one_off_workout duration=8740ms success=True
+2026-01-15 17:42:44 - INFO - TOOL_RESULT: {
+  "success": true,
+  "zwo_content": "<workout_file>\n  <author>Train-R</author>\n  <name>2x20 Sweet Spot Intervals</name>\n  <description>A 60-minute session focused on building muscular endurance and aerobic capacity with two 20-minute intervals at 90% FTP.</description>\n  <sportType>bike</sportType>\n  <workout>\n    <Warmup Duration=\"600\" PowerLow=\"0.50\" PowerHigh=\"0.75\"/>\n    <SteadyState Duration=\"1200\" Power=\"0.90\"/>\n    <SteadyState Duration=\"300\" Power=\"0.50\"/>\n    <SteadyState Duration=\"1200\" Power=\"0.90\"/>\n    <Cooldown Duration=\"300\" PowerLow=\"0.50\" PowerHigh=\"0.30\"/>\n  </workout>\n</workout_file>",
+  "filename": "20260115_174244.zwo",
+  "workout_name": "10 minute warm up ramping from",
+  "workout_description": "10 minute warm up ramping from 50% to 75% FTP. 20 minutes at Sweet Spot (90% FTP). 5 minutes recovery at 50% FTP. 20 minutes at Sweet Spot (90% FTP). 5 minute cool down at 50% FTP.",
+  "scheduled_time": "2026-01-15T18:42:44",
+  "external_id": "train-r-20260115_174244",
+  "message": "Workout created and ready to schedule for 2026-01-15T18:42:44",
+  "workout_data": {
+    "segments": [
+      {
+        "time": "0:00",
+        "duration": 60,
+        "power": 182,
+        "zone": "warmup",
+        "trainingZone": "Z1",
+        "label": "Warmup"
+      },
+      {
+        "time": "1:00",
+        "duration": 60,
+        "power": 192,
+        "zone": "warmup",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "2:00",
+        "duration": 60,
+        "power": 202,
+        "zone": "warmup",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "3:00",
+        "duration": 60,
+        "power": 212,
+        "zone": "warmup",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "4:00",
+        "duration": 60,
+        "power": 223,
+        "zone": "warmup",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "5:00",
+        "duration": 60,
+        "power": 233,
+        "zone": "warmup",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "6:00",
+        "duration": 60,
+        "power": 243,
+        "zone": "warmup",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "7:00",
+        "duration": 60,
+        "power": 253,
+        "zone": "warmup",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "8:00",
+        "duration": 60,
+        "power": 263,
+        "zone": "warmup",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "9:00",
+        "duration": 60,
+        "power": 273,
+        "zone": "warmup",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "10:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": "Interval 1"
+      },
+      {
+        "time": "11:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "12:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "13:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "14:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "15:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "16:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "17:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "18:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "19:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "20:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "21:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "22:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "23:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "24:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "25:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "26:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "27:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "28:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "29:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "30:00",
+        "duration": 60,
+        "power": 182,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": "Recovery"
+      },
+      {
+        "time": "31:00",
+        "duration": 60,
+        "power": 182,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "32:00",
+        "duration": 60,
+        "power": 182,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "33:00",
+        "duration": 60,
+        "power": 182,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "34:00",
+        "duration": 60,
+        "power": 182,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "35:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": "Interval 2"
+      },
+      {
+        "time": "36:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "37:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "38:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "39:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "40:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "41:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "42:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "43:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "44:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "45:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "46:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "47:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "48:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "49:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "50:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "51:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "52:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "53:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "54:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "55:00",
+        "duration": 60,
+        "power": 182,
+        "zone": "cooldown",
+        "trainingZone": "Z1",
+        "label": "Cooldown"
+      },
+      {
+        "time": "56:00",
+        "duration": 60,
+        "power": 164,
+        "zone": "cooldown",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "57:00",
+        "duration": 60,
+        "power": 146,
+        "zone": "cooldown",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "58:00",
+        "duration": 60,
+        "power": 127,
+        "zone": "cooldown",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "59:00",
+        "duration": 60,
+        "power": 109,
+        "zone": "cooldown",
+        "trainingZone": "Z1",
+        "label": null
+      }
+    ],
+    "ftp": 365,
+    "totalDuration": 3600,
+    "workoutName": "2x20 Sweet Spot Intervals",
+    "description": "A 60-minute session focused on building muscular endurance and aerobic capacity with two 20-minute intervals at 90% FTP."
+  }
+}
+2026-01-15 17:42:44 - INFO - [req=809e46df] LLM_REQUEST model=gemini-3-flash-preview temp=0 messages=8 tools=3
+2026-01-15 17:42:46 - INFO - [req=809e46df] LLM_RESPONSE duration=2050ms tokens=9408 (prompt=9242, completion=166) finish=stop
+2026-01-15 17:42:46 - INFO - [req=809e46df] ASSISTANT: I've updated your workout to a full 60-minute session. 
+
+Here is the breakdown:
+*   **Warm-up:** 10 minutes ramping from 50% to 75% FTP (182W - 273W).
+*   **Interval 1:** 20 minutes at 90% FTP (328W).
+*   **Recovery:** 5 minutes at 50% FTP (182W).
+*   **Interval 2:** 20 minutes at 90% FTP (328W).
+*   **Cool-down:** 5 minutes ramping down from 50% FTP.
+
+This fits perfectly into your 1-hour window. Good luck with the intervals!
+2026-01-15 17:43:18 - INFO - [client=9002b8d0] [req=27be797d] Received: can yu reduce the ramp at the start e.g. finsih the warm up at 65% FTP
+2026-01-15 17:43:18 - INFO - [req=27be797d] USER: can yu reduce the ramp at the start e.g. finsih the warm up at 65% FTP
+2026-01-15 17:43:18 - INFO - [req=27be797d] LLM_REQUEST model=gemini-3-flash-preview temp=0 messages=10 tools=3
+2026-01-15 17:43:22 - INFO - [req=27be797d] LLM_RESPONSE duration=3657ms tokens=9430 (prompt=9030, completion=105) finish=tool_calls
+2026-01-15 17:43:22 - INFO - [req=27be797d] LLM_TOOL_CALLS count=1 tools=['create_one_off_workout']
+2026-01-15 17:43:22 - INFO - [req=27be797d] TOOL_CALL: create_one_off_workout
+2026-01-15 17:43:22 - INFO - TOOL_START tool=create_one_off_workout args={'workout_duration': 3600, 'workout_description': '10 minute warm up ramping from 50% to 65% FTP. 20 minutes at Sweet Spot (90% FTP). 5 minutes recovery at 50% FTP. 20 minutes at Sweet Spot (90% FTP). 5 minute cool down at 50% FTP.', 'client_ftp': 365}
+2026-01-15 17:43:22 - INFO - Generating workout: FTP=365W, Duration=3600s, Description=10 minute warm up ramping from 50% to 65% FTP. 20 ...
+2026-01-15 17:43:22 - INFO - Generating workout with description: FTP: 365W
+Duration: 3600 seconds (60 minutes)
+Workout: 10 minute warm up ramping from 50% to 65% FTP. 20 minutes at Sweet Spot (90% FTP). 5 minutes recovery at 50% FTP. 20 minutes at Sweet Spot (90% FTP). 5 minute cool down at 50% FTP.
+2026-01-15 17:43:22 - INFO - LLM_REQUEST model=gemini-3-flash-preview temp=0 messages=2 tools=0
+2026-01-15 17:43:29 - INFO - LLM_RESPONSE duration=7572ms tokens=2344 (prompt=984, completion=207) finish=stop
+2026-01-15 17:43:29 - INFO - Workout generated successfully
+2026-01-15 17:43:29 - INFO - Workout generated successfully
+2026-01-15 17:43:29 - INFO - Parsing workout: 2x20 Sweet Spot Intervals, Duration: 3600s, Granularity: 60s
+2026-01-15 17:43:29 - INFO - Parsed workout into 60 segments
+2026-01-15 17:43:29 - INFO - Workout created for scheduling at: 2026-01-15T18:43:29
+2026-01-15 17:43:29 - INFO - TOOL_END tool=create_one_off_workout duration=7573ms success=True
+2026-01-15 17:43:29 - INFO - TOOL_RESULT: {
+  "success": true,
+  "zwo_content": "<workout_file>\n  <author>Train-R</author>\n  <name>2x20 Sweet Spot Intervals</name>\n  <description>A 60-minute session featuring two 20-minute Sweet Spot intervals at 90% FTP, designed to build aerobic engine and muscular endurance.</description>\n  <sportType>bike</sportType>\n  <workout>\n    <Warmup Duration=\"600\" PowerLow=\"0.50\" PowerHigh=\"0.65\"/>\n    <SteadyState Duration=\"1200\" Power=\"0.90\"/>\n    <SteadyState Duration=\"300\" Power=\"0.50\"/>\n    <SteadyState Duration=\"1200\" Power=\"0.90\"/>\n    <Cooldown Duration=\"300\" PowerLow=\"0.50\" PowerHigh=\"0.30\"/>\n  </workout>\n</workout_file>",
+  "filename": "20260115_174329.zwo",
+  "workout_name": "10 minute warm up ramping from",
+  "workout_description": "10 minute warm up ramping from 50% to 65% FTP. 20 minutes at Sweet Spot (90% FTP). 5 minutes recovery at 50% FTP. 20 minutes at Sweet Spot (90% FTP). 5 minute cool down at 50% FTP.",
+  "scheduled_time": "2026-01-15T18:43:29",
+  "external_id": "train-r-20260115_174329",
+  "message": "Workout created and ready to schedule for 2026-01-15T18:43:29",
+  "workout_data": {
+    "segments": [
+      {
+        "time": "0:00",
+        "duration": 60,
+        "power": 182,
+        "zone": "warmup",
+        "trainingZone": "Z1",
+        "label": "Warmup"
+      },
+      {
+        "time": "1:00",
+        "duration": 60,
+        "power": 188,
+        "zone": "warmup",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "2:00",
+        "duration": 60,
+        "power": 194,
+        "zone": "warmup",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "3:00",
+        "duration": 60,
+        "power": 200,
+        "zone": "warmup",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "4:00",
+        "duration": 60,
+        "power": 206,
+        "zone": "warmup",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "5:00",
+        "duration": 60,
+        "power": 212,
+        "zone": "warmup",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "6:00",
+        "duration": 60,
+        "power": 219,
+        "zone": "warmup",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "7:00",
+        "duration": 60,
+        "power": 225,
+        "zone": "warmup",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "8:00",
+        "duration": 60,
+        "power": 231,
+        "zone": "warmup",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "9:00",
+        "duration": 60,
+        "power": 237,
+        "zone": "warmup",
+        "trainingZone": "Z2",
+        "label": null
+      },
+      {
+        "time": "10:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": "Interval 1"
+      },
+      {
+        "time": "11:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "12:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "13:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "14:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "15:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "16:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "17:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "18:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "19:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "20:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "21:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "22:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "23:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "24:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "25:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "26:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "27:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "28:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "29:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "30:00",
+        "duration": 60,
+        "power": 182,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": "Recovery"
+      },
+      {
+        "time": "31:00",
+        "duration": 60,
+        "power": 182,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "32:00",
+        "duration": 60,
+        "power": 182,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "33:00",
+        "duration": 60,
+        "power": 182,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "34:00",
+        "duration": 60,
+        "power": 182,
+        "zone": "recovery",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "35:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": "Interval 2"
+      },
+      {
+        "time": "36:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "37:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "38:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "39:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "40:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "41:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "42:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "43:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "44:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "45:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "46:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "47:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "48:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "49:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "50:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "51:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "52:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "53:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "54:00",
+        "duration": 60,
+        "power": 328,
+        "zone": "sweetspot",
+        "trainingZone": "Z4",
+        "label": null
+      },
+      {
+        "time": "55:00",
+        "duration": 60,
+        "power": 182,
+        "zone": "cooldown",
+        "trainingZone": "Z1",
+        "label": "Cooldown"
+      },
+      {
+        "time": "56:00",
+        "duration": 60,
+        "power": 164,
+        "zone": "cooldown",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "57:00",
+        "duration": 60,
+        "power": 146,
+        "zone": "cooldown",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "58:00",
+        "duration": 60,
+        "power": 127,
+        "zone": "cooldown",
+        "trainingZone": "Z1",
+        "label": null
+      },
+      {
+        "time": "59:00",
+        "duration": 60,
+        "power": 109,
+        "zone": "cooldown",
+        "trainingZone": "Z1",
+        "label": null
+      }
+    ],
+    "ftp": 365,
+    "totalDuration": 3600,
+    "workoutName": "2x20 Sweet Spot Intervals",
+    "description": "A 60-minute session featuring two 20-minute Sweet Spot intervals at 90% FTP, designed to build aerobic engine and muscular endurance."
+  }
+}
+2026-01-15 17:43:29 - INFO - [req=27be797d] LLM_REQUEST model=gemini-3-flash-preview temp=0 messages=12 tools=3
+2026-01-15 17:43:31 - INFO - [req=27be797d] LLM_RESPONSE duration=2184ms tokens=12814 (prompt=12641, completion=173) finish=stop
+2026-01-15 17:43:31 - INFO - [req=27be797d] ASSISTANT: Done! I've adjusted the warm-up so it now finishes at 65% FTP (237W) instead of 75%. 
+
+The rest of the workout remains the same:
+*   **Warm-up:** 10 minutes ramping from 50% to 65% FTP.
+*   **Interval 1:** 20 minutes at 90% FTP (328W).
+*   **Recovery:** 5 minutes at 50% FTP (182W).
+*   **Interval 2:** 20 minutes at 90% FTP (328W).
+*   **Cool-down:** 5 minutes ramping down from 50% FTP.
+
+The total time is still exactly 1 hour. Have a great session!
+2026-01-15 17:43:39 - INFO - Received confirmation from 9002b8d0-d76b-4b7d-a872-de169af514e9: True
+2026-01-15 17:43:39 - INFO - Workout saved to: /Users/zeph/Projects/train-r/data/created_workouts/10_minute_warm_up_ramping_from_20260115_174339.zwo
+2026-01-15 17:43:39 - INFO - Workout saved to: /Users/zeph/Projects/train-r/data/created_workouts/10_minute_warm_up_ramping_from_20260115_174339.zwo
+2026-01-15 17:43:39 - INFO - intervals.icu API call starting: upload workout 10_minute_warm_up_ramping_from_20260115_174339.zwo
+2026-01-15 17:43:41 - INFO - intervals.icu API call completed: upload workout - duration=2459ms, event_id=88746008
+2026-01-15 17:43:41 - INFO - Upload successful - Event ID: 88746008
+2026-01-15 17:44:03 - INFO - Client 9002b8d0-d76b-4b7d-a872-de169af514e9 disconnected. Total connections: 0
+2026-01-15 17:44:03 - INFO - Client 9002b8d0-d76b-4b7d-a872-de169af514e9 disconnected
+2026-01-15 17:44:03 - INFO - ============================================================
+2026-01-15 17:44:03 - INFO - Shutting down Train-R API Server
+2026-01-15 17:44:03 - INFO - ============================================================
+2026-01-15 17:44:03 - INFO - Closing 0 active WebSocket connections...
+2026-01-15 17:44:03 - INFO - All WebSocket connections closed
+2026-01-15 17:44:03 - INFO - Shutdown complete
+2026-01-15 19:54:01 - INFO - ============================================================
+2026-01-15 19:54:01 - INFO - Train-R Application Started
+2026-01-15 19:54:01 - INFO - ============================================================
+2026-01-15 19:54:01 - INFO - CORS configured for origins: http://localhost:3001
+2026-01-15 19:54:01 - INFO - FastAPI application created and configured
+2026-01-15 19:54:01 - INFO - ============================================================
+2026-01-15 19:54:01 - INFO - Starting Train-R API Server (Refactored Architecture)
+2026-01-15 19:54:01 - INFO - ============================================================
+2026-01-15 19:54:01 - INFO - Flushed LLM messages log file
+2026-01-15 19:54:01 - INFO - Configuration validated
+2026-01-15 19:54:01 - INFO - LangSmith tracing enabled for project: Train-R
+2026-01-15 19:54:01 - INFO - LLMClient initialized with endpoint: https://generativelanguage.googleapis.com/v1beta/openai/
+2026-01-15 19:54:01 - INFO - LLM messages will be logged to: /Users/zeph/Projects/train-r/logs/llm_messages.json
+2026-01-15 19:54:01 - INFO - LLM client initialized: gemini-3-flash-preview
+2026-01-15 19:54:01 - INFO - CoachService initialized with 3 tools: create_one_off_workout, create_workout_plan, modify_workout
+2026-01-15 19:54:01 - INFO - Coach service initialized with tool support
+2026-01-15 19:54:01 - INFO - Data already migrated to v2 structure
+2026-01-15 19:54:01 - INFO - Starting full data sync (including power curves)...
+2026-01-15 19:54:01 - INFO - ============================================================
+2026-01-15 19:54:01 - INFO - Starting athlete data sync (synchronous)
+2026-01-15 19:54:01 - INFO - ============================================================
+2026-01-15 19:54:01 - INFO - Performing INCREMENTAL sync (new activities only)
+2026-01-15 19:54:01 - INFO - Fetching activities from 2026-01-01 to 2026-01-15 (refreshing last 2 weeks)
+2026-01-15 19:54:01 - INFO - intervals.icu API call starting: fetch activities (oldest=2026-01-01, newest=2026-01-15)
+2026-01-15 19:54:02 - INFO - intervals.icu API call completed: fetch activities - duration=395ms, count=7
+2026-01-15 19:54:02 - INFO - Transformed 7 activities with standardized field names
+2026-01-15 19:54:02 - INFO - Fetched 7 activities
+2026-01-15 19:54:02 - INFO - Activity merge: 163 existing + 7 new = 164 total
+2026-01-15 19:54:02 - INFO - Merged 7 new activities with 163 existing = 164 total
+2026-01-15 19:54:02 - INFO - Fetching planned events
+2026-01-15 19:54:02 - INFO - Fetching events (incremental, refreshing last 2 weeks): 2026-01-01 to 2027-01-15
+2026-01-15 19:54:02 - INFO - intervals.icu API call starting: fetch events (oldest=2026-01-01, newest=2027-01-15, category=WORKOUT)
+2026-01-15 19:54:02 - INFO - intervals.icu API call completed: fetch events - duration=212ms, count=20
+2026-01-15 19:54:02 - INFO - Retrieved 20 planned events
+2026-01-15 19:54:02 - INFO - Fetched 20 planned events
+2026-01-15 19:54:02 - INFO - Event merge: 23 existing + 20 new = 24 total
+2026-01-15 19:54:02 - INFO - Total events after merge: 24
+2026-01-15 19:54:02 - INFO - Fetching fresh power curves from intervals.icu
+2026-01-15 19:54:02 - INFO - intervals.icu API call starting: fetch 1-month power curve
+2026-01-15 19:54:02 - INFO - intervals.icu API call completed: fetch 1-month power curve - duration=298ms, data_points=12
+2026-01-15 19:54:02 - INFO - intervals.icu API call starting: fetch 2-month power curve
+2026-01-15 19:54:02 - INFO - intervals.icu API call completed: fetch 2-month power curve - duration=308ms, data_points=12
+2026-01-15 19:54:02 - INFO - intervals.icu API call starting: fetch 3-month power curve
+2026-01-15 19:54:03 - INFO - intervals.icu API call completed: fetch 3-month power curve - duration=360ms, data_points=12
+2026-01-15 19:54:03 - INFO - intervals.icu API call starting: fetch 6-month power curve
+2026-01-15 19:54:03 - INFO - intervals.icu API call completed: fetch 6-month power curve - duration=309ms, data_points=12
+2026-01-15 19:54:03 - INFO - intervals.icu API call starting: fetch 12-month power curve
+2026-01-15 19:54:03 - INFO - intervals.icu API call completed: fetch 12-month power curve - duration=179ms, data_points=12
+2026-01-15 19:54:03 - INFO - Retrieved power curves for 5 time periods
+2026-01-15 19:54:03 - INFO - Matching planned events with completed activities
+2026-01-15 19:54:03 - INFO - Matching 164 activities with 24 events
+2026-01-15 19:54:03 - INFO - Phase 1 (paired_event_id): Matched 7 activities
+2026-01-15 19:54:03 - INFO - Phase 2 (fuzzy match): Matched 4 additional activities
+2026-01-15 19:54:03 - INFO - Total matched: 11/164 activities
+2026-01-15 19:54:03 - INFO - Building workout indices
+2026-01-15 19:54:03 - INFO - Building workout index from activities and events
+2026-01-15 19:54:03 - INFO - Index built: 168 dates, 50 weeks, 23 types
+2026-01-15 19:54:03 - INFO - Aggregating weekly summaries
+2026-01-15 19:54:03 - INFO - Saved 164 activities to /Users/zeph/Projects/train-r/data/athlete/raw/completed_activities.json
+2026-01-15 19:54:03 - INFO - Saved 24 events to /Users/zeph/Projects/train-r/data/athlete/raw/planned_events.json
+2026-01-15 19:54:03 - INFO - Saved power curves to /Users/zeph/Projects/train-r/data/athlete/raw/power_curves.json
+2026-01-15 19:54:03 - INFO - Saved workout index to /Users/zeph/Projects/train-r/data/athlete/processed/workout_index.json
+2026-01-15 19:54:03 - INFO - Saved 48 weeks to /Users/zeph/Projects/train-r/data/athlete/processed/weekly_summary.json
+2026-01-15 19:54:03 - INFO - ============================================================
+2026-01-15 19:54:03 - INFO - Athlete data sync complete
+2026-01-15 19:54:03 - INFO - Total activities: 164
+2026-01-15 19:54:03 - INFO - Total events: 24
+2026-01-15 19:54:03 - INFO - Total weeks: 48
+2026-01-15 19:54:03 - INFO - ============================================================
+2026-01-15 19:54:03 - INFO - Athlete data sync complete: {'success': True, 'sync_type': 'incremental', 'total_activities': 164, 'new_activities': 7, 'total_events': 24, 'total_weeks': 48}
+2026-01-15 19:54:03 - INFO - Current plan loaded with 126 workouts
+2026-01-15 19:54:03 - INFO - Syncing with 24 planned events from intervals.icu
+2026-01-15 19:54:03 - INFO - Synced 14 workouts with intervals.icu event IDs
+2026-01-15 19:54:03 - INFO - Synced 14 workouts with intervals.icu event IDs
+2026-01-15 19:54:03 - INFO - Background workout upload task started
+2026-01-15 19:54:03 - INFO - ============================================================
+2026-01-15 19:54:03 - INFO - Train-R API Server ready
+2026-01-15 19:54:03 - INFO - ============================================================
+2026-01-15 19:54:03 - INFO - Starting background workout upload...
+2026-01-15 19:54:03 - INFO - Found 14 future workouts to process
+2026-01-15 19:54:03 - INFO - Uploading 0 workouts (14 already uploaded)
+2026-01-15 19:54:03 - INFO - All workouts already uploaded!
+2026-01-15 19:54:03 - INFO - Background upload complete: {'success': 0, 'skipped': 14, 'failed': 0, 'total': 14}
+2026-01-15 19:56:01 - INFO - ============================================================
+2026-01-15 19:56:01 - INFO - Shutting down Train-R API Server
+2026-01-15 19:56:01 - INFO - ============================================================
+2026-01-15 19:56:01 - INFO - Closing 0 active WebSocket connections...
+2026-01-15 19:56:01 - INFO - All WebSocket connections closed
+2026-01-15 19:56:01 - INFO - Shutdown complete
+2026-01-15 19:56:02 - INFO - ============================================================
+2026-01-15 19:56:02 - INFO - Train-R Application Started
+2026-01-15 19:56:02 - INFO - ============================================================
+2026-01-15 19:56:02 - INFO - CORS configured for origins: http://localhost:3001
+2026-01-15 19:56:02 - INFO - FastAPI application created and configured
+2026-01-15 19:56:02 - INFO - ============================================================
+2026-01-15 19:56:02 - INFO - Starting Train-R API Server (Refactored Architecture)
+2026-01-15 19:56:02 - INFO - ============================================================
+2026-01-15 19:56:02 - INFO - LLM messages log file will be created on first LLM call
+2026-01-15 19:56:02 - INFO - Configuration validated
+2026-01-15 19:56:02 - INFO - LangSmith tracing enabled for project: Train-R
+2026-01-15 19:56:02 - INFO - LLMClient initialized with endpoint: https://generativelanguage.googleapis.com/v1beta/openai/
+2026-01-15 19:56:02 - INFO - LLM messages will be logged to: /Users/zeph/Projects/train-r/logs/llm_messages.json
+2026-01-15 19:56:02 - INFO - LLM client initialized: gemini-3-flash-preview
+2026-01-15 19:56:02 - INFO - CoachService initialized with 3 tools: create_one_off_workout, create_workout_plan, modify_workout
+2026-01-15 19:56:02 - INFO - Coach service initialized with tool support
+2026-01-15 19:56:02 - INFO - Data already migrated to v2 structure
+2026-01-15 19:56:02 - INFO - Starting full data sync (including power curves)...
+2026-01-15 19:56:02 - INFO - ============================================================
+2026-01-15 19:56:02 - INFO - Starting athlete data sync (synchronous)
+2026-01-15 19:56:02 - INFO - ============================================================
+2026-01-15 19:56:02 - INFO - Performing INCREMENTAL sync (new activities only)
+2026-01-15 19:56:02 - INFO - Fetching activities from 2026-01-01 to 2026-01-15 (refreshing last 2 weeks)
+2026-01-15 19:56:02 - INFO - intervals.icu API call starting: fetch activities (oldest=2026-01-01, newest=2026-01-15)
+2026-01-15 19:56:02 - INFO - intervals.icu API call completed: fetch activities - duration=368ms, count=7
+2026-01-15 19:56:02 - INFO - Transformed 7 activities with standardized field names
+2026-01-15 19:56:02 - INFO - Fetched 7 activities
+2026-01-15 19:56:02 - INFO - Activity merge: 164 existing + 7 new = 164 total
+2026-01-15 19:56:02 - INFO - Merged 7 new activities with 164 existing = 164 total
+2026-01-15 19:56:02 - INFO - Fetching planned events
+2026-01-15 19:56:02 - INFO - Fetching events (incremental, refreshing last 2 weeks): 2026-01-01 to 2027-01-15
+2026-01-15 19:56:02 - INFO - intervals.icu API call starting: fetch events (oldest=2026-01-01, newest=2027-01-15, category=WORKOUT)
+2026-01-15 19:56:03 - INFO - intervals.icu API call completed: fetch events - duration=313ms, count=20
+2026-01-15 19:56:03 - INFO - Retrieved 20 planned events
+2026-01-15 19:56:03 - INFO - Fetched 20 planned events
+2026-01-15 19:56:03 - INFO - Event merge: 24 existing + 20 new = 24 total
+2026-01-15 19:56:03 - INFO - Total events after merge: 24
+2026-01-15 19:56:03 - INFO - Fetching fresh power curves from intervals.icu
+2026-01-15 19:56:03 - INFO - intervals.icu API call starting: fetch 1-month power curve
+2026-01-15 19:56:03 - INFO - intervals.icu API call completed: fetch 1-month power curve - duration=429ms, data_points=12
+2026-01-15 19:56:03 - INFO - intervals.icu API call starting: fetch 2-month power curve
+2026-01-15 19:56:03 - INFO - intervals.icu API call completed: fetch 2-month power curve - duration=275ms, data_points=12
+2026-01-15 19:56:03 - INFO - intervals.icu API call starting: fetch 3-month power curve
+2026-01-15 19:56:04 - INFO - intervals.icu API call completed: fetch 3-month power curve - duration=308ms, data_points=12
+2026-01-15 19:56:04 - INFO - intervals.icu API call starting: fetch 6-month power curve
+2026-01-15 19:56:04 - INFO - intervals.icu API call completed: fetch 6-month power curve - duration=375ms, data_points=12
+2026-01-15 19:56:04 - INFO - intervals.icu API call starting: fetch 12-month power curve
+2026-01-15 19:56:04 - INFO - intervals.icu API call completed: fetch 12-month power curve - duration=299ms, data_points=12
+2026-01-15 19:56:04 - INFO - Retrieved power curves for 5 time periods
+2026-01-15 19:56:04 - INFO - Matching planned events with completed activities
+2026-01-15 19:56:04 - INFO - Matching 164 activities with 24 events
+2026-01-15 19:56:04 - INFO - Phase 1 (paired_event_id): Matched 7 activities
+2026-01-15 19:56:04 - INFO - Phase 2 (fuzzy match): Matched 4 additional activities
+2026-01-15 19:56:04 - INFO - Total matched: 11/164 activities
+2026-01-15 19:56:04 - INFO - Building workout indices
+2026-01-15 19:56:04 - INFO - Building workout index from activities and events
+2026-01-15 19:56:04 - INFO - Index built: 168 dates, 50 weeks, 23 types
+2026-01-15 19:56:04 - INFO - Aggregating weekly summaries
+2026-01-15 19:56:04 - INFO - Saved 164 activities to /Users/zeph/Projects/train-r/data/athlete/raw/completed_activities.json
+2026-01-15 19:56:04 - INFO - Saved 24 events to /Users/zeph/Projects/train-r/data/athlete/raw/planned_events.json
+2026-01-15 19:56:04 - INFO - Saved power curves to /Users/zeph/Projects/train-r/data/athlete/raw/power_curves.json
+2026-01-15 19:56:04 - INFO - Saved workout index to /Users/zeph/Projects/train-r/data/athlete/processed/workout_index.json
+2026-01-15 19:56:04 - INFO - Saved 48 weeks to /Users/zeph/Projects/train-r/data/athlete/processed/weekly_summary.json
+2026-01-15 19:56:04 - INFO - ============================================================
+2026-01-15 19:56:04 - INFO - Athlete data sync complete
+2026-01-15 19:56:04 - INFO - Total activities: 164
+2026-01-15 19:56:04 - INFO - Total events: 24
+2026-01-15 19:56:04 - INFO - Total weeks: 48
+2026-01-15 19:56:04 - INFO - ============================================================
+2026-01-15 19:56:04 - INFO - Athlete data sync complete: {'success': True, 'sync_type': 'incremental', 'total_activities': 164, 'new_activities': 7, 'total_events': 24, 'total_weeks': 48}
+2026-01-15 19:56:04 - INFO - Current plan loaded with 126 workouts
+2026-01-15 19:56:04 - INFO - Syncing with 24 planned events from intervals.icu
+2026-01-15 19:56:04 - INFO - Synced 14 workouts with intervals.icu event IDs
+2026-01-15 19:56:04 - INFO - Synced 14 workouts with intervals.icu event IDs
+2026-01-15 19:56:04 - INFO - Background workout upload task started
+2026-01-15 19:56:04 - INFO - ============================================================
+2026-01-15 19:56:04 - INFO - Train-R API Server ready
+2026-01-15 19:56:04 - INFO - ============================================================
+2026-01-15 19:56:04 - INFO - Starting background workout upload...
+2026-01-15 19:56:04 - INFO - Found 14 future workouts to process
+2026-01-15 19:56:04 - INFO - Uploading 0 workouts (14 already uploaded)
+2026-01-15 19:56:04 - INFO - All workouts already uploaded!
+2026-01-15 19:56:04 - INFO - Background upload complete: {'success': 0, 'skipped': 14, 'failed': 0, 'total': 14}
