@@ -92,7 +92,11 @@ Return ONLY the ZWO XML file content, nothing else."""
         )
 
         # Extract and validate ZWO content
-        zwo_content = response.choices[0].message.content.strip()
+        content = response.choices[0].message.content
+        if content is None:
+            raise ValueError("LLM returned no content. Response may have been blocked or failed.")
+
+        zwo_content = content.strip()
 
         if not self._validate_zwo(zwo_content):
             raise ValueError("Generated workout is missing required XML structure")

@@ -109,8 +109,8 @@ def execute(args: dict, config: AppConfig, coach_service: "CoachService" = None)
         )
 
         # Parse ZWO to extract actual duration/TSS
-        parsed_segments = parse_zwo_content(zwo_content, athlete_ftp)
-        new_duration_min, new_tss = _extract_duration_tss_from_zwo(parsed_segments, athlete_ftp)
+        parsed_data = parse_zwo_content(zwo_content, athlete_ftp)
+        new_duration_min, new_tss = _extract_duration_tss_from_zwo(parsed_data["segments"], athlete_ftp)
 
         # Determine new workout type from description (simple heuristic)
         new_type = _infer_workout_type(workout_description)

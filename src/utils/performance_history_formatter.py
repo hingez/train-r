@@ -393,7 +393,7 @@ def _get_training_load_for_week(activities_data: Dict, week_start: datetime) -> 
 
 
 def _format_future_workouts(planned_events: List[Dict]) -> List[Dict]:
-    """Format future planned workouts for the next 28 days.
+    """Format future planned workouts for the next 28 days (including today).
 
     Args:
         planned_events: List of planned event dictionaries
@@ -402,7 +402,8 @@ def _format_future_workouts(planned_events: List[Dict]) -> List[Dict]:
         List of future workout dictionaries
     """
     future_workouts = []
-    today = datetime.now()
+    # Normalize to midnight to ensure today's workout is included
+    today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
     cutoff_future = today + timedelta(days=28)
 
     for event in planned_events:
@@ -435,6 +436,14 @@ def _format_future_workouts(planned_events: List[Dict]) -> List[Dict]:
             # Add duration if available (moving_time in seconds)
             if event.get("moving_time"):
                 workout_obj["min"] = event.get("moving_time") // 60
+
+            # Add description if available
+            if event.get("description"):
+                workout_obj["description"] = event.get("description")
+
+            # Add full workout structure if available
+            if event.get("workout_doc"):
+                workout_obj["workout_doc"] = event.get("workout_doc")
 
             future_workouts.append(workout_obj)
 

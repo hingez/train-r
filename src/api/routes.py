@@ -297,6 +297,25 @@ async def websocket_endpoint(websocket: WebSocket):
                             client_id=client_id
                         )
 
+                    # Handle modify_workout completion - return to dashboard
+                    if tool_name == "modify_workout":
+                        # Get dashboard data from coach service
+                        try:
+                            dashboard_data = await coach_service.dashboard_service.get_dashboard_data()
+                            await manager.send_display_update(
+                                display_type="dashboard",
+                                data=dashboard_data,
+                                client_id=client_id
+                            )
+                        except Exception as e:
+                            logger.error(f"Failed to get dashboard data after modify_workout: {e}")
+                            # Fall back to welcome screen if dashboard fails
+                            await manager.send_display_update(
+                                display_type="welcome",
+                                data={},
+                                client_id=client_id
+                            )
+
                 # Process message through coach service
                 # Pass client_id as session_id for LangSmith thread grouping
                 response = await coach_service.process_message(
