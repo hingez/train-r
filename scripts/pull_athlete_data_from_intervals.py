@@ -112,17 +112,21 @@ def enrich_workout_data(
         logger.warning("Workout missing activity ID, skipping enrichment")
         return transform_to_template_format(workout, None)
 
+    # Strip prefix from activity ID (e.g., "i104737889" -> "104737889")
+    # intervals.icu IDs can have prefixes like "i" for internal activities
+    activity_id_str = str(activity_id).lstrip('i')
+
     try:
         # Small delay to avoid rate limiting
         time.sleep(0.1)
 
         # Fetch activity details for name and elevation
-        activity_details = intervals_client.get_activity_details(str(activity_id))
+        activity_details = intervals_client.get_activity_details(activity_id_str)
 
         return transform_to_template_format(workout, activity_details)
 
     except Exception as e:
-        logger.error(f"Error enriching workout {activity_id}: {str(e)}")
+        logger.error(f"Error enriching workout {activity_id} (cleaned: {activity_id_str}): {str(e)}")
         # Return basic transformed data on error
         return transform_to_template_format(workout, None)
 
