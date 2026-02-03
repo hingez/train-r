@@ -112,13 +112,20 @@ def enrich_workout_data(
         logger.warning("Workout missing activity ID, skipping enrichment")
         return transform_to_template_format(workout, None)
 
+    # Skip enrichment for external activities (e.g., synced from Strava)
+    # Only internal intervals.icu activities (with "i" prefix) support detail fetching
+    activity_id_str = str(activity_id)
+    if not activity_id_str.startswith("i"):
+        logger.info(f"Skipping enrichment for external activity {activity_id}")
+        return transform_to_template_format(workout, None)
+
     try:
         # Small delay to avoid rate limiting
         time.sleep(0.1)
 
         # Fetch activity details for name and elevation
         # Note: activity ID must include the prefix (e.g., "i118382427")
-        activity_details = intervals_client.get_activity_details(str(activity_id))
+        activity_details = intervals_client.get_activity_details(activity_id_str)
 
         return transform_to_template_format(workout, activity_details)
 
