@@ -198,8 +198,8 @@ def _calculate_match_confidence(
     score = 0.50  # Base score for same date (already checked)
 
     # Check type match
-    activity_type = activity.get('type', '').lower()
-    event_type = event.get('type', '').lower()
+    activity_type = (activity.get('type') or '').lower()
+    event_type = (event.get('type') or '').lower()
 
     type_match = activity_type == event_type or \
         (activity_type in ['ride', 'virtualride'] and event_type in ['ride', 'virtualride'])
