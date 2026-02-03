@@ -120,8 +120,8 @@ def enrich_workout_data(
         return transform_to_template_format(workout, None)
 
     try:
-        # Small delay to avoid rate limiting
-        time.sleep(0.1)
+        # Longer delay to avoid rate limiting (0.5s between requests)
+        time.sleep(0.5)
 
         # Fetch activity details for name and elevation
         # Note: activity ID must include the prefix (e.g., "i118382427")
@@ -130,7 +130,8 @@ def enrich_workout_data(
         return transform_to_template_format(workout, activity_details)
 
     except Exception as e:
-        logger.error(f"Error enriching workout {activity_id}: {str(e)}")
+        # Log warning for timeouts/errors and continue with basic data
+        logger.warning(f"Could not enrich workout {activity_id}, using basic data: {str(e)[:100]}")
         # Return basic transformed data on error
         return transform_to_template_format(workout, None)
 
@@ -247,7 +248,8 @@ def aggregate_weekly_stats(workouts: list[dict]) -> dict:
 def generate_test_data(
     oldest_date: Optional[str] = None,
     newest_date: Optional[str] = None,
-    limit: Optional[int] = None
+    limit: Optional[int] = None,
+    skip_enrichment: bool = False
 ):
     """Generate structured test data from intervals.icu.
 
@@ -255,6 +257,7 @@ def generate_test_data(
         oldest_date: Start date in YYYY-MM-DD format (optional)
         newest_date: End date in YYYY-MM-DD format (optional)
         limit: Maximum number of workouts to fetch (optional)
+        skip_enrichment: Skip fetching additional activity details (faster but less data)
     """
     # Load configuration
     config = AppConfig.from_env()
@@ -269,6 +272,28 @@ def generate_test_data(
         api_key=config.intervals_api_key,
         config=config
     )
+
+    # Check for existing data and determine date range
+    workout_history_path = config.athlete_data_dir / "athlete_workout_history.json"
+    existing_workouts = []
+
+    if workout_history_path.exists() and not oldest_date:
+        try:
+            with open(workout_history_path, 'r', encoding='utf-8') as f:
+                existing_data = json.load(f)
+                existing_workouts = existing_data.get("workout_history", [])
+
+            if existing_workouts:
+                # Find most recent workout date
+                dates = [w.get("date") for w in existing_workouts if w.get("date")]
+                if dates:
+                    most_recent = max(dates)
+                    # Parse and add one day to avoid duplicates
+                    most_recent_dt = datetime.fromisoformat(most_recent.replace('Z', '+00:00'))
+                    oldest_date = (most_recent_dt + timedelta(days=1)).strftime("%Y-%m-%d")
+                    logger.info(f"Found existing data, fetching workouts newer than {oldest_date}")
+        except Exception as e:
+            logger.warning(f"Could not load existing workout history: {e}")
 
     # Fetch base workout history
     logger.info(f"Fetching workout history (oldest={oldest_date}, newest={newest_date})")
@@ -288,10 +313,15 @@ def generate_test_data(
     enriched_workouts = []
     total = len(history)
 
-    for idx, workout in enumerate(history, 1):
-        logger.info(f"Processing workout {idx}/{total}...")
-        enriched = enrich_workout_data(workout, intervals_client)
-        enriched_workouts.append(enriched)
+    if skip_enrichment:
+        logger.info("Skipping enrichment - using basic workout data only")
+        for workout in history:
+            enriched_workouts.append(transform_to_template_format(workout, None))
+    else:
+        for idx, workout in enumerate(history, 1):
+            logger.info(f"Processing workout {idx}/{total}...")
+            enriched = enrich_workout_data(workout, intervals_client)
+            enriched_workouts.append(enriched)
 
     # Fetch aggregate power curves
     logger.info("Fetching aggregate power curves...")
@@ -300,15 +330,22 @@ def generate_test_data(
     # Transform power curve periods to match template
     transformed_power_curves = map_power_curve_periods(power_curves)
 
-    # Generate weekly aggregated statistics
+    # Merge with existing workouts if any
+    if existing_workouts:
+        logger.info(f"Merging {len(enriched_workouts)} new workouts with {len(existing_workouts)} existing workouts")
+        all_workouts = existing_workouts + enriched_workouts
+    else:
+        all_workouts = enriched_workouts
+
+    # Generate weekly aggregated statistics from all workouts
     logger.info("Aggregating weekly statistics...")
-    weekly_stats = aggregate_weekly_stats(enriched_workouts)
+    weekly_stats = aggregate_weekly_stats(all_workouts)
     weeks_count = len(weekly_stats)
     logger.info(f"Generated statistics for {weeks_count} weeks")
 
     # Prepare final data structures
     workout_history_data = {
-        "workout_history": enriched_workouts
+        "workout_history": all_workouts
     }
 
     power_history_data = {
@@ -338,7 +375,8 @@ def generate_test_data(
 
     logger.info("=" * 60)
     logger.info("Test data generation complete!")
-    logger.info(f"Workouts processed: {len(enriched_workouts)}")
+    logger.info(f"New workouts: {len(enriched_workouts)}")
+    logger.info(f"Total workouts: {len(all_workouts)}")
     logger.info(f"Weeks summarized: {weeks_count}")
     logger.info(f"Workout history: {workout_history_path}")
     logger.info(f"Power history: {power_history_path}")
@@ -366,6 +404,11 @@ def main():
         type=int,
         help="Maximum number of workouts to fetch (default: all)"
     )
+    parser.add_argument(
+        "--skip-enrichment",
+        action="store_true",
+        help="Skip fetching activity details for faster processing (no names/elevation data)"
+    )
 
     args = parser.parse_args()
 
@@ -373,7 +416,8 @@ def main():
         generate_test_data(
             oldest_date=args.oldest,
             newest_date=args.newest,
-            limit=args.limit
+            limit=args.limit,
+            skip_enrichment=args.skip_enrichment
         )
     except Exception as e:
         logger.error(f"Test data generation failed: {str(e)}", exc_info=True)
