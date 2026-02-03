@@ -80,7 +80,7 @@ async def websocket_endpoint(websocket: WebSocket):
             # Run sync in thread pool with timeout (skip power curves for speed)
             sync_result = await asyncio.wait_for(
                 asyncio.to_thread(sync_service.sync_athlete_data, skip_power_curves=True),
-                timeout=30.0
+                timeout=60.0
             )
             logger.info(f"Data sync complete for client {client_id[:8]}: {sync_result}")
 
